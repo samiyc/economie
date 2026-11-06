@@ -6,7 +6,7 @@ fort, conflit sur des matières premières, rachat d'entreprises, inflation, pan
 
 Client de [`mcts-commun`](../mcts-commun/README.md). La recherche sera choisie par la mesure, contre les stabilisateurs automatiques et une règle de Taylor.
 
-**État** : le dépôt existe, sans modèle. Le cadrage vient d'abord (`docs/modele.md`, `docs/recherche/`).
+**État** (6/11/2026) : le cadrage est écrit, sans code de modèle ni de recherche : [`docs/modele.md`](docs/modele.md) (SIM, PC puis ÉCO, les crises, les règles à battre, les mesures) et [`docs/recherche/`](docs/recherche/README.md) (les chiffres et leurs sources, le glossaire, les questions, le prompt de recherche).
 
 ## Les commandes
 
