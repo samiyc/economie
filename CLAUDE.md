@@ -40,17 +40,20 @@ Its line in the roadmap: `mcts-commun/docs/feuille-de-route.md`, § 2.C. Start t
 - **Types come from JSDoc** (`npm run types`); the shapes the modules hand each other are in `src/types.js`.
 - **Commit straight to `main`; push only when Sami asks.** The GitHub repository is his to create, private.
 
-## To add when their turn comes
+## What holds the model
 
-Each of these exists in the other clients; copy it from them when there is something for it to hold, not before.
+- **The fingerprints** (`tests/fingerprint.test.js`): a hash of what each model does. A refactor changes none; a change
+  meant to alter a model updates its hash and says so in the commit, with the measures before and after.
+- **The ledger** (`src/sfc/ledger.js`): every run checks both matrices and the hidden equation each period, to 1e-9;
+  a model that leaks throws. A new model brings its matrices (`src/sim/ledger.js` is the pattern).
+- **The page**: `npm run page` (`mcts-commun`'s `serve.js`, port 4807, 4800 to 4807 are the projects'), then
+  http://127.0.0.1:4807/web/. `mcts-commun/web/theme.css` first, then `web/style.css`: the Khaki of Notepad++, as
+  Sami prefers, light in both modes. The colours of a chart are checked on the panel (`#e8e8cd`) before use.
+- **The changelog** as data (`docs/changelog.json`, then `npm run changelog`): a version a milestone or a change Sami
+  sees, both files committed (a test compares them).
 
-- **The fingerprints** (`tests/fingerprint.test.js`), with the first model: a hash of what the model does. A refactor
-  changes none; a change meant to alter the model updates its hash and says so in the commit, with the measures before
-  and after.
-- **The page**: `npm run page`, `node node_modules/mcts-commun/bin/serve.js 4807` (4800 to 4807 are the projects'),
-  with `mcts-commun/web/theme.css` first. Sami prefers sepia, the Khaki of Notepad++, to white.
-- **The changelog** as data (`docs/changelog.json`, `npm run changelog`), with the first version shown on the page.
-- **The bench** (`npm run bench`, `scripts/search-bench.js`), with the first search; its hot paths do not allocate.
+To add when its turn comes, copied from the other clients: **the bench** (`npm run bench`, `scripts/search-bench.js`),
+with the first search; its hot paths do not allocate.
 
 ## The machine
 

@@ -62,7 +62,7 @@ le disent, et le code les vérifie à chaque trimestre :
 monnaie émise par l'État égale celle que détiennent les ménages ». Le code ne l'écrit pas, il la vérifie : si elle
 tient à 1e-9 près, rien ne s'est perdu. C'est le test de Godley et Lavoie, et c'est le nôtre.
 
-**Le temps.** Un pas d'un **trimestre** (H, Q-S2). Une crise se joue sur **40 trimestres** (10 ans) après un état
+**Le temps.** Un pas d'un **trimestre** (Sami, 6/11, Q-S2). Une crise se joue sur **40 trimestres** (10 ans) après un état
 stationnaire de départ ; le vieillissement, sur **160** (40 ans). SIM et PC gardent la période abstraite du livre, avec
 ses paramètres, le temps de les rejouer.
 
@@ -137,7 +137,7 @@ la dette des ménages. Chacun peut revenir comme un bloc, si un professionnel di
 
 ## 4. La calibration : ce qu'ÉCO doit retrouver
 
-ÉCO n'est pas la France : c'est un État fictif aux proportions françaises (Q-S1). Son PIB du trimestre de départ vaut
+ÉCO n'est pas la France : c'est un État fictif aux proportions françaises (Sami, 6/11, Q-S1). Son PIB du trimestre de départ vaut
 100, si bien que tout flux se lit en points de PIB trimestriel. On règle les paramètres pour que l'état de départ
 retrouve ces ratios (2024), et on le vérifie par des tests :
 
@@ -156,7 +156,7 @@ retrouve ces ratios (2024), et on le vérifie par des tests :
 
 **L'état de départ n'est pas stationnaire** : un déficit de 5,8 % avec une dette de 113 % fait monter la dette. C'est
 voulu, c'est la France ; mais une mesure doit alors comparer deux politiques à la même dérive. La variante
-stationnaire (le déficit qui stabilise la dette) sert aux tests (Q-S2).
+stationnaire (le déficit qui stabilise la dette) sert aux tests (Sami, 6/11, Q-S2).
 
 **Les comportements à retrouver**, en tests de calibration, chacun avec sa tolérance (H) :
 
@@ -289,8 +289,8 @@ rapporte toujours avec `paired`. Un écrémage rapide rejette, il ne promeut jam
 | LP, OPEN, BMW, DISINF, GROWTH | chaque bloc d'ÉCO, rejoué d'abord dans son modèle d'origine | 1e-6 |
 
 **Les trajectoires de référence** viennent de `sfcr` (ou de MacroStat), tirées une fois et gardées en CSV dans
-`tests/fixtures/`, avec la version du paquet. Cela demande R ou Python une fois sur la machine (Q-S7) ; d'ici là, les
-valeurs calculées à la main et celles qu'imprime le README.
+`tests/fixtures/`, avec la version du paquet. Sami a choisi R et `sfcr` (6/11, Q-S7) : R s'installe une fois, au J2 ;
+d'ici là, les valeurs calculées à la main et celles qu'imprime le README.
 
 **Se comparer à la littérature, sur les politiques.** Il n'y a pas de banc public de « politiques contre crises » comme
 RESCO pour les feux. On compare donc des tendances, pas des chiffres : la règle de Taylor stabilise mieux que rien face
@@ -370,10 +370,10 @@ indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le
 
 | Jalon | Ce qu'il livre | Il est fini quand |
 |---|---|---|
-| **J1** | SIM : les équations, la résolution, les deux matrices, la page et son Sankey | les tests de SIM passent (§ 8) ; la première empreinte ; le changelog |
+| **J1** (fait le 6/11) | SIM : les équations, la résolution, les deux matrices, la page et son Sankey | les tests de SIM passent (§ 8) ; la première empreinte ; le changelog |
 | **J2** | PC : les bons, la banque centrale, le taux ; SIMEX et PCEX en tests | l'état stationnaire calculé et les trajectoires de `sfcr` retrouvés |
 | **J3** | ÉCO au trimestre : le travail, les prix, les entreprises, les banques, le reste du monde ; chaque bloc rejoué dans son modèle d'origine | les ratios de départ et les tests de calibration du § 4 |
-| **J4** | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
+| **J4** | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Sami, 6/11, Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
 | **J5** | le réglage des règles sur les graines d'apprentissage | R1\* et R2s\* mesurées contre les règles des manuels |
 | **J6** | la recherche à horizon glissant : l'escalade, puis le faisceau ; le banc (`npm run bench`) | elle bat la meilleure règle réglée selon le seuil du § 8, ou on sait pourquoi pas ; le témoin du modèle décalé |
 | **J7** | deux États, la guerre commerciale, l'ISMCTS | à cadrer à son tour |

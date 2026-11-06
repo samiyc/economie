@@ -6,7 +6,7 @@ fort, conflit sur des matières premières, rachat d'entreprises, inflation, pan
 
 Client de [`mcts-commun`](../mcts-commun/README.md). La recherche sera choisie par la mesure, contre les stabilisateurs automatiques et une règle de Taylor.
 
-**État** (6/11/2026) : le cadrage est écrit, sans code de modèle ni de recherche : [`docs/modele.md`](docs/modele.md) (SIM, PC puis ÉCO, les crises, les règles à battre, les mesures) et [`docs/recherche/`](docs/recherche/README.md) (les chiffres et leurs sources, le glossaire, les questions, le prompt de recherche).
+**État** (6/11/2026) : J1 est fait. SIM, le premier modèle de Godley et Lavoie, tourne et retrouve les chiffres publiés ; ses deux matrices et l'équation cachée sont vérifiées à chaque période. La page (`npm run page`, puis http://127.0.0.1:4807/web/) montre ses flux en diagramme de Sankey, ses matrices et ses courbes. Le cadrage : [`docs/modele.md`](docs/modele.md) (SIM, PC puis ÉCO, les crises, les règles à battre, les mesures) et [`docs/recherche/`](docs/recherche/README.md) (les chiffres et leurs sources, le glossaire, les questions, le prompt de recherche).
 
 ## Les commandes
 

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Journal des versions</title>
+    <link rel="stylesheet" href="../node_modules/mcts-commun/web/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="changelog.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <p class="links"><a href="index.html">← le modèle</a></p>
+      <h1>Économie : journal des versions</h1>
+      <p>L'économie d'un État en simulation, pour en comprendre les mécanismes : ses secteurs, la monnaie qui passe de l'un à l'autre, les leviers et les crises. Un modèle pour comprendre, pas pour prévoir.</p>
+    </header>
+    <main class="changelog">
+      <section>
+        <h2>Les versions</h2>
+
+      <article class="version">
+        <h3><span class="tag">0.1.0</span> SIM, le premier modèle de Godley et Lavoie <span class="date">6/11/2026</span></h3>
+        <ul>
+          <li>SIM, le modèle du chapitre 3 de Godley et Lavoie : des ménages, des entreprises et un État, une seule monnaie, émise par l'État quand il dépense plus qu'il ne lève.</li>
+          <li>À chaque période, le code vérifie la matrice des transactions, la matrice des bilans et l'équation cachée : la monnaie émise par l'État égale celle que détiennent les ménages.</li>
+          <li>Il retrouve les chiffres publiés : un revenu de 100 pour une dépense de 20 et un impôt de 20 %, puis 119, 124, 128… quand la dépense passe à 30, comme les imprime le paquet sfcr.</li>
+          <li>La page : des curseurs sur la dépense, l'impôt et les deux propensions à consommer, le diagramme des flux période par période, les deux matrices et les courbes.</li>
+        </ul>
+        <p class="commits"></p>
+      </article>
+      </section>
+      <p class="hint">Le détail, les chiffres et leurs sources sont dans <code>docs/modele.md</code> et <code>docs/recherche/chiffres.md</code>.</p>
+    </main>
+  </body>
+</html>

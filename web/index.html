@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Économie</title>
+    <link rel="stylesheet" href="../node_modules/mcts-commun/web/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      { "imports": { "mcts-commun/": "../node_modules/mcts-commun/src/" } }
+    </script>
+  </head>
+  <body>
+    <header class="masthead">
+      <p class="links"><a href="changelog.html">Journal des versions</a></p>
+      <h1>Économie</h1>
+      <p>L'économie d'un État en simulation, pour en comprendre les mécanismes. D'abord SIM, le plus simple des modèles de Godley et Lavoie : des ménages, des entreprises et un État, une seule monnaie.</p>
+    </header>
+    <main>
+      <section class="controls">
+        <label>Départ
+          <select id="start">
+            <option value="steady">L'état stationnaire du livre (G = 20, θ = 20 %)</option>
+            <option value="zero">L'économie vide, sans monnaie</option>
+          </select>
+        </label>
+        <label>Nouvelle politique dès la période<input id="at" type="number" min="1" max="60" step="1" value="5" /></label>
+        <label>Achats de l'État G <span id="G-value"></span><input id="G" type="range" min="0" max="50" step="1" value="30" /></label>
+        <label>Taux d'impôt θ <span id="theta-value"></span><input id="theta" type="range" min="0.05" max="0.6" step="0.01" value="0.2" /></label>
+        <label>Propension à consommer le revenu α1 <span id="alpha1-value"></span><input id="alpha1" type="range" min="0" max="0.95" step="0.05" value="0.6" /></label>
+        <label>Propension à consommer la richesse α2 <span id="alpha2-value"></span><input id="alpha2" type="range" min="0.05" max="0.9" step="0.05" value="0.4" /></label>
+        <button type="button" class="quiet" id="reset">Revenir à l'exemple</button>
+      </section>
+      <section class="controls player">
+        <button type="button" id="play">Lecture</button>
+        <input type="range" id="position" min="0" max="60" step="1" value="0" aria-label="Période" />
+        <button type="button" class="quiet" id="slower" title="Plus lent">−</button>
+        <span id="speed-label"></span>
+        <button type="button" class="quiet" id="faster" title="Plus vite">+</button>
+      </section>
+      <p class="hint" id="hint"></p>
+      <p class="summary" id="frame" aria-live="polite"></p>
+      <section class="panel">
+        <h2>Les flux de la période</h2>
+        <svg id="sankey" role="img" aria-label="Diagramme des flux entre les secteurs : à gauche ce que chacun paie, à droite ce qu'il reçoit"></svg>
+        <p class="hint">Chaque secteur paraît deux fois : à gauche ce qu'il paie, à droite ce qu'il reçoit, et les deux barres sont aussi hautes l'une que l'autre, parce que rien ne se perd. Un ruban a la couleur de celui qui paie. La « variation de la monnaie » est l'épargne des ménages : l'État la leur verse en monnaie neuve quand il dépense plus qu'il ne lève.</p>
+      </section>
+      <section class="panel">
+        <h2>Les courbes</h2>
+        <div class="plot">
+          <svg id="curves" role="img" aria-label="Le revenu, la consommation et la monnaie des ménages, période par période"></svg>
+          <div id="tooltip" class="tooltip" hidden></div>
+        </div>
+        <p class="hint">Le revenu va vers G / θ, quoi que pensent les ménages : les propensions à consommer ne règlent que la vitesse du chemin. Aux valeurs du livre, la consommation et la monnaie des ménages finissent au même niveau (α1 + α2 = 1) : leurs courbes se recouvrent, l'infobulle les distingue. Un clic sur les courbes va à sa période.</p>
+      </section>
+      <details open>
+        <summary>Les deux matrices de la période</summary>
+        <div class="matrices">
+          <div><h3>Les transactions</h3><table id="transactions"></table></div>
+          <div><h3>Les bilans</h3><table id="balance"></table></div>
+        </div>
+        <p class="hint">« + » une ressource, « − » un emploi, comme dans le livre. Chaque ligne et chaque colonne des transactions somment à zéro ; la dernière ligne des transactions, la variation de la monnaie, est l'équation cachée : la monnaie émise par l'État égale celle que reçoivent les ménages. Le code la vérifie à chaque période, à 10^−9 près.</p>
+      </details>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+/*
+ * The page's Khaki, from Notepad++'s own theme (themes/khaki.xml: 5F5F00 on D7D7AF), as Sami prefers, and as
+ * raquette has it. Light in both modes: this block comes after the theme, so that it wins over the theme's dark mode
+ * too. The ink is darker than the theme's 5F5F00, which falls short of 7:1 on this background.
+ */
+:root {
+  color-scheme: light;
+  --bg: #d7d7af;
+  --panel: #e8e8cd;
+  --ink: #2f2f00;
+  --ink-2: #4d4d00;
+  --line: #a9a97e;
+  --accent: #5f5f00;
+  --accent-2: #474700;
+  --accent-ink: #ffffff;
+  --masthead: #5f5f00;
+  --masthead-ink: #ffffff;
+}
+
+.player { align-items: center; }
+.player input[type="range"] { flex: 1; min-width: 200px; padding: 0; }
+#speed-label { min-width: 7em; text-align: center; font-variant-numeric: tabular-nums; }
+input[type="range"] { accent-color: var(--accent); }
+.controls input[type="range"] { padding: 0; min-width: 150px; }
+.controls label span { color: var(--ink); font-variant-numeric: tabular-nums; }
+#at { width: 5em; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 4px 14px 10px; box-shadow: var(--shadow); }
+.panel h2 { margin-top: 10px; }
+.panel svg { display: block; width: 100%; max-width: 920px; margin-inline: auto; }
+
+/* The Sankey: ribbons translucent so that crossings read, darker on hover or focus; labels haloed in the panel's colour. */
+.ribbon { fill-opacity: 0.42; transition: fill-opacity 0.12s; }
+.ribbon:hover, .ribbon:focus { fill-opacity: 0.75; outline: none; }
+#sankey text, #curves text { fill: var(--ink); font-size: 12px; paint-order: stroke; stroke: var(--panel); stroke-width: 3px; stroke-linejoin: round; }
+.ribbon-label { dominant-baseline: middle; font-size: 11px; pointer-events: none; }
+.node-label { dominant-baseline: middle; font-weight: 650; }
+.node-label.left { text-anchor: end; }
+.node-total { font-weight: 400; fill: var(--ink-2); }
+.column-label { text-anchor: middle; font-size: 11px; fill: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* The curves: one axis, a recessive grid, 2 px lines, the target dashed; the period shown, and the crosshair. */
+.plot { position: relative; }
+.grid { stroke: var(--line); stroke-width: 1; opacity: 0.6; }
+.tick { fill: var(--ink-2) !important; font-size: 11px !important; }
+.tick.y { text-anchor: end; dominant-baseline: middle; }
+.tick.x { text-anchor: middle; }
+.curve { stroke-width: 2; stroke-linejoin: round; }
+.curve.target { stroke-dasharray: 6 4; stroke-width: 1.5; }
+.curve-label { dominant-baseline: middle; }
+.now { stroke: var(--accent); stroke-width: 1.5; opacity: 0.7; }
+.hair { stroke: var(--ink-2); stroke-width: 1; }
+#curves { cursor: crosshair; }
+.tooltip {
+  position: absolute; top: 8px; transform: translateX(12px); pointer-events: none;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow);
+  padding: 6px 10px; font-size: 0.82rem; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.tooltip .key { display: inline-block; width: 12px; height: 2px; margin-right: 6px; vertical-align: middle; }
+.tooltip strong { margin-right: 2px; }
+
+/* The matrices: figures aligned, the sums set apart. */
+.matrices { display: flex; flex-wrap: wrap; gap: 8px 32px; padding: 4px 14px 0; }
+.matrices table { border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 0.88rem; }
+.matrices th, .matrices td { padding: 3px 10px; border-bottom: 1px solid var(--line); }
+.matrices td { text-align: right; min-width: 5.5em; }
+.matrices th { text-align: left; font-weight: 600; }
+.matrices thead th { text-align: right; color: var(--ink-2); }
+.matrices .sum { color: var(--ink-2); }
+.matrices tr.sum th, .matrices tr.sum td { border-top: 2px solid var(--line); }
+details > .hint { padding: 0 14px 6px; }
