@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { run } from "../src/models.js";
+import { worstGap } from "./sfcr.js";
 
 /**
  * Our models against sfcr's trajectories (Macalós, MIT), solved once by scripts/reference/sfcr.R and kept in
@@ -12,30 +12,6 @@ import { run } from "../src/models.js";
  */
 
 const TOLERANCE = 1e-9;
-const OURS = { TX: "T", YDE: "YDe" };
-
-/** The fixture `name`: its columns, and its rows as numbers (the stamp line skipped). */
-function fixture(name) {
-  const lines = readFileSync(new URL(`fixtures/sfcr/${name}.csv`, import.meta.url), "utf8").trim().split(/\r?\n/);
-  const [header, ...rows] = lines.filter((line) => !line.startsWith("#"));
-  return { columns: header.split(","), rows: rows.map((row) => row.split(",").map(Number)) };
-}
-
-/** The largest relative gap between `ours` and the fixture `name`, and where it is. */
-function worstGap(ours, name) {
-  const { columns, rows } = fixture(name);
-  let worst = { gap: 0, at: "" };
-  for (const row of rows) {
-    const t = row[0] - 1;
-    for (let c = 1; c < columns.length; c += 1) {
-      const variable = OURS[columns[c]] ?? columns[c];
-      const mine = ours.state(t)[ours.model.V[variable]];
-      const gap = Math.abs(mine - row[c]) / Math.max(1, Math.abs(row[c]));
-      if (gap > worst.gap) worst = { gap, at: `${variable} at period ${t}: ${mine} against ${row[c]}` };
-    }
-  }
-  return worst;
-}
 
 const CASES = [
   ["SIM from the empty economy", "sim-zero", "SIM", { start: "zero" }],

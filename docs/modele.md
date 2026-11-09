@@ -294,7 +294,8 @@ rapporte toujours avec `paired`. Un écrémage rapide rejette, il ne promeut jam
 | SIM, la montée à `G = 30` | 119,23, 123,96… : `(30 + 0,4 · 80) / 0,52`, puis la suite ; le README de `sfcr` imprime 119, 124, 128, 131, 134, 137 | 1e-9 sur nos calculs, l'arrondi sur l'imprimé |
 | SIM et SIMEX, la consommation accrue, la dépense à 25 | la trajectoire de `sfcr` | 1e-9 (mesuré : 2e-13) |
 | PC et PCEX, l'état stationnaire, et la hausse du taux | le calcul de l'état stationnaire ; la trajectoire de `sfcr` | 1e-9 (mesuré : 9e-13) |
-| LP, OPEN, BMW, DISINF, GROWTH | chaque bloc d'ÉCO, rejoué d'abord dans son modèle d'origine | 1e-6 |
+| LP, OPEN, BMW, DISINF | chaque bloc d'ÉCO, rejoué d'abord dans son modèle d'origine (`src/book/`), depuis le départ de sa vignette puis après son choc | 1e-9 (mesuré : 1,2e-11) |
+| GROWTH | le bloc des entreprises | 1e-9 |
 
 **Les trajectoires de référence** viennent de `sfcr` (ou de MacroStat), tirées une fois et gardées en CSV dans
 `tests/fixtures/`, avec la version du paquet. Sami a choisi R et `sfcr` (6/11, Q-S7) : R 4.6.2 et `sfcr` 0.2.3
@@ -357,10 +358,14 @@ pour cela.
 **Ce qu'on ajoute** : le moteur des modèles (les équations d'un trimestre, leur résolution, les deux matrices et leur
 vérification), SIM, PC puis ÉCO, les crises, les règles, la mesure d'une graine, la page et son diagramme de Sankey.
 
-**La résolution.** SIM et PC se résolvent dans un ordre explicite (le revenu d'abord, puis le reste). ÉCO a des
-simultanéités (les prix et les salaires, le revenu et l'impôt) : une itération de Gauss-Seidel en ordre fixe, jusqu'à
-1e-12, avec un plafond d'itérations compté dans la trace. Le même ordre donne le même résultat à l'octet, ce que
-l'empreinte vérifie.
+**La résolution.** SIM et PC se résolvent dans un ordre explicite (le revenu d'abord, puis le reste), écrit à la main.
+Les blocs du livre et ÉCO s'écrivent dans la notation de `sfcr` (`Y ~ C + G`, `Bh[-1]`, `d(Hh)`, `if (…) {1} else
+{0}`), que `src/sfc/system.js` compile une fois (J3, 9/11). Comme `sfcr`, il coupe les équations d'une période en
+blocs (les composantes fortement connexes du graphe de ce que chacune lit) : un bloc sans cycle se calcule une fois,
+un cycle itère en Gauss-Seidel, dans l'ordre écrit, jusqu'à 1e-14 relatif, avec un plafond de 500 itérations au-delà
+duquel il lève une erreur. Le même ordre donne le même résultat à l'octet, ce que l'empreinte vérifie. Les matrices
+s'écrivent de même, cellule par cellule (`+rb[-1] * Bh[-1]`) ; une ligne d'actifs réels (le capital, l'or) porte son
+total, que la ligne de la valeur nette reprend.
 
 **Le chemin chaud n'alloue rien** : l'état d'un trimestre dans un `Float64Array` réservé une fois, les variables à des
 indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le besoin se montre).

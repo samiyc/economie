@@ -55,7 +55,7 @@ export function runModel(model, { params = model.DEFAULTS, periods = 60, start =
   states.set(state, 0);
   for (let t = 1; t <= periods; t += 1) {
     model.step(plan[t], state);
-    assertConsistent(ledger, state, t);
+    assertConsistent(ledger, state, t, states.subarray((t - 1) * width, t * width));
     states.set(state, t * width);
   }
   return {

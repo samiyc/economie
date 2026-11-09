@@ -18,6 +18,12 @@ const EXPECTED = {
   simex: "41231ec0513e61f2",
   pc: "48be577ffbb80ad5",
   pcex: "9c243d4abac31ad3",
+  // 9/11/2026, J3: the book's blocks, solved by src/sfc/system.js, each from its start, 100 periods, its vignette's
+  // shock at 50.
+  lp: "90d09cff4400e9f6",
+  open: "02c5bb039201feb3",
+  bmw: "143abd2e121091e3",
+  disinf: "38250af50d22089b",
 };
 
 const digest = (states) => createHash("sha256").update(Buffer.from(states.buffer, states.byteOffset, states.byteLength)).digest("hex").slice(0, 16);
@@ -37,5 +43,13 @@ describe("the fingerprints of the models", () => {
     assert.equal(from("SIMEX", [{ at: 50, alpha1: 0.7 }]), EXPECTED.simex);
     assert.equal(from("PC", [{ at: 50, r: 0.035 }, { at: 70, G: 25 }]), EXPECTED.pc);
     assert.equal(from("PCEX", [{ at: 50, r: 0.035 }, { at: 70, theta: 0.25 }]), EXPECTED.pcex);
+  });
+
+  it("leaves the book's blocks as they were", () => {
+    const from = (name, changes) => digest(run(name, { start: "zero", periods: 100, changes }).states);
+    assert.equal(from("LP", [{ at: 50, rb: 0.04, pbl: 15 }]), EXPECTED.lp);
+    assert.equal(from("OPEN", [{ at: 50, mu_S: 0.25 }]), EXPECTED.open);
+    assert.equal(from("BMW", [{ at: 50, alpha0: 30 }]), EXPECTED.bmw);
+    assert.equal(from("DISINF", [{ at: 50, phi: 0.3 }]), EXPECTED.disinf);
   });
 });

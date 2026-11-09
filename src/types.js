@@ -5,9 +5,10 @@
 
 /**
  * A row of a matrix: its cells, each a sector, a sign (+1 a source of funds or an asset, −1 a use or a liability)
- * and the index of the state's variable it reads.
+ * and what it reads: the index of a variable of the state, or the compiled source of an expression over the period
+ * (`s`) and the period before (`l`). A row of real assets has a `total`, read the same way: its sum.
  *
- * @typedef {{ key: string, cells: Array<[string, number, number]> }} LedgerRow
+ * @typedef {{ key: string, cells: Array<[string, number, number | string]>, total?: number | string }} LedgerRow
  */
 
 /**
@@ -18,15 +19,16 @@
  */
 
 /**
- * A ledger: the matrices' cells after `fill(state)`, row-major (`width` a row), and the largest relative gap of a sum
- * to zero.
+ * A ledger: the matrices' cells after `fill(state, previous)`, row-major (`width` a row), the balance sheet's totals,
+ * and the largest relative gap of a sum to zero.
  *
  * @typedef {{
  *   spec: LedgerSpec,
  *   width: number,
  *   flows: Float64Array,
  *   stocks: Float64Array,
- *   fill: (state: Float64Array) => void,
+ *   totals: Float64Array,
+ *   fill: (state: Float64Array, previous?: Float64Array) => void,
  *   residual: () => number,
  * }} Ledger
  */
