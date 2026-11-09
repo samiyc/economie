@@ -48,8 +48,8 @@ Its line in the roadmap: `mcts-commun/docs/feuille-de-route.md`, § 2.C. Start t
   a model that leaks throws. A new model brings its matrices and joins `src/models.js`, which the runner
   (`src/sfc/run.js`) and the page take it from.
 - **The system** (`src/sfc/system.js`): a model written in sfcr's notation, its equations and its matrices, compiled
-  once and solved block by block (Gauss-Seidel in written order). The book's blocks (`src/book/`) and ÉCO are written
-  so; SIM and PC stay hand-written.
+  once and solved block by block (Gauss-Seidel in written order). The book's blocks (`src/book/`) and ÉCO (`src/eco/`:
+  its equations, matrices, targets and calibration) are written so; SIM and PC stay hand-written.
 - **The reference trajectories** (`tests/reference.test.js`, `tests/book.test.js`): sfcr's, solved once by
   `scripts/reference/sfcr.R` (R and sfcr installed for Sami's account, 9/11) and kept in `tests/fixtures/sfcr/`; a
   model of the book is retraced to 1e-9.

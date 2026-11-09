@@ -116,7 +116,13 @@ nette.
 | Prélèvements obligatoires | 42,8 % du PIB | idem | **E** |
 | Chômage au sens du BIT | 7,4 % en moyenne annuelle (7,4 % en 2023, 7,3 % en 2022), 2,3 millions de chômeurs ; 7,3 % au T4 2024 | Insee [[insee-chom]] | **E** |
 | Taux d'épargne des ménages | 17,7 % en 2024 (Banque de France) ; 18,5 % au T4 2024 (Insee) ; autour de 14 % avant la pandémie | [[bdf-epargne]] ; Insee | **E** ; l'écart des deux n'est pas expliqué |
-| Importations, en part du PIB | non trouvé | — | **H** (Q-P1) |
+| Exportations, importations | 33,8 % et 34,3 % du PIB (biens et services) | OCDE, statistiques de base de la France 2025 [[ocde-base]] ; Insee : 999,1 Md€ d'importations pour un PIB de 2 919,9 Md€ [[insee-cn]] (recherche du 9/11) | **E** |
+| Facture énergétique | 57,8 Md€ en 2024 (−21 % sur 2023), 116,3 Md€ en 2022 ; environ 2,0 % du PIB | SDES, chiffres clés de l'énergie [[sdes]] | **E** ; RTE retient 61 Md€ |
+| Charge d'intérêts de la dette | 2,0 % du PIB en 2024 (1,8 % en 2023) | Insee, comptes des APU, mars 2025 [[insee-apu-2024]] | **E** |
+| Taux d'épargne financière des ménages | 9,3 % du revenu disponible en 2024 (7,3 % en 2023) | Banque de France [[bdf-epargne]] | **E** |
+| Crédits aux sociétés non financières | 1 359,7 Md€ en août 2024, +2,0 % sur un an | Banque de France, financement des entreprises [[bdf-credit]] | **E** |
+| Solde courant | un excédent en 2024 | OFCE, « 2024 : la France en excédent extérieur courant » [[ofce-ca]] | **E** : le titre seulement ; ÉCO prend +0,4 % (H) |
+| Dette révisée | 112,6 % du PIB en 2024, 115,7 % en 2025 | Insee [[insee-apu-2024]] | **E** ; ÉCO garde 113 % |
 
 ## 4. Les comportements à retrouver
 
@@ -151,8 +157,8 @@ La fourchette « 0,9 à 1,7 », souvent citée, n'a pas été trouvée dans le t
 | Calcul | Valeur | Statut |
 |---|---|---|
 | Un plan noté par la recherche | K × horizon = 16 × 12 = 192 trimestres | **C** |
-| Le temps d'un trimestre d'ÉCO | quelques microsecondes, une cinquantaine d'équations | **H**, à mesurer au banc |
-| Une graine pilotée par la recherche | 2 000 plans × 192 trimestres × 40 décisions ≈ 15 millions de trimestres : de l'ordre de la minute | **C** sur **H** |
+| Le temps d'un trimestre d'ÉCO | 6 µs, une centaine d'équations, les matrices vérifiées (mesuré le 9/11, 32 000 trimestres) | **C** |
+| Une graine pilotée par la recherche | 2 000 plans × 192 trimestres × 40 décisions ≈ 15 millions de trimestres : de l'ordre de la minute et demie à 6 µs | **C** |
 
 ## Les liens
 
@@ -176,4 +182,10 @@ La fourchette « 0,9 à 1,7 », souvent citée, n'a pas été trouvée dans le t
 - [[insee-2020]] : https://www.insee.fr/fr/statistiques/5387891
 - [[eurostat]] : https://ec.europa.eu/eurostat/documents/2995521/16324747/2-31032023-AP-FR.pdf/7d97c349-eb47-81a1-9f2d-a0a0aedeeb30
 - [[insee-etr]] : https://www.insee.fr/fr/statistiques/8285656
+- [[ocde-base]] : https://www.oecd.org/fr/publications/etudes-economiques-de-l-ocde-france-2026_65cc698e-fr/full-report/basic-statistics-of-france-2025_dc6de9a2
+- [[insee-cn]] : https://www.insee.fr/fr/statistiques/8574653
+- [[sdes]] : https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-energie/fr/4-depenses-en-energie
+- [[insee-apu-2024]] : https://www.insee.fr/fr/statistiques/8540375
+- [[bdf-credit]] : https://www.banque-france.fr/fr/statistiques/credit/financement-des-entreprises-2024-08
+- [[ofce-ca]] : https://www.ofce.sciences-po.fr/blog2024/fr/2025/20250722_EA/
 - [[cor]] : https://www.cor-retraites.fr/sites/default/files/2026-06/Pr%C3%A9sentation_Pl%C3%A9ni%C3%A8re.pdf

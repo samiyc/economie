@@ -33,7 +33,13 @@ modèle fera. Une réponse quitte cette liste et va, avec sa date, dans [`chiffr
 - une itération de Gauss-Seidel en ordre fixe pour les simultanéités d'ÉCO ;
 - la cible d'inflation de 2 %, celle de la BCE ; le taux neutre de la règle de Taylor, celui du modèle ;
 - R2n, la règle nominale des 3 %, gardée exprès comme homme de paille procyclique ;
-- un flux de tirage par usage (la crise, le bruit, la recherche).
+- un flux de tirage par usage (la crise, le bruit, la recherche) ;
+- (J3, 9/11) ÉCO sans actions, sans logement, sans dette des ménages, sans capitaux étrangers ; les obligations à
+  leur valeur faciale, le coupon moyen suivant le taux long à mesure que la dette se renouvelle ; les hypothèses de
+  calibration dans `src/eco/targets.js`, chacune avec sa question (les importations des achats publics et le
+  plein emploi : Q-P1 et Q-P6) ;
+- (J3) deux corrections aux vignettes de `sfcr`, faute de quoi leurs matrices ne se ferment pas : DISINF (les
+  intérêts au taux d'avant) et GROWTH (la ligne des profits de la banque centrale, la richesse initiale des ménages).
 
 ## Pour un professionnel
 

@@ -119,6 +119,7 @@ describe("a model in sfcr's notation", () => {
     const empty = { sectors: [], flows: [], stocks: [] };
     assert.throws(() => createSystem({ name: "x", equations: "Y ~ Z", external: {}, matrices: empty }), /x: unknown variable Z/);
     assert.throws(() => createSystem({ name: "x", equations: "Y ~ 1\nY ~ 2", external: {}, matrices: empty }), /Y is defined twice/);
+    assert.throws(() => createSystem({ name: "x", equations: "Y ~ 1", external: {}, initial: { Z: 1 }, matrices: empty }), /no variable Z to start/);
     const explosive = createSystem({ name: "x", equations: "Y ~ 2 * Y + 1", external: {}, matrices: empty });
     assert.throws(() => explosive.step({}, explosive.emptyState()), /block 0 \(Y\) did not settle/);
     const drifting = createSystem({ name: "x", equations: "Y ~ Y[-1] + 1", external: {}, matrices: empty });

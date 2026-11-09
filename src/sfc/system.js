@@ -96,6 +96,7 @@ export function createSystem({ name, equations, external, initial = {}, matrices
     const failed = solve(state, lag);
     if (failed) throw new Error(`${name}: block ${failed - 1} (${blocks[failed - 1].members.map((i) => VARS[i])}) did not settle`);
   };
+  for (const variable of Object.keys(initial)) if (!(variable in V)) throw new Error(`${name}: no variable ${variable} to start`);
   const emptyState = () => {
     const state = new Float64Array(VARS.length).fill(EMPTY);
     for (const [variable, value] of Object.entries(initial)) state[V[variable]] = value;

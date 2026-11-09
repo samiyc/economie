@@ -25,6 +25,8 @@ const EXPECTED = {
   bmw: "143abd2e121091e3",
   disinf: "38250af50d22089b",
   growth: "e894737445bc0e74",
+  // 9/11/2026, J3: ÉCO from its calibrated start, 100 quarters, energy twice as dear from 20, the rate at 5 % from 40.
+  eco: "3aa253792848fe9c",
 };
 
 const digest = (states) => createHash("sha256").update(Buffer.from(states.buffer, states.byteOffset, states.byteLength)).digest("hex").slice(0, 16);
@@ -53,5 +55,10 @@ describe("the fingerprints of the models", () => {
     assert.equal(from("BMW", [{ at: 50, alpha0: 30 }]), EXPECTED.bmw);
     assert.equal(from("DISINF", [{ at: 50, phi: 0.3 }]), EXPECTED.disinf);
     assert.equal(from("GROWTH", [{ at: 50, omega0: -0.1 }]), EXPECTED.growth);
+  });
+
+  it("leaves ÉCO as it was", () => {
+    const changes = [{ at: 20, eshock: 2 }, { at: 40, rcb: 0.05 }];
+    assert.equal(digest(run("ECO", { start: "zero", periods: 100, changes }).states), EXPECTED.eco);
   });
 });

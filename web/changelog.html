@@ -19,6 +19,18 @@
         <h2>Les versions</h2>
 
       <article class="version">
+        <h3><span class="tag">0.3.0</span> ÉCO : l'économie d'un État, au trimestre <span class="date">9/11/2026</span></h3>
+        <ul>
+          <li>ÉCO, notre modèle : des ménages, des entreprises, des banques, un État, une banque centrale et le reste du monde, une centaine d'équations, le trimestre pour pas. Ses deux matrices et l'équation cachée sont vérifiées à chaque trimestre.</li>
+          <li>Son trimestre de départ a les proportions de la France en 2024 : une dette de 113 % du PIB, un déficit de 5,8 %, une dépense publique de 57,2 %, des prélèvements de 42,8 %, un chômage de 7,4 %, des importations d'un tiers du PIB. Sans rien décider, sa dette monte à 133 % en dix ans.</li>
+          <li>Il se comporte comme les études le disent : le solde public perd 0,51 point par point d'écart de production, le chômage suit la croissance comme le veut la loi d'Okun, un point de PIB de dépense rapporte 1,16 point de PIB en un an quand le chômage est haut et 0,63 au plein emploi, le choc de l'énergie de 2022 porte l'inflation à 9 %, une pandémie comme celle de 2020 ôte 6,5 % du PIB de l'année.</li>
+          <li>Chacun de ses blocs vient d'un modèle de Godley et Lavoie, refait d'abord et comparé au paquet sfcr : LP (les obligations), OPEN (deux pays qui échangent), BMW (les banques), DISINF (les prix et les salaires) et GROWTH (les entreprises), tous retrouvés à 10^−11 près.</li>
+          <li>Un moteur lit désormais les équations telles que sfcr les écrit, et les résout bloc par bloc, comme lui ; il a trouvé deux défauts dans ses exemples, des matrices qui ne se ferment pas, corrigés.</li>
+        </ul>
+        <p class="commits"></p>
+      </article>
+
+      <article class="version">
         <h3><span class="tag">0.2.0</span> PC : la banque centrale, les bons et le taux <span class="date">9/11/2026</span></h3>
         <ul>
           <li>PC, le modèle du chapitre 4 de Godley et Lavoie : une banque centrale arrive, l'État émet des bons, les ménages partagent leur richesse entre monnaie et bons selon le taux, et la banque centrale prend les bons qu'ils laissent.</li>

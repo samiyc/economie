@@ -3,8 +3,8 @@
 L'économie d'un État en simulation : six secteurs (les ménages, les entreprises, les banques, l'État, la banque
 centrale, le reste du monde), l'argent qui passe de l'un à l'autre chaque trimestre, et les leviers qui le règlent
 (impôts, dépense, taux, obligations), face à des crises tirées par graine. On mesure trois choses, séparément : le
-chômage, l'inflation, la dette. Ce document fixe ce qu'on va construire et comment on saura que ça marche. **Il n'y a
-encore ni modèle ni recherche dans `src/`.**
+chômage, l'inflation, la dette. Ce document fixe ce qu'on va construire et comment on saura que ça marche. **Les modèles sont
+construits (SIM et PC à J1 et J2, ÉCO à J3) ; la recherche ne l'est pas encore.**
 
 **Un modèle pour comprendre, pas pour prévoir.** Il ne dira jamais ce que fera l'économie française l'an prochain. Il
 doit montrer des mécanismes qu'on reconnaît (pourquoi l'austérité en pleine récession creuse la dette, pourquoi un
@@ -123,25 +123,42 @@ attendent, celui de la période d'avant ; la monnaie absorbe la surprise. Le PCE
 
 ### M2 — ÉCO : l'économie d'un État, au trimestre
 
-Le nôtre. Il assemble des blocs des chapitres suivants, chacun rejoué d'abord dans son modèle d'origine (§ 8), puis
-calibré sur les ordres de grandeur de la France (§ 4).
+Le nôtre (J3, 9/11) : une centaine d'équations dans la notation de `sfcr` (`src/eco/equations.js`), six secteurs et
+leurs deux matrices (`src/eco/matrices.js`). Chaque bloc vient d'un modèle du livre, rejoué d'abord contre `sfcr`
+(`src/book/`, § 8), puis calibré sur les proportions de la France (§ 4).
 
-| Bloc | Ce qu'il ajoute | D'où |
+| Bloc | Ce qu'il fait | D'où |
 |---|---|---|
-| **Le travail** | une population active `L` ; l'emploi `N = Y / productivité` ; le chômage `u = 1 − N / L` ; le PIB potentiel et l'écart de production | H ; la loi d'Okun comme test (§ 4) |
-| **Les prix et les salaires** | les salaires suivent l'inflation attendue et le chômage (une courbe de Phillips) ; les prix sont un taux de marge sur le coût unitaire (salaires et intrants importés) ; deux revendications en conflit, celle des salariés et celle des entreprises | DIS et DISINF (ch. 9), GROWTH (ch. 11) ; la pente est H (Q-P2) |
-| **Les entreprises** | l'investissement, selon l'utilisation des capacités et le taux réel ; les profits, versés en dividendes aux ménages et au reste du monde | GROWTH (ch. 11) ; la part étrangère d'après l'emploi sous contrôle étranger, 13 % |
-| **Les banques** | les prêts aux entreprises, les dépôts des ménages ; le taux des prêts suit le taux directeur, plus une marge | BMW (ch. 7), INSOUT (ch. 10) |
-| **L'État** | les achats `G` ; les prestations chômage (une part du salaire, par chômeur) ; les retraites (un montant, par retraité) ; les impôts sur les revenus et la consommation ; les intérêts de sa dette ; des bons et des obligations | PC, LP (ch. 5) ; les ratios de la France (§ 4) |
-| **La banque centrale** | le taux directeur ; l'achat des bons restants ; les réserves de change | PC, OPEN (ch. 6) |
-| **Le reste du monde** | les exportations, selon sa demande et nos prix ; les importations, dont l'énergie et les matières premières à un prix qu'il fixe ; un change fixe au départ (H, Q-S1) | OPEN (ch. 6, ch. 12) |
+| **Le travail** | une population active `Lf` de 31,1 millions ; l'emploi suit le travail que demande la production, un dixième de l'écart par trimestre (les entreprises gardent leurs salariés un temps) ; le chômage `u = 1 − N / Lf` ; le PIB potentiel au chômage structurel de 7 % (H, Q-P7) | GROWTH (11.22 à 11.24) ; Okun comme test |
+| **Les prix et les salaires** | le salaire suit l'inflation attendue (moitié la cible, moitié les quatre derniers trimestres, H, Q-P2), la productivité, et une courbe de Phillips convexe `phil · (u* / u₋₁ − 1)` ; le prix est une marge sur le coût unitaire normal : salaires, importations, énergie | DISINF (ch. 9), GROWTH (11.27 à 11.29) |
+| **Les entreprises** | l'investissement fait croître le capital selon l'utilisation des capacités et le taux réel des prêts ; les profits paient l'impôt, puis des dividendes, dont 13 % au reste du monde (l'emploi sous contrôle étranger) ; le reste et les prêts financent l'investissement | GROWTH (11.6 à 11.11, 11.37 à 11.39) |
+| **Les banques** | les dépôts des ménages, les prêts aux entreprises, des réserves à la banque centrale (15 % des dépôts, H) ; des bons pour le reste ; prêts au taux directeur plus 1,5 point, dépôts à 1,5 point dessous (H) ; leurs profits vont aux ménages | BMW (ch. 7), GROWTH (11.87 à 11.92) |
+| **L'État** | les achats `G` (une part du PIB potentiel) ; les prestations chômage (une part du salaire net, par chômeur) ; les retraites (par retraité, indexées sur les prix) ; les autres prestations et les subventions ; les impôts sur les salaires, la consommation (la TVA), les profits et les revenus du capital ; des recettes propres (ventes, revenus de la propriété), qui suivent l'activité ; la dette en bons et en obligations | PC, LP (ch. 5) |
+| **La banque centrale** | le taux directeur, qui est celui des bons ; les bons que les banques ne prennent pas ; les réserves de change, qui absorbent le solde courant à change fixe | PC, OPEN (ch. 6) |
+| **Le reste du monde** | les exportations, selon sa demande et le prix relatif ; les importations, une part de la demande privée (un dixième des achats publics, surtout des salaires, H, Q-P1), qui monte quand le chômage passe sous son niveau structurel : la demande que les salariés ne servent plus va dehors (H, Q-P6) ; l'énergie, une part fixe de la production, à un prix mondial ; les profits que les entreprises tirent de leurs filiales à l'étranger | OPEN (ch. 6) |
 
-**Les stabilisateurs automatiques sont dans la structure** : l'impôt proportionnel et les prestations chômage. Ils
-jouent sans que personne décide, et c'est la règle R0 (§ 6).
+**Les obligations sont tenues à leur valeur faciale** : chacune garde le coupon de son émission, et le coupon moyen
+`rbar` rejoint le taux long à mesure que la dette se renouvelle (une maturité moyenne de 8,5 ans, H). Une hausse des
+taux pèse donc sur la charge d'intérêts peu à peu, comme en France ; les obligations perpétuelles de LP auraient
+réévalué toute la dette à chaque mouvement du taux.
 
-**Ce qui reste hors du modèle au départ** : les marchés financiers et le prix des actifs (sauf les obligations, LP), le
-logement, les inégalités entre ménages (un seul ménage représentatif), les secteurs de production (une seule branche),
-la dette des ménages. Chacun peut revenir comme un bloc, si un professionnel dit qu'il change le classement des règles.
+**Les ménages** dépensent selon le revenu réel qu'ils attendent, net de ce que l'inflation ôte à leur richesse
+(GROWTH 11.53 à 11.55), et selon cette richesse ; ils la partagent entre dépôts et obligations selon l'écart de taux.
+
+**Les stabilisateurs automatiques sont dans la structure** : les impôts proportionnels, les recettes propres et les
+prestations chômage. Ils jouent sans que personne décide, et c'est la règle R0 (§ 6).
+
+**Les leviers et les chocs sont des variables externes** : le taux directeur `rcb`, la part des achats `gshare`,
+le taux sur les salaires `tauw`, le taux de remplacement `rr`, l'indexation `idx`, le bouclier `shield` ;
+les chocs `eshock` (le prix de l'énergie), `pmshock` (les prix importés), `xshock` (la demande étrangère),
+`conf` (la confiance), `lock` (la consommation impossible), `wpush` et `mpush` (les revendications des salariés
+et des entreprises). Les familles de crises (§ 7) les tireront par graine, à J4.
+
+**Ce qui reste hors du modèle au départ** : les marchés financiers et le prix des actifs, les actions, le logement (d'où
+l'épargne des ménages, § 4), les inégalités entre ménages (un seul ménage représentatif), les secteurs de production
+(une seule branche), la dette des ménages, les capitaux étrangers (personne dehors ne détient notre dette, H), le
+chômage partiel (il viendra avec la pandémie). Chacun peut revenir comme un bloc, si un professionnel dit qu'il change
+le classement des règles.
 
 ## 4. La calibration : ce qu'ÉCO doit retrouver
 
@@ -151,31 +168,54 @@ retrouve ces ratios (2024), et on le vérifie par des tests :
 
 | Ratio de départ | Valeur | D'où |
 |---|---|---|
-| Dette publique | 113 % du PIB annuel | Insee, comptes 2024 (113,2 % après révision) |
+| Dette publique | 113 % du PIB annuel | Insee, comptes 2024 (113,2 %, puis 112,6 % après révision) |
 | Déficit public | 5,8 % du PIB | Insee |
-| Dépense publique | 57 % du PIB | Insee (57,2 %) |
-| Prélèvements obligatoires | 43 % du PIB | Insee (42,8 %) |
+| Dépense publique | 57,2 % du PIB | Insee ; ÉCO en finance 8,6 points par des recettes propres (ventes, revenus de la propriété) |
+| Prélèvements obligatoires | 42,8 % du PIB | Insee |
+| Charge d'intérêts | 2,0 % du PIB | Insee |
 | Chômage | 7,4 % de la population active | Insee, moyenne 2024 |
-| Taux d'épargne des ménages | 18 % du revenu disponible | Banque de France 17,7 %, Insee 18,5 % au T4 |
 | Retraites | 14 % du PIB | COR (14,1 % en 2025) |
-| Emploi marchand sous contrôle étranger | 13 % | Insee, 2022 |
-| Importations | un tiers du PIB, dont l'énergie : à trouver | **H** (Q-P1) |
+| Exportations, importations | 33,8 % et 34,3 % du PIB | OCDE ; Insee (999 Md€ d'importations) |
+| Dont l'énergie | 2,0 % du PIB | SDES : facture de 57,8 Md€ |
+| Solde courant | +0,4 % du PIB | OFCE (l'excédent de 2024 ; le chiffre est à relire) |
+| Crédits aux entreprises | 46,6 % du PIB annuel | Banque de France : 1 360 Md€ |
+| Emploi marchand sous contrôle étranger | 13 % : la part des dividendes qui sort | Insee, 2022 |
 | Inflation de départ | 2 % l'an | la cible de la BCE |
+| Le reste : les achats publics (28 %), l'investissement des entreprises (13 %), les impôts sur les produits (10 %), les salaires (52 %), le capital (2,25 ans de PIB), les retraités (17 millions)… | | **H**, dans `src/eco/targets.js`, à sourcer |
+
+`src/eco/calibrate.js` en déduit le trimestre de départ (PIB 100, prix 1) et, pour chaque comportement, le paramètre
+qui le fait tenir au départ : la propension à consommer (0,83), la marge (44 %, qui paie aussi l'amortissement et le
+revenu des indépendants), la part des profits versée en dividendes (72 %)… `tests/eco.test.js` retrouve tous les
+ratios du tableau à 1e-9 au trimestre de départ, et les voit à peine bouger le trimestre suivant.
+
+**Le taux d'épargne des ménages** : 11,3 % de leur revenu, et non les 18 % de l'Insee, parce que les ménages d'ÉCO
+n'ont pas de logement à acheter (9 points du revenu en France) : toute leur épargne est financière. Le chiffre à
+comparer est le taux d'épargne financière, 9,3 % en 2024 (Banque de France) ; ÉCO en a 2 points de plus, parce que ses
+ménages prêtent seuls ce que l'État et les entreprises empruntent (les sociétés financières n'y sont pas).
 
 **L'état de départ n'est pas stationnaire** : un déficit de 5,8 % avec une dette de 113 % fait monter la dette. C'est
-voulu, c'est la France ; mais une mesure doit alors comparer deux politiques à la même dérive. La variante
-stationnaire (le déficit qui stabilise la dette) sert aux tests (Sami, 6/11, Q-S2).
+voulu, c'est la France ; mais une mesure doit alors comparer deux politiques à la même dérive. Sans rien décider, ÉCO
+finit ses dix ans à 133 % de dette, avec une charge d'intérêts passée de 2,0 à 3,4 % du PIB (le coupon moyen rejoint le
+taux long de 3 %) et des retraites descendues de 14 à 12,6 % (indexées sur les prix, quand les salaires suivent aussi
+la productivité). La variante stationnaire (le déficit qui stabilise la dette) servira aux tests (Sami, 6/11, Q-S2).
 
-**Les comportements à retrouver**, en tests de calibration, chacun avec sa tolérance (H) :
+**Les comportements à retrouver**, en tests de calibration, chacun avec sa tolérance (H), et ce qu'ÉCO donne (J3,
+9/11) :
 
-| Test | La cible | Tolérance |
-|---|---|---|
-| Semi-élasticité du solde public à l'écart de production | 0,63 (France, Mourre et Poissonnier 2019) | 0,5 à 0,75 |
-| Coefficient d'Okun (chômage contre croissance) | entre −0,40 et −0,12 (méta-analyse de Tavéra, Perman et Stephan 2016, 522 estimations) | dans l'intervalle |
-| Multiplicateur d'une hausse de G, à un an, chômage haut | au-dessus de 1 (Blanchard et Leigh 2013) | 1 à 2 |
-| Multiplicateur à un an, plein emploi | sous celui du chômage haut | le sens de l'écart |
-| Le choc de 2022 sous R0 (§ 7) | un pic d'inflation de l'ordre de 7 à 10 % l'an (France 7,3 %, zone euro 10,6 %) | l'ordre de grandeur |
-| La pandémie de 2020 sous R0 et le chômage partiel | une chute du PIB annuel de l'ordre de 8 % (Insee : −7,9 %) | 6 à 10 % |
+| Test | La cible | Tolérance | ÉCO |
+|---|---|---|---|
+| Semi-élasticité du solde public à l'écart de production | 0,63 (France, Mourre et Poissonnier 2019) | 0,5 à 0,75 | **0,51**, une baisse de confiance au trimestre 4, lue un an plus tard |
+| Coefficient d'Okun (chômage contre croissance) | entre −0,40 et −0,12 (méta-analyse de Tavéra, Perman et Stephan 2016, 522 estimations) | dans l'intervalle | **−0,28** |
+| Multiplicateur d'une hausse de G, à un an, chômage haut | au-dessus de 1 (Blanchard et Leigh 2013) | 1 à 2 | **1,16** (1 point de PIB pendant un an) |
+| Multiplicateur à un an, plein emploi | sous celui du chômage haut | le sens de l'écart | **0,63**, le chômage à 5,6 % |
+| Le choc de 2022 sous R0 (§ 7) | un pic d'inflation de l'ordre de 7 à 10 % l'an (France 7,3 %, zone euro 10,6 %) | l'ordre de grandeur | **9,1 %**, l'énergie deux fois plus chère pendant deux ans et les autres importations 10 % plus chères (H) |
+| La pandémie de 2020 sous R0 | une chute du PIB annuel de l'ordre de 8 % (Insee : −7,9 %) | 6 à 10 % | **−6,5 %**, la consommation et les exportations empêchées trimestre par trimestre, à peu près comme en 2020 (H) |
+
+**Ce que le modèle manque** : sous le choc de 2022, le chômage monte de 7,4 à 9,7 %, quand il a baissé en France. Sans
+bouclier (R0), l'inflation ronge le revenu réel et la richesse des ménages, qui dépensent moins ; la France avait le
+bouclier, et des entreprises qui gardaient leurs salariés. C'est à regarder avec un professionnel (Q-P11, Q-P17). Le
+multiplicateur au plein emploi tient à une hypothèse : les importations prennent la demande que les salariés, devenus
+rares, ne servent plus (Q-P6).
 
 Ce sont des ajustements, pas des preuves : un modèle à une branche retrouve un chiffre agrégé par plusieurs chemins. On
 le dit chaque fois. Si deux cibles se contredisent, on garde les deux et on dit laquelle le modèle manque.
@@ -338,7 +378,7 @@ pour cela.
 - **la recherche exploite le modèle** : d'où le témoin du modèle décalé (§ 8) ;
 - **elle optimise ce qu'on lui donne** : avec des poids, elle trouve un compromis, pas « la » politique. D'où la
   frontière, et les objectifs rapportés séparément ;
-- **le coût** : un trimestre d'ÉCO résout une cinquantaine d'équations (H : quelques microsecondes). Un plan noté, c'est
+- **le coût** : un trimestre d'ÉCO résout une centaine d'équations, en 6 µs matrices vérifiées comprises (mesuré le 9/11). Un plan noté, c'est
   K × 12 = 192 trimestres ; 2 000 plans par décision, 40 décisions par graine : de l'ordre de la minute par graine
   (C, à mesurer au banc). Les séries passent par la file, en jobs d'un fil, avec `progress`.
 
@@ -386,7 +426,7 @@ indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le
 |---|---|---|
 | **J1** (fait le 6/11) | SIM : les équations, la résolution, les deux matrices, la page et son Sankey | les tests de SIM passent (§ 8) ; la première empreinte ; le changelog |
 | **J2** (fait le 9/11) | PC : les bons, la banque centrale, le taux ; SIMEX et PCEX en tests | l'état stationnaire calculé et les trajectoires de `sfcr` retrouvés |
-| **J3** | ÉCO au trimestre : le travail, les prix, les entreprises, les banques, le reste du monde ; chaque bloc rejoué dans son modèle d'origine | les ratios de départ et les tests de calibration du § 4 |
+| **J3** (fait le 9/11) | ÉCO au trimestre : le travail, les prix, les entreprises, les banques, le reste du monde ; chaque bloc rejoué dans son modèle d'origine | les ratios de départ et les tests de calibration du § 4 |
 | **J4** | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Sami, 6/11, Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
 | **J5** | le réglage des règles sur les graines d'apprentissage | R1\* et R2s\* mesurées contre les règles des manuels |
 | **J6** | la recherche à horizon glissant : l'escalade, puis le faisceau ; le banc (`npm run bench`) | elle bat la meilleure règle réglée selon le seuil du § 8, ou on sait pourquoi pas ; le témoin du modèle décalé |
