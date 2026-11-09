@@ -39,24 +39,50 @@
  */
 
 /**
- * @typedef {{
- *   params?: SimParams,
- *   periods?: number,
- *   start?: "zero" | "steady",
- *   changes?: Array<{ at: number } & Partial<SimParams>>,
- * }} SimRunOptions
+ * PC's parameters (Godley and Lavoie, ch. 4): SIM's without the wage, the three coefficients of the households'
+ * portfolio choice, and the rate on bills the central bank sets.
+ *
+ * @typedef {{ G: number, alpha1: number, alpha2: number, theta: number, lambda0: number, lambda1: number,
+ *   lambda2: number, r: number }} PcParams
  */
 
 /**
- * A run of SIM: every state, period 0 the start, and the parameters of each period (`plan[0]` the start's).
+ * A model the runner takes (src/sfc/run.js): its variables and their indices, its book values, its matrices, and its
+ * functions: the check of the parameters, the empty state, the stationary state, a step in place.
  *
  * @typedef {{
+ *   name: string,
+ *   VARS: readonly string[],
+ *   V: Readonly<Record<string, number>>,
+ *   DEFAULTS: Readonly<Record<string, number>>,
+ *   SPEC: LedgerSpec,
+ *   assertParams: (params: any) => void,
+ *   emptyState: () => Float64Array,
+ *   steadyState: (params: any) => Float64Array,
+ *   step: (params: any, state: Float64Array) => void,
+ * }} Model
+ */
+
+/**
+ * @typedef {{
+ *   params?: Record<string, number>,
+ *   periods?: number,
+ *   start?: "zero" | "steady",
+ *   changes?: Array<{ at: number } & Record<string, number>>,
+ * }} RunOptions
+ */
+
+/**
+ * A run of a model: every state, period 0 the start, and the parameters of each period (`plan[0]` the start's).
+ *
+ * @typedef {{
+ *   model: Model,
  *   periods: number,
- *   plan: SimParams[],
+ *   plan: Array<Record<string, number>>,
  *   states: Float64Array,
  *   state: (t: number) => Float64Array,
  *   series: (name: string) => Float64Array,
- * }} SimRun
+ * }} ModelRun
  */
 
 export {};

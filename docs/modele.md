@@ -106,12 +106,20 @@ veulent pas, et émet la monnaie en face. **Le taux des bons est le premier levi
 | `Bs = Bs₋₁ + G + r₋₁ · Bs₋₁ − T − r₋₁ · Bcb₋₁` | la dette de l'État ; les intérêts versés à la banque centrale lui reviennent |
 | `Bcb = Bs − Bh`, `Hs = Hs₋₁ + Bcb − Bcb₋₁` | la banque centrale prend le reste |
 
-Les valeurs : celles de SIM, plus `λ0 = 0,635`, `λ1 = 5`, `λ2 = 0,01` (MacroStat), et `r = 0,025` (lu dans un extrait seulement,
-à vérifier contre `sfcr` au J2). L'équation cachée : `Hh = Hs`.
+Les valeurs : celles de SIM, plus `λ0 = 0,635`, `λ1 = 5`, `λ2 = 0,01` et `r = 0,025` (MacroStat,
+`src/macrostat/models/GL06PC/parameters.py` et `scenarios.py`, lus le 9/11 ; la vignette PC de `sfcr` donne aussi
+`r = 0,025` et le choc à 0,035, mais écrit `λ1 = 0,05`, sans doute une coquille : un point de taux n'y déplacerait
+que 0,05 point de la part des bons ; à vérifier un jour dans le tableau 4.4 du livre). L'équation cachée : `Hh = Hs`.
+L'état stationnaire, calculé à la main : `Y* = 106,49` (`YD* = 16 / 0,185`), 75 % de la richesse en bons.
 
-**Ce qu'il montre** : monter le taux freine d'abord, puis peut relever le revenu à long terme, parce que l'État verse
-plus d'intérêts aux ménages. Le livre le discute ; on le retrouve par le calcul de l'état stationnaire (un test), avant
-de le voir à la page.
+**Ce qu'il montre** (J2, 9/11) : monter le taux de 2,5 % à 3,5 % **relève** le revenu, de 106,49 à 110,09, dès la
+période d'après (l'intérêt se paie au taux d'avant) : les ménages tiennent plus de bons, l'État leur verse plus
+d'intérêts, et ils les dépensent. Le frein n'apparaît que si la propension à consommer baisse avec le taux
+(`α1 = α10 − ι · r₋₁`, le PCEX2 du livre, le PCEX3 de la vignette de `sfcr`) : c'est pour ÉCO, pas pour PC.
+
+**Ses variantes** : SIMEX et PCEX (le PCEX1 du livre, le PCEX2 de `sfcr`), où les ménages dépensent le revenu qu'ils
+attendent, celui de la période d'avant ; la monnaie absorbe la surprise. Le PCEX du livre ajoute une erreur aléatoire
+à cette attente : elle viendra, tirée d'une graine, avec les crises.
 
 ### M2 — ÉCO : l'économie d'un État, au trimestre
 
@@ -284,13 +292,15 @@ rapporte toujours avec `paired`. Un écrémage rapide rejette, il ne promeut jam
 |---|---|---|
 | SIM, état stationnaire | `Y* = G / θ = 100`, puis 125 à `G = 25` (MacroStat, figure SIM.3) | 1e-9 |
 | SIM, la montée à `G = 30` | 119,23, 123,96… : `(30 + 0,4 · 80) / 0,52`, puis la suite ; le README de `sfcr` imprime 119, 124, 128, 131, 134, 137 | 1e-9 sur nos calculs, l'arrondi sur l'imprimé |
-| SIM, la consommation accrue (SIMEX) | la trajectoire de `sfcr` | 1e-6 |
-| PC, l'état stationnaire, et la hausse du taux | le calcul de l'état stationnaire ; la trajectoire de `sfcr` | 1e-6 |
+| SIM et SIMEX, la consommation accrue, la dépense à 25 | la trajectoire de `sfcr` | 1e-9 (mesuré : 2e-13) |
+| PC et PCEX, l'état stationnaire, et la hausse du taux | le calcul de l'état stationnaire ; la trajectoire de `sfcr` | 1e-9 (mesuré : 9e-13) |
 | LP, OPEN, BMW, DISINF, GROWTH | chaque bloc d'ÉCO, rejoué d'abord dans son modèle d'origine | 1e-6 |
 
 **Les trajectoires de référence** viennent de `sfcr` (ou de MacroStat), tirées une fois et gardées en CSV dans
-`tests/fixtures/`, avec la version du paquet. Sami a choisi R et `sfcr` (6/11, Q-S7) : R s'installe une fois, au J2 ;
-d'ici là, les valeurs calculées à la main et celles qu'imprime le README.
+`tests/fixtures/`, avec la version du paquet. Sami a choisi R et `sfcr` (6/11, Q-S7) : R 4.6.2 et `sfcr` 0.2.3
+sont installés depuis le 9/11, pour son seul compte ; `scripts/reference/sfcr.R` écrit les huit trajectoires de
+`tests/fixtures/sfcr/` (SIM, SIMEX, PC et PCEX, chacun depuis l'économie vide et après un choc), et
+`tests/reference.test.js` les retrouve **à 1e-12 près** (la tolérance du test : 1e-9).
 
 **Se comparer à la littérature, sur les politiques.** Il n'y a pas de banc public de « politiques contre crises » comme
 RESCO pour les feux. On compare donc des tendances, pas des chiffres : la règle de Taylor stabilise mieux que rien face
@@ -371,7 +381,7 @@ indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le
 | Jalon | Ce qu'il livre | Il est fini quand |
 |---|---|---|
 | **J1** (fait le 6/11) | SIM : les équations, la résolution, les deux matrices, la page et son Sankey | les tests de SIM passent (§ 8) ; la première empreinte ; le changelog |
-| **J2** | PC : les bons, la banque centrale, le taux ; SIMEX et PCEX en tests | l'état stationnaire calculé et les trajectoires de `sfcr` retrouvés |
+| **J2** (fait le 9/11) | PC : les bons, la banque centrale, le taux ; SIMEX et PCEX en tests | l'état stationnaire calculé et les trajectoires de `sfcr` retrouvés |
 | **J3** | ÉCO au trimestre : le travail, les prix, les entreprises, les banques, le reste du monde ; chaque bloc rejoué dans son modèle d'origine | les ratios de départ et les tests de calibration du § 4 |
 | **J4** | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Sami, 6/11, Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
 | **J5** | le réglage des règles sur les graines d'apprentissage | R1\* et R2s\* mesurées contre les règles des manuels |

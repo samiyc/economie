@@ -45,7 +45,10 @@ Its line in the roadmap: `mcts-commun/docs/feuille-de-route.md`, § 2.C. Start t
 - **The fingerprints** (`tests/fingerprint.test.js`): a hash of what each model does. A refactor changes none; a change
   meant to alter a model updates its hash and says so in the commit, with the measures before and after.
 - **The ledger** (`src/sfc/ledger.js`): every run checks both matrices and the hidden equation each period, to 1e-9;
-  a model that leaks throws. A new model brings its matrices (`src/sim/ledger.js` is the pattern).
+  a model that leaks throws. A new model brings its matrices (`src/sim/ledger.js` is the pattern) and joins
+  `src/models.js`, which the runner (`src/sfc/run.js`) and the page take it from.
+- **The reference trajectories** (`tests/reference.test.js`): sfcr's, solved once by `scripts/reference/sfcr.R` (R and
+  sfcr installed for Sami's account, 9/11) and kept in `tests/fixtures/sfcr/`; a model of the book is retraced to 1e-9.
 - **The page**: `npm run page` (`mcts-commun`'s `serve.js`, port 4807, 4800 to 4807 are the projects'), then
   http://127.0.0.1:4807/web/. `mcts-commun/web/theme.css` first, then `web/style.css`: the Khaki of Notepad++, as
   Sami prefers, light in both modes. The colours of a chart are checked on the panel (`#e8e8cd`) before use.

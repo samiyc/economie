@@ -1,18 +1,15 @@
 import { amount, svg } from "./labels.js";
 
 /**
- * The run's curves on one axis, all in units of money: the income Y, the consumption C, the households' money H, and
- * the income the model goes to, G / θ, dashed. Violet, magenta, green: checked on the Khaki panel; magenta falls
- * under 3:1, so each curve is named at its end and in the legend, and the tooltip gives every value at a period.
- * A vertical line marks the period the page shows; a click goes to the period under the pointer.
+ * The run's curves on one axis, all in units of money, the page's choice of them (web/pages.js), and the income the
+ * model goes to, dashed: its stationary state under the policy of each period. Violet, magenta, green: checked on the
+ * Khaki panel; magenta falls under 3:1, so each curve is named at its end, and the tooltip gives every value at a
+ * period. A vertical line marks the period the page shows; a click goes to the period under the pointer.
+ *
+ * @typedef {{ key: string, name: string, colour: string }} Curve
  */
 
-export const CURVES = [
-  { key: "Y", name: "Revenu Y", colour: "#6250d6" },
-  { key: "C", name: "Consommation C", colour: "#e87ba4" },
-  { key: "Hh", name: "Monnaie des ménages H", colour: "#008300" },
-];
-export const TARGET = { name: "Cible G / θ", colour: "#4d4d00", dashed: true };
+const TARGET = { colour: "#4d4d00", dashed: true };
 
 const VIEW = { width: 760, height: 260, left: 46, right: 150, top: 12, bottom: 28 };
 
@@ -61,14 +58,15 @@ function placeLabels(group, labels) {
   }
 }
 
-/** The values of every curve at period `t`, for the tooltip. */
-function readout(series, target, t) {
-  return [...CURVES.map((c) => [c, series[c.key][t]]), [TARGET, target[t]]];
+/** The values of every curve at period `t`, for the tooltip, the target's if it has one. */
+function readout({ curves, series, target, goal }, t) {
+  const rows = curves.map((c) => [c, series[c.key][t]]);
+  return Number.isFinite(goal[t]) ? [...rows, [{ ...TARGET, name: target }, goal[t]]] : rows;
 }
 
 /** The tooltip at period `t`: the period, then each value, a short stroke of its colour before it. */
-function fillTooltip(tooltip, series, target, t) {
-  const rows = readout(series, target, t).map(([{ name, colour }, value]) => {
+function fillTooltip(tooltip, data, t) {
+  const rows = readout(data, t).map(([{ name, colour }, value]) => {
     const row = document.createElement("div");
     const key = document.createElement("span");
     key.className = "key";
@@ -85,7 +83,7 @@ function fillTooltip(tooltip, series, target, t) {
 
 /** The crosshair, the tooltip and the click that seeks, over the plot. */
 function hover(target, tooltip, { x }, data) {
-  const { series, goal, periods, onSeek } = data;
+  const { periods, onSeek } = data;
   const hair = svg("line", { y1: VIEW.top, y2: VIEW.height - VIEW.bottom, class: "hair", visibility: "hidden" });
   target.append(hair);
   const periodAt = (event) => {
@@ -98,7 +96,7 @@ function hover(target, tooltip, { x }, data) {
     hair.setAttribute("x1", String(x(t)));
     hair.setAttribute("x2", String(x(t)));
     hair.setAttribute("visibility", "visible");
-    fillTooltip(tooltip, series, goal, t);
+    fillTooltip(tooltip, data, t);
     tooltip.hidden = false;
     tooltip.style.left = `${(x(t) / VIEW.width) * 100}%`;
   };
@@ -114,17 +112,19 @@ function hover(target, tooltip, { x }, data) {
  *
  * @param {SVGSVGElement} target
  * @param {HTMLElement} tooltip
- * @param {{ series: Record<string, Float64Array>, goal: Float64Array, periods: number, t: number, onSeek: (t: number) => void }} data
+ * @param {{ curves: Curve[], series: Record<string, Float64Array>, target: string, goal: Float64Array, periods: number,
+ *   t: number, onSeek: (t: number) => void }} data
  */
 export function drawCurves(target, tooltip, data) {
-  const { series, goal, periods, t } = data;
+  const { curves, series, goal, periods, t } = data;
   target.replaceChildren();
   target.setAttribute("viewBox", `0 0 ${VIEW.width} ${VIEW.height}`);
-  const top = niceTop(Math.max(...CURVES.map((c) => Math.max(...series[c.key])), ...goal));
+  const reached = goal.every(Number.isFinite);
+  const top = niceTop(Math.max(...curves.map((c) => Math.max(...series[c.key])), ...(reached ? goal : [])));
   const scale = scales(periods, top);
   grid(target, scale, periods, top);
-  const labels = CURVES.map((c) => curve(target, scale, series[c.key], c));
-  labels.push(curve(target, scale, goal, TARGET));
+  const labels = curves.map((c) => curve(target, scale, series[c.key], c));
+  if (reached) labels.push(curve(target, scale, goal, { ...TARGET, name: data.target }));
   placeLabels(target, labels);
   target.append(svg("line", { x1: scale.x(t), x2: scale.x(t), y1: VIEW.top, y2: VIEW.height - VIEW.bottom, class: "now" }));
   hover(target, tooltip, scale, data);

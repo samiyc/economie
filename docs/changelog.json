@@ -4,6 +4,19 @@
   "intro": "L'économie d'un État en simulation, pour en comprendre les mécanismes : ses secteurs, la monnaie qui passe de l'un à l'autre, les leviers et les crises. Un modèle pour comprendre, pas pour prévoir.",
   "versions": [
     {
+      "version": "0.2.0",
+      "title": "PC : la banque centrale, les bons et le taux",
+      "date": "9/11/2026",
+      "commits": [],
+      "items": [
+        "PC, le modèle du chapitre 4 de Godley et Lavoie : une banque centrale arrive, l'État émet des bons, les ménages partagent leur richesse entre monnaie et bons selon le taux, et la banque centrale prend les bons qu'ils laissent.",
+        "Monter le taux de 2,5 % à 3,5 % relève le revenu, de 106,5 à 110,1 : l'État verse plus d'intérêts aux ménages, qui les dépensent. Le calcul à la main de l'état stationnaire le prévoit, la simulation le retrouve.",
+        "SIMEX et PCEX : les mêmes économies quand les ménages dépensent le revenu qu'ils attendent ; leur monnaie absorbe la surprise.",
+        "Les quatre modèles retrouvent, à 10^−12 près, les trajectoires que calcule le paquet sfcr, installé pour l'occasion avec R.",
+        "La page : le choix du modèle, un curseur sur le taux, la banque centrale dans le diagramme des flux et dans les matrices, et la cible du revenu, son état stationnaire."
+      ]
+    },
+    {
       "version": "0.1.0",
       "title": "SIM, le premier modèle de Godley et Lavoie",
       "date": "6/11/2026",

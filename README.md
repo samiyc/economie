@@ -6,7 +6,7 @@ fort, conflit sur des matières premières, rachat d'entreprises, inflation, pan
 
 Client de [`mcts-commun`](../mcts-commun/README.md). La recherche sera choisie par la mesure, contre les stabilisateurs automatiques et une règle de Taylor.
 
-**État** (6/11/2026) : J1 est fait. SIM, le premier modèle de Godley et Lavoie, tourne et retrouve les chiffres publiés ; ses deux matrices et l'équation cachée sont vérifiées à chaque période. La page (`npm run page`, puis http://127.0.0.1:4807/web/) montre ses flux en diagramme de Sankey, ses matrices et ses courbes. Le cadrage : [`docs/modele.md`](docs/modele.md) (SIM, PC puis ÉCO, les crises, les règles à battre, les mesures) et [`docs/recherche/`](docs/recherche/README.md) (les chiffres et leurs sources, le glossaire, les questions, le prompt de recherche).
+**État** (9/11/2026) : J2 est fait. SIM et PC, les deux premiers modèles de Godley et Lavoie, et leurs variantes au revenu anticipé (SIMEX, PCEX), tournent et retrouvent les trajectoires du paquet `sfcr` à 1e-12 près ; leurs deux matrices et l'équation cachée sont vérifiées à chaque période. La page (`npm run page`, puis http://127.0.0.1:4807/web/) montre, au choix du modèle, ses flux en diagramme de Sankey, ses matrices et ses courbes. Le cadrage : [`docs/modele.md`](docs/modele.md) (SIM, PC puis ÉCO, les crises, les règles à battre, les mesures) et [`docs/recherche/`](docs/recherche/README.md) (les chiffres et leurs sources, le glossaire, les questions, le prompt de recherche).
 
 ## Les commandes
 
@@ -17,5 +17,7 @@ Client de [`mcts-commun`](../mcts-commun/README.md). La recherche sera choisie p
 | `npm run lint` (`lint:fix`) | eslint, avec le budget de complexité de lopin |
 | `npm run types` | tsc vérifie le JavaScript d'après ses commentaires JSDoc, sans rien compiler |
 | `npm test` (`test:coverage`) | les tests de `node --test`, dont la longueur des `.md` |
+| `npm run page` | la page, sur http://127.0.0.1:4807/web/ |
+| `Rscript scripts/reference/sfcr.R` | réécrit les trajectoires de référence de `tests/fixtures/sfcr/` (R et `sfcr` installés) |
 
 Les règles du dépôt sont dans [`CLAUDE.md`](CLAUDE.md).
