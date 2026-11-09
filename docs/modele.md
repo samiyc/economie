@@ -142,8 +142,12 @@ leurs deux matrices (`src/eco/matrices.js`). Chaque bloc vient d'un modèle du l
 taux pèse donc sur la charge d'intérêts peu à peu, comme en France ; les obligations perpétuelles de LP auraient
 réévalué toute la dette à chaque mouvement du taux.
 
-**Les ménages** dépensent selon le revenu réel qu'ils attendent, net de ce que l'inflation ôte à leur richesse
-(GROWTH 11.53 à 11.55), et selon cette richesse ; ils la partagent entre dépôts et obligations selon l'écart de taux.
+**Les ménages** dépensent selon le revenu réel qu'ils attendent, net de ce que l'inflation attendue ôte à leur
+richesse (GROWTH 11.53 à 11.55), et selon cette richesse ; leur propension à consommer baisse quand le taux réel monte
+(le PCEX2 du livre, 0,005 par point, H, Q-P4) ; ils partagent leur richesse entre dépôts et obligations selon l'écart
+de taux. **Le taux réel** que lisent les ménages et les entreprises est attendu : le taux nominal moins l'inflation
+attendue (J4, 9/11). Mesurée sur l'inflation du trimestre, une crise de l'énergie faisait tomber le taux réel à −8 %
+et la richesse réelle de six points par trimestre, et le modèle divergeait.
 
 **Les stabilisateurs automatiques sont dans la structure** : les impôts proportionnels, les recettes propres et les
 prestations chômage. Ils jouent sans que personne décide, et c'est la règle R0 (§ 6).
@@ -206,16 +210,17 @@ la productivité). La variante stationnaire (le déficit qui stabilise la dette)
 |---|---|---|---|
 | Semi-élasticité du solde public à l'écart de production | 0,63 (France, Mourre et Poissonnier 2019) | 0,5 à 0,75 | **0,51**, une baisse de confiance au trimestre 4, lue un an plus tard |
 | Coefficient d'Okun (chômage contre croissance) | entre −0,40 et −0,12 (méta-analyse de Tavéra, Perman et Stephan 2016, 522 estimations) | dans l'intervalle | **−0,28** |
-| Multiplicateur d'une hausse de G, à un an, chômage haut | au-dessus de 1 (Blanchard et Leigh 2013) | 1 à 2 | **1,16** (1 point de PIB pendant un an) |
-| Multiplicateur à un an, plein emploi | sous celui du chômage haut | le sens de l'écart | **0,63**, le chômage à 5,6 % |
-| Le choc de 2022 sous R0 (§ 7) | un pic d'inflation de l'ordre de 7 à 10 % l'an (France 7,3 %, zone euro 10,6 %) | l'ordre de grandeur | **9,1 %**, l'énergie deux fois plus chère pendant deux ans et les autres importations 10 % plus chères (H) |
-| La pandémie de 2020 sous R0 | une chute du PIB annuel de l'ordre de 8 % (Insee : −7,9 %) | 6 à 10 % | **−6,5 %**, la consommation et les exportations empêchées trimestre par trimestre, à peu près comme en 2020 (H) |
+| Multiplicateur d'une hausse de G, à un an, chômage haut | au-dessus de 1 (Blanchard et Leigh 2013) | 1 à 2 | **1,10** (1 point de PIB pendant un an) |
+| Multiplicateur à un an, plein emploi | sous celui du chômage haut | le sens de l'écart | **0,79**, le chômage à 5,5 % |
+| Une hausse d'un point du taux directeur | l'activité freinée en 2 à 6 trimestres, les prix plus tard (Q-P4) | PIB −0,5 à −1,5 % | **−1,0 %** au 4e trimestre ; les prix −0,1 % en deux ans, −0,5 % en cinq |
+| Le choc de 2022 sous R0 (§ 7) | un pic d'inflation de l'ordre de 7 à 10 % l'an (France 7,3 %, zone euro 10,6 %) | l'ordre de grandeur | **9,5 %**, l'énergie deux fois plus chère pendant deux ans et les autres importations 10 % plus chères (H) |
+| La pandémie de 2020 sous R0 | une chute du PIB annuel de l'ordre de 8 % (Insee : −7,9 %) | 6 à 10 % | **−6,8 %**, la consommation et les exportations empêchées trimestre par trimestre, à peu près comme en 2020 (H) |
 
-**Ce que le modèle manque** : sous le choc de 2022, le chômage monte de 7,4 à 9,7 %, quand il a baissé en France. Sans
-bouclier (R0), l'inflation ronge le revenu réel et la richesse des ménages, qui dépensent moins ; la France avait le
-bouclier, et des entreprises qui gardaient leurs salariés. C'est à regarder avec un professionnel (Q-P11, Q-P17). Le
-multiplicateur au plein emploi tient à une hypothèse : les importations prennent la demande que les salariés, devenus
-rares, ne servent plus (Q-P6).
+**Ce que le modèle manque encore** : sous le choc de 2022, le chômage monte un peu (de 7,4 à 7,8 %), quand il a baissé
+en France (au J3, il montait à 9,7 % : les ménages comptaient la perte de leur richesse à l'inflation du trimestre,
+non à celle qu'ils attendent). Le multiplicateur au plein emploi tient à une hypothèse : les importations prennent la
+demande que les salariés, devenus rares, ne servent plus (Q-P6) ; le taux nominal fixe de R0 la tempère, l'inflation
+du plein emploi baissant le taux réel.
 
 Ce sont des ajustements, pas des preuves : un modèle à une branche retrouve un chiffre agrégé par plusieurs chemins. On
 le dit chaque fois. Si deux cibles se contredisent, on garde les deux et on dit laquelle le modèle manque.
@@ -253,6 +258,9 @@ faible.
 coupe la dépense au pire moment. Le modèle doit le montrer (c'est le constat 4) : si R2n bat R2s en récession, le
 modèle ou la mesure a un défaut.
 
+**Mesurées au J4** (9/11) : les règles telles que `src/policy/rules.js` les écrit, leurs bornes et leurs délais, et
+leurs paires sur 1 000 crises par famille, dans [`regles.md`](regles.md).
+
 **Les règles sont réglées, pas tirées du chapeau** (J5) : leurs coefficients (les 0,5 de Taylor, la vitesse de la règle
 de déficit) passent par l'escalade de la lib (`createClimb`), sur des **graines d'apprentissage**, jamais sur celles
 de la mesure. On rapporte les deux : la règle des manuels, et la même règle réglée (R1\*, R2s\*). La recherche du § 9
@@ -273,6 +281,10 @@ niveaux de demande des feux.
 | **L'inflation** | les salariés visent un salaire réel plus haut, ou les entreprises une marge plus haute : la spirale prix-salaires | 2022-2023 (Q-P2) | casser la spirale sans casser l'emploi |
 | **La pandémie** | pendant 1 à 3 trimestres, une part de la production est impossible et la consommation est forcée vers le bas ; puis le rebond | 2020 : −7,9 % de PIB (Insee) | soutenir les revenus (chômage partiel) sans emballer la dette ni l'inflation du rebond |
 | **Le papy-boom** | le rapport actifs sur retraités passe de 2,5 à 1,6 en 40 ans ; la population active baisse, les retraites montent | COR 2026 : 2,5 en 2025, 1,62 en 2070 | qui paie : les actifs, les retraités ou la dette ; sur 160 trimestres |
+
+**Écrites au J4** (9/11, `src/crises/families.js`) : le calme, le chômage fort et les matières premières, leurs
+fourchettes dans [`regles.md`](regles.md), § 1 ; les autres familles viendront avec leurs leviers (la pandémie et le
+chômage partiel, les entreprises parties, la spirale, le papy-boom).
 
 **Les tirages** : un flux par usage, `streamOf(graine, k)` de la lib : un pour la crise, un pour le bruit de demande, un
 pour la recherche. Deux règles comparées sur une graine voient la même crise, au même trimestre, avec le même bruit.
@@ -430,7 +442,7 @@ indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le
 | **J1** (fait le 6/11) | SIM : les équations, la résolution, les deux matrices, la page et son Sankey | les tests de SIM passent (§ 8) ; la première empreinte ; le changelog |
 | **J2** (fait le 9/11) | PC : les bons, la banque centrale, le taux ; SIMEX et PCEX en tests | l'état stationnaire calculé et les trajectoires de `sfcr` retrouvés |
 | **J3** (fait le 9/11) | ÉCO au trimestre : le travail, les prix, les entreprises, les banques, le reste du monde ; chaque bloc rejoué dans son modèle d'origine | les ratios de départ et les tests de calibration du § 4 |
-| **J4** | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Sami, 6/11, Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
+| **J4** (fait le 9/11) | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Sami, 6/11, Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
 | **J5** | le réglage des règles sur les graines d'apprentissage | R1\* et R2s\* mesurées contre les règles des manuels |
 | **J6** | la recherche à horizon glissant : l'escalade, puis le faisceau ; le banc (`npm run bench`) | elle bat la meilleure règle réglée selon le seuil du § 8, ou on sait pourquoi pas ; le témoin du modèle décalé |
 | **J7** | deux États, la guerre commerciale, l'ISMCTS | à cadrer à son tour |

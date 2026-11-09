@@ -38,6 +38,10 @@ modèle fera. Une réponse quitte cette liste et va, avec sa date, dans [`chiffr
   leur valeur faciale, le coupon moyen suivant le taux long à mesure que la dette se renouvelle ; les hypothèses de
   calibration dans `src/eco/targets.js`, chacune avec sa question (les importations des achats publics et le
   plein emploi : Q-P1 et Q-P6) ;
+- (J4, 9/11) le taux réel attendu dans les comportements, et une propension à consommer qui baisse quand il monte
+  (le PCEX2 du livre) : sans eux, la règle de Taylor faisait pire que rien en récession (les ménages perdaient des
+  intérêts) ; les fourchettes des crises (Q-P9) ; les règles budgétaires naïves, décidées une fois l'an ; R2 lu comme
+  une baisse du déficit structurel de 0,5 point par an jusqu'à 1,5 % (Q-P14) ;
 - (J3) deux corrections aux vignettes de `sfcr`, faute de quoi leurs matrices ne se ferment pas : DISINF (les
   intérêts au taux d'avant) et GROWTH (la ligne des profits de la banque centrale, la richesse initiale des ménages).
 

@@ -25,8 +25,9 @@ const EXPECTED = {
   bmw: "143abd2e121091e3",
   disinf: "38250af50d22089b",
   growth: "e894737445bc0e74",
-  // 9/11/2026, J3: ÉCO from its calibrated start, 100 quarters, energy twice as dear from 20, the rate at 5 % from 40.
-  eco: "3aa253792848fe9c",
+  // ÉCO from its calibrated start, 100 quarters, energy twice as dear from 20, the rate at 5 % from 40 (9/11/2026, J3;
+  // 9/11, J4: the rate reaches consumption and investment as an expected real rate, 3aa253792848fe9c before).
+  eco: "132e3011d9401144",
 };
 
 const digest = (states) => createHash("sha256").update(Buffer.from(states.buffer, states.byteOffset, states.byteLength)).digest("hex").slice(0, 16);

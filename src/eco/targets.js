@@ -54,7 +54,8 @@ export const ASSUMED = Object.freeze({
   mug: 0.1, // contenu en importations des achats publics, surtout des salaires (H, Q-P1)
   mut: 0.5, // hausse des importations quand le travail manque : la demande que les salariés ne servent pas (H, Q-P6)
   gammau: 0.02, // réponse de l'investissement à l'utilisation des capacités (H, Q-P3)
-  gammar: 0.05, // réponse de l'investissement au taux réel (H, Q-P3)
+  gammar: 0.1, // croissance trimestrielle du capital perdue par unité de taux réel annuel (0,001 par point) (H, Q-P3)
+  iota: 0.5, // propension à consommer perdue par unité de taux réel annuel (0,005 par point) : le PCEX2 du livre (H, Q-P4)
   gammac: 0.05, // réponse de l'investissement à la confiance (H, Q-P9)
   lb1: 5, // sensibilité de la part des obligations à l'écart de taux (H)
   idx: 1, // indexation des retraites sur les prix

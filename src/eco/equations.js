@@ -43,17 +43,18 @@ export const EQUATIONS = `
   x ~ xw * yw * xshock * (pm / p)^epsx
   X ~ p * x
   ucap ~ kappa * y / k[-1]
-  rrl ~ (1 + rl) / (1 + pic) - 1
-  gk ~ gk0 + gammau * (ucap[-1] - 1) - gammar * rrl[-1] - conf * gammac
+  rrl ~ (1 + rl) / (1 + pie) - 1
+  gk ~ gk0 + gammau * (ucap[-1] - 1) - gammar * 4 * (rrl[-1] - rrl0) - conf * gammac
   k ~ k[-1] * (1 + gk)
   i ~ k - k[-1] + delta * k[-1]
   I ~ p * i
 
-  # Households: income, consumption out of expected real income and real wealth, portfolio (PC, LP, GROWTH)
+  # Households: income, consumption out of expected real income and real wealth, the less the dearer real credit is
+  # (PCEX2), portfolio (PC, LP, GROWTH)
   YD ~ WB - TW + UB + PEN + TO - ORV + FDh + Fb + rm[-1] * M[-1] + rbar[-1] * BL[-1] - TK
-  ydr ~ (YD - (pc - pc[-1]) * v[-1]) / pc
+  ydr ~ (YD - pie * pc[-1] * v[-1]) / pc
   yde ~ eps * ydr + (1 - eps) * ydr[-1] * (1 + gpr)
-  c ~ (1 - lock) * (1 - conf) * (alpha1 * yde + alpha2 * v[-1])
+  c ~ (1 - lock) * (1 - conf) * ((alpha1 - iota * 4 * (rrl[-1] - rrl0)) * yde + alpha2 * v[-1])
   C ~ pc * c
   V ~ V[-1] + YD - C
   v ~ V / pc

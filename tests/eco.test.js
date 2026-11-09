@@ -88,6 +88,14 @@ describe("ÉCO's behaviour (docs/modele.md, § 4)", () => {
     assert.ok(multiplier(boom, 30) < multiplier([], AT) - 0.2);
   });
 
+  it("slows down when the central bank raises its rate, the activity in 2 to 6 quarters, the prices after (Q-P4)", () => {
+    const hike = run([{ at: 1, rcb: ECO.DEFAULTS.rcb + 0.01 }], 20);
+    const fall = (name, t) => value(hike, name, t) / value(base, name, t) - 1;
+    const deepest = Math.min(...[2, 3, 4, 5, 6].map((t) => fall("y", t)));
+    assert.ok(deepest < -0.005 && deepest > -0.015, `GDP ${deepest}`);
+    assert.ok(fall("pc", 4) > -0.001 && fall("pc", 20) < -0.003, `prices ${fall("pc", 4)} then ${fall("pc", 20)}`);
+  });
+
   it("peaks at 7 to 10 % of inflation after the energy shock of 2022, with no policy but the stabilisers", () => {
     // Energy twice as dear for two years, the other imports 10 % dearer (France's bill doubled: 116 Md€ in 2022).
     const shock = run([{ at: AT, eshock: 2, pmshock: 1.1 }, { at: AT + 8, eshock: 1.3, pmshock: 1.1 }]);

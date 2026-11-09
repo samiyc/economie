@@ -103,7 +103,7 @@ function capital(t, a, z, rise) {
   const k = t.capital * 4 * Q;
   const before = k / (1 + a.gpr);
   const rrl = (1 + z.rl) / (1 + rise.prices) - 1;
-  return { k, kappa: before / z.y, delta: (z.i - (k - before)) / before, ucap: 1, rrl, gk: a.gpr, gk0: a.gpr + a.gammar * rrl };
+  return { k, kappa: before / z.y, delta: (z.i - (k - before)) / before, ucap: 1, rrl, rrl0: rrl, gk: a.gpr, gk0: a.gpr };
 }
 
 /** The prices at 1, growing at the target; the wage that grows with them and the productivity. */
@@ -115,7 +115,7 @@ function prices(t, a, z, rise) {
 
 /** The parameters and exogenous variables of ÉCO's equations, with the shocks at rest. */
 const EXTERNAL_KEYS = ["gpr", "un", "piT", "chi", "phil", "piw", "mu", "mut", "mug", "me", "phi", "tauc", "gshare", "xw", "epsx", "kappa",
-  "gk0", "gammau", "gammar", "gammac", "delta", "eps", "alpha1", "alpha2", "lb0", "lb1", "fin", "tauf", "psid",
+  "gk0", "rrl0", "iota", "gammau", "gammar", "gammac", "delta", "eps", "alpha1", "alpha2", "lb0", "lb1", "fin", "tauf", "psid",
   "fshare", "rcb", "sl", "sm", "rho", "rr", "tauw", "idx", "tos", "subs", "orv", "tauk", "tp", "mat", "etan"];
 const AT_REST = { Lf: 0, Ret: 0, xr: 1, wpush: 0, pmshock: 1, eshock: 1, shield: 0, mpush: 0, xshock: 1, conf: 0, lock: 0 };
 
