@@ -24,6 +24,7 @@ const EXPECTED = {
   open: "02c5bb039201feb3",
   bmw: "143abd2e121091e3",
   disinf: "38250af50d22089b",
+  growth: "e894737445bc0e74",
 };
 
 const digest = (states) => createHash("sha256").update(Buffer.from(states.buffer, states.byteOffset, states.byteLength)).digest("hex").slice(0, 16);
@@ -51,5 +52,6 @@ describe("the fingerprints of the models", () => {
     assert.equal(from("OPEN", [{ at: 50, mu_S: 0.25 }]), EXPECTED.open);
     assert.equal(from("BMW", [{ at: 50, alpha0: 30 }]), EXPECTED.bmw);
     assert.equal(from("DISINF", [{ at: 50, phi: 0.3 }]), EXPECTED.disinf);
+    assert.equal(from("GROWTH", [{ at: 50, omega0: -0.1 }]), EXPECTED.growth);
   });
 });

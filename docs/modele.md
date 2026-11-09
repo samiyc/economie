@@ -294,8 +294,7 @@ rapporte toujours avec `paired`. Un écrémage rapide rejette, il ne promeut jam
 | SIM, la montée à `G = 30` | 119,23, 123,96… : `(30 + 0,4 · 80) / 0,52`, puis la suite ; le README de `sfcr` imprime 119, 124, 128, 131, 134, 137 | 1e-9 sur nos calculs, l'arrondi sur l'imprimé |
 | SIM et SIMEX, la consommation accrue, la dépense à 25 | la trajectoire de `sfcr` | 1e-9 (mesuré : 2e-13) |
 | PC et PCEX, l'état stationnaire, et la hausse du taux | le calcul de l'état stationnaire ; la trajectoire de `sfcr` | 1e-9 (mesuré : 9e-13) |
-| LP, OPEN, BMW, DISINF | chaque bloc d'ÉCO, rejoué d'abord dans son modèle d'origine (`src/book/`), depuis le départ de sa vignette puis après son choc | 1e-9 (mesuré : 1,2e-11) |
-| GROWTH | le bloc des entreprises | 1e-9 |
+| LP, OPEN, BMW, DISINF, GROWTH | chaque bloc d'ÉCO, rejoué d'abord dans son modèle d'origine (`src/book/`), depuis le départ de sa vignette puis après son choc | 1e-9 (mesuré : 1,2e-11) |
 
 **Les trajectoires de référence** viennent de `sfcr` (ou de MacroStat), tirées une fois et gardées en CSV dans
 `tests/fixtures/`, avec la version du paquet. Sami a choisi R et `sfcr` (6/11, Q-S7) : R 4.6.2 et `sfcr` 0.2.3

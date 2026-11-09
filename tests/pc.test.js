@@ -99,6 +99,6 @@ describe("PC's parameters", () => {
   });
 
   it("are a model's name the runner knows", () => {
-    assert.throws(() => run("GROWTH"), /no model GROWTH/);
+    assert.throws(() => run("ECO1"), /no model ECO1/);
   });
 });

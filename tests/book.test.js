@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { BMW } from "../src/book/bmw.js";
 import { DISINF } from "../src/book/disinf.js";
+import { GROWTH } from "../src/book/growth.js";
 import { LP } from "../src/book/lp.js";
 import { OPEN } from "../src/book/open.js";
 import { runModel } from "../src/sfc/run.js";
@@ -22,6 +23,7 @@ const CASES = [
   ["BMW, autonomous consumption from 20 to 30", BMW, "bmw", 100, { alpha0: 30 }],
   ["DISINF, the mark-up from 0.24 to 0.3", DISINF, "disinf", 200, { phi: 0.3 }],
   ["OPEN, the South's propensity to import from 0.15 to 0.25", OPEN, "open", 100, { mu_S: 0.25 }],
+  ["GROWTH, the target real wage up (ω0 from −0.20594 to −0.1)", GROWTH, "growth", 100, { omega0: -0.1 }],
 ];
 
 describe("the book's blocks against sfcr's trajectories", () => {

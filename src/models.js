@@ -1,5 +1,6 @@
 import { BMW } from "./book/bmw.js";
 import { DISINF } from "./book/disinf.js";
+import { GROWTH } from "./book/growth.js";
 import { LP } from "./book/lp.js";
 import { OPEN } from "./book/open.js";
 import { PC_SPEC } from "./pc/ledger.js";
@@ -12,7 +13,7 @@ import * as simex from "./sim/simex.js";
 
 /**
  * The models the runner takes (src/sfc/run.js), each with its matrices: SIM and SIMEX (ch. 3), PC and PCEX (ch. 4),
- * written by hand; the book's blocks of ÉCO, LP, OPEN, BMW and DISINF (ch. 5 to 9), written in sfcr's notation
+ * written by hand; the book's blocks of ÉCO, LP, OPEN, BMW, DISINF and GROWTH (ch. 5 to 11), written in sfcr's notation
  * (src/sfc/system.js). A variant with expectations keeps its model's matrices: its state starts with the same
  * variables.
  *
@@ -31,7 +32,7 @@ export const PC = model("PC", pc, PC_SPEC, pc.DEFAULTS);
 export const PCEX = model("PCEX", pcex, PC_SPEC, pc.DEFAULTS);
 
 /** The models by name. */
-export const MODELS = Object.freeze({ SIM, SIMEX, PC, PCEX, LP, OPEN, BMW, DISINF });
+export const MODELS = Object.freeze({ SIM, SIMEX, PC, PCEX, LP, OPEN, BMW, DISINF, GROWTH });
 
 /**
  * A run of the model `name`.
