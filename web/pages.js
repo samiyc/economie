@@ -1,17 +1,27 @@
 import { MODELS } from "../src/models.js";
-import { amount, rate } from "./labels.js";
+import { ratiosOf } from "../src/eco/ratios.js";
+import { amount, percent, rate } from "./labels.js";
+import { ECO_NOTES, PC_NOTES, SIM_NOTES } from "./notes.js";
 
 /**
- * What the page shows of each model: its controls, its curves, the example its button brings back, the line under the
- * controls and the notes under each drawing. Everything else (the Sankey, the matrices) reads the model's ledger.
+ * What the page shows of each model: its controls, its starts, its curves, the example its button brings back, the line
+ * under the controls and the notes under each drawing. Everything else (the Sankey, the matrices) reads the model's
+ * ledger. ÉCO's page skips its starting quarter, a snapshot whose stocks did not change from a quarter before
+ * (`skip`): its quarter 0 is the first the model computes.
  *
- * @typedef {{ key: string, name: string, colour: string }} Curve
+ * @typedef {{ key: string, label: string, min: number, max: number, step: number, format: (v: number) => string }} Field
+ * @typedef {{ key: string, name: string, colour: string, of?: (run: any) => Float64Array }} Curve
  * @typedef {{
  *   model: import("../src/types.js").Model,
- *   fields: string[],
+ *   fields: Field[],
+ *   starts: Array<[string, string]>,
+ *   periods: number,
+ *   skip: number,
+ *   unit: string,
  *   example: Record<string, number>,
  *   curves: Curve[],
  *   target: string,
+ *   goal: (model: any, params: Record<string, number>) => number,
  *   summary: (s: Float64Array, V: Readonly<Record<string, number>>, goal: number) => string,
  *   notes: { flows: string, curves: string, matrices: string },
  * }} Page
@@ -19,19 +29,27 @@ import { amount, rate } from "./labels.js";
 
 /** The curves' colours: violet, magenta, green, checked on the Khaki panel (#e8e8cd), each named at its end. */
 const COLOURS = ["#6250d6", "#e87ba4", "#008300"];
-const curves = (pairs) => pairs.map(([key, name], i) => ({ key, name, colour: COLOURS[i] }));
+const curves = (list) => list.map(([key, name, of], i) => ({ key, name, colour: COLOURS[i], of }));
+const field = (key, label, [min, max, step], format) => ({ key, label, min, max, step, format });
+const decimals = (v) => v.toFixed(2).replace(".", ",");
+const times = (v) => `× ${v.toFixed(1).replace(".", ",")}`;
 
-const SIM_NOTES = {
-  flows: "Chaque secteur paraît deux fois : à gauche ce qu'il paie, à droite ce qu'il reçoit, et les deux barres sont aussi hautes l'une que l'autre, parce que rien ne se perd. Un ruban a la couleur de celui qui paie. La « variation de la monnaie » est l'épargne des ménages : l'État la leur verse en monnaie neuve quand il dépense plus qu'il ne lève.",
-  curves: "Le revenu va vers G / θ, quoi que pensent les ménages : les propensions à consommer ne règlent que la vitesse du chemin. Aux valeurs du livre, la consommation et la monnaie des ménages finissent au même niveau (α1 + α2 = 1) : leurs courbes se recouvrent, l'infobulle les distingue. Un clic sur les courbes va à sa période.",
-  matrices: "« + » une ressource, « − » un emploi, comme dans le livre. Chaque ligne et chaque colonne des transactions somment à zéro ; la dernière ligne des transactions, la variation de la monnaie, est l'équation cachée : la monnaie émise par l'État égale celle que reçoivent les ménages. Le code la vérifie à chaque période, à 10^−9 près.",
-};
+const SIM_FIELDS = [
+  field("G", "Achats de l'État G", [0, 50, 1], amount),
+  field("theta", "Taux d'impôt θ", [0.05, 0.6, 0.01], percent),
+  field("alpha1", "Propension à consommer le revenu α1", [0, 0.95, 0.05], decimals),
+  field("alpha2", "Propension à consommer la richesse α2", [0.05, 0.9, 0.05], decimals),
+];
+const BOOK_STARTS = /** @type {Array<[string, string]>} */ ([["steady", "L'état stationnaire du livre"], ["zero", "L'économie vide, sans monnaie"]]);
 
-const PC_NOTES = {
-  flows: "La banque centrale arrive. L'État paie ses intérêts aux ménages et à la banque centrale, qui les lui rend en profits. Les ménages achètent des bons (« variation des bons ») ; la banque centrale prend ceux qu'ils laissent, et paie avec la monnaie qu'elle émet. Un flux négatif (des bons vendus) est dessiné à l'envers, du receveur au payeur.",
-  curves: "Le revenu va vers Y*, l'état stationnaire de la politique en cours. Monter le taux relève Y* : les ménages tiennent plus de bons, l'État leur verse plus d'intérêts, et ils les dépensent. Le revenu ne bouge qu'à la période d'après, l'intérêt se payant au taux d'avant. Un clic sur les courbes va à sa période.",
-  matrices: "« + » une ressource, « − » un emploi, comme dans le livre (tableaux 4.1 et 4.2) ; la banque centrale en une colonne, ses comptes courant et de capital sommant chacun à zéro. La ligne « variation de la monnaie » est l'équation cachée : la monnaie émise par la banque centrale égale celle que gardent les ménages. Le code la vérifie à chaque période, à 10^−9 près.",
-};
+/** The income the model goes to under `params`: its stationary state's, NaN when it has none. */
+export function goalOf(model, params) {
+  try {
+    return model.steadyState(params)[model.V.Y];
+  } catch {
+    return Number.NaN;
+  }
+}
 
 const simSummary = (s, V, goal) =>
   `revenu ${amount(s[V.Y])} (il va vers G / θ = ${amount(goal)}), impôt ${amount(s[V.T])}, déficit ${amount(s[V.G] - s[V.T])}, `
@@ -42,36 +60,56 @@ const pcSummary = (s, V, goal) =>
   + `impôt ${amount(s[V.T])}, intérêts versés par l'État ${amount(s[V.iBs])} ; dette de l'État ${amount(s[V.Bs])}, `
   + `dont ${amount(s[V.Bh])} aux ménages et ${amount(s[V.Bcb])} à la banque centrale ; monnaie ${amount(s[V.Hh])}.`;
 
+const ecoSummary = (s, V) => {
+  const r = ratiosOf(s, V);
+  return `PIB ${amount(s[V.GDP])}, chômage ${rate(r.unemployment)}, inflation ${rate(r.inflation)} au rythme du trimestre, `
+    + `déficit ${rate(r.deficit)} du PIB, dette ${percent(r.debt)} du PIB, taux directeur ${rate(s[V.rcb])}, `
+    + `solde courant ${rate(r.currentAccount)} du PIB.`;
+};
+
+/** A series of ÉCO's quarterly ratios, in percent. */
+const ratioSeries = (key) => (run) => Float64Array.from({ length: run.periods + 1 }, (_, t) => 100 * ratiosOf(run.state(t), run.model.V)[key]);
+
+/** The consumer prices' rise over the four quarters to each, in percent (the pace of its quarter before the fourth). */
+const yearly = (run) => {
+  const pc = run.series("pc");
+  return Float64Array.from(pc, (price, t) => 100 * (t >= 4 ? price / pc[t - 4] - 1 : (price / run.before(t)[run.model.V.pc]) ** 4 - 1));
+};
+
 /** @type {(model: any) => Page} */
 const sim = (model) => ({
-  model,
-  fields: ["G", "theta", "alpha1", "alpha2"],
-  example: { G: 30 },
+  model, fields: SIM_FIELDS, starts: BOOK_STARTS, periods: 60, skip: 0, unit: "Période", example: { G: 30 },
   curves: curves([["Y", "Revenu Y"], ["C", "Consommation C"], ["Hh", "Monnaie des ménages H"]]),
-  target: "Cible G / θ",
-  summary: simSummary,
-  notes: SIM_NOTES,
+  target: "Cible G / θ", goal: goalOf, summary: simSummary, notes: SIM_NOTES,
 });
 
 /** @type {(model: any) => Page} */
 const pc = (model) => ({
-  model,
-  fields: ["G", "theta", "r", "alpha1", "alpha2"],
+  ...sim(model),
+  fields: [...SIM_FIELDS.slice(0, 2), field("r", "Taux des bons r", [0, 0.08, 0.0025], rate), ...SIM_FIELDS.slice(2)],
   example: { r: 0.035 },
   curves: curves([["Y", "Revenu Y"], ["Bh", "Bons des ménages"], ["Hh", "Monnaie des ménages"]]),
-  target: "Cible Y*",
-  summary: pcSummary,
-  notes: PC_NOTES,
+  target: "Cible Y*", summary: pcSummary, notes: PC_NOTES,
 });
 
-/** The pages by model name; the variants with expectations show as their model. */
-export const PAGES = Object.freeze({ SIM: sim(MODELS.SIM), SIMEX: sim(MODELS.SIMEX), PC: pc(MODELS.PC), PCEX: pc(MODELS.PCEX) });
+/** @type {Page} */
+const eco = {
+  model: MODELS.ECO,
+  fields: [
+    field("rcb", "Taux directeur", [0, 0.08, 0.0025], rate),
+    field("gshare", "Achats publics, part du PIB potentiel", [0.2, 0.4, 0.005], rate),
+    field("tauw", "Impôts et cotisations sur les salaires", [0.4, 0.7, 0.01], percent),
+    field("rr", "Allocation chômage, part du salaire net", [0.3, 0.9, 0.05], percent),
+    field("shield", "Bouclier : part de l'énergie payée par l'État", [0, 0.5, 0.05], percent),
+    field("eshock", "Prix de l'énergie importée", [0.5, 3, 0.1], times),
+    field("conf", "Perte de confiance des ménages", [0, 0.05, 0.005], rate),
+  ],
+  starts: [["zero", "La France de 2024 (son trimestre de départ)"]],
+  periods: 40, skip: 1, unit: "Trimestre", example: { eshock: 2 },
+  curves: curves([["u", "Chômage", ratioSeries("unemployment")], ["inflation", "Inflation sur un an", yearly],
+    ["deficit", "Déficit public", ratioSeries("deficit")]]),
+  target: "", goal: () => Number.NaN, summary: ecoSummary, notes: ECO_NOTES,
+};
 
-/** The income the model goes to under `params`: its stationary state's, NaN when it has none. */
-export function goalOf(model, params) {
-  try {
-    return model.steadyState(params)[model.V.Y];
-  } catch {
-    return Number.NaN;
-  }
-}
+/** The pages by model name; the variants with expectations show as their model. */
+export const PAGES = Object.freeze({ SIM: sim(MODELS.SIM), SIMEX: sim(MODELS.SIMEX), PC: pc(MODELS.PC), PCEX: pc(MODELS.PCEX), ECO: eco });

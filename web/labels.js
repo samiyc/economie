@@ -1,14 +1,17 @@
 /**
  * The page's words and colours. A sector keeps its colour on every drawing (the Sankey, the matrices): blue, orange,
- * aqua, yellow, the first four slots of the dataviz palette in its order, checked on the Khaki panel (#e8e8cd) by
- * neighbours (the yellow of the central bank sits below the aqua of the government, and far from the orange): their
- * contrast is under 3:1, so every node carries its name, every wide ribbon its label, and the matrices every value.
+ * aqua, yellow, magenta, green, the first six slots of the dataviz palette, checked on the Khaki panel (#e8e8cd) by
+ * neighbours in the models' order (households, firms, government, central bank, banks, world: the magenta of the banks
+ * kept away from the orange of the firms, 9.1 at worst for colour-blind eyes): their contrast is under 3:1, so every
+ * node carries its name, every wide ribbon its label, and the matrices every value.
  */
 export const SECTORS = {
   households: { name: "Ménages", colour: "#2a78d6" },
   firms: { name: "Entreprises", colour: "#eb6834" },
   government: { name: "État", colour: "#1baf7a" },
   centralBank: { name: "Banque centrale", colour: "#eda100" },
+  banks: { name: "Banques", colour: "#e87ba4" },
+  world: { name: "Reste du monde", colour: "#008300" },
 };
 
 export const FLOWS = {
@@ -21,12 +24,33 @@ export const FLOWS = {
   taxes: "Impôts",
   money: "Variation de la monnaie",
   bills: "Variation des bons",
+  exports: "Exportations",
+  imports: "Importations",
+  energy: "Énergie importée",
+  subsidies: "Subventions",
+  loanInterest: "Intérêts des prêts",
+  dividends: "Dividendes",
+  corporateTax: "Impôt sur les sociétés",
+  bankProfits: "Profits des banques",
+  depositInterest: "Intérêts des dépôts",
+  billInterest: "Intérêts des bons",
+  coupons: "Coupons des obligations",
+  benefits: "Prestations",
+  deposits: "Variation des dépôts",
+  loans: "Variation des prêts",
+  bonds: "Variation des obligations",
+  foreignReserves: "Variation des réserves de change",
 };
 
 export const STOCKS = {
   money: "Monnaie",
   bills: "Bons",
   netWorth: "Patrimoine net",
+  deposits: "Dépôts",
+  loans: "Prêts",
+  bonds: "Obligations",
+  foreignReserves: "Réserves de change",
+  capital: "Capital",
 };
 
 const DECIMAL = new Intl.NumberFormat("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });

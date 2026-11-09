@@ -14,30 +14,22 @@
     <header class="masthead">
       <p class="links"><a href="changelog.html">Journal des versions</a></p>
       <h1>Économie</h1>
-      <p>L'économie d'un État en simulation, pour en comprendre les mécanismes. D'abord les modèles de Godley et Lavoie : SIM, des ménages, des entreprises et un État, une seule monnaie ; puis PC, une banque centrale, des bons et un taux.</p>
+      <p>L'économie d'un État en simulation, pour en comprendre les mécanismes. ÉCO, notre modèle : six secteurs, le trimestre pour pas, les proportions de la France en 2024. Avant lui, les modèles de Godley et Lavoie dont il est fait : SIM, des ménages, des entreprises et un État, une seule monnaie ; PC, une banque centrale, des bons et un taux.</p>
     </header>
     <main>
       <section class="controls">
         <label>Modèle
           <select id="model">
+            <option value="ECO">ÉCO : l'économie d'un État, au trimestre</option>
             <option value="SIM">SIM : l'État et sa monnaie</option>
             <option value="SIMEX">SIMEX : SIM, le revenu anticipé</option>
             <option value="PC">PC : la banque centrale, les bons, le taux</option>
             <option value="PCEX">PCEX : PC, le revenu anticipé</option>
           </select>
         </label>
-        <label>Départ
-          <select id="start">
-            <option value="steady">L'état stationnaire du livre (G = 20, θ = 20 %, et r = 2,5 % pour PC)</option>
-            <option value="zero">L'économie vide, sans monnaie</option>
-          </select>
-        </label>
-        <label>Nouvelle politique dès la période<input id="at" type="number" min="1" max="60" step="1" value="5" /></label>
-        <label>Achats de l'État G <span id="G-value"></span><input id="G" type="range" min="0" max="50" step="1" value="30" /></label>
-        <label>Taux d'impôt θ <span id="theta-value"></span><input id="theta" type="range" min="0.05" max="0.6" step="0.01" value="0.2" /></label>
-        <label id="r-field">Taux des bons r <span id="r-value"></span><input id="r" type="range" min="0" max="0.08" step="0.0025" value="0.025" /></label>
-        <label>Propension à consommer le revenu α1 <span id="alpha1-value"></span><input id="alpha1" type="range" min="0" max="0.95" step="0.05" value="0.6" /></label>
-        <label>Propension à consommer la richesse α2 <span id="alpha2-value"></span><input id="alpha2" type="range" min="0.05" max="0.9" step="0.05" value="0.4" /></label>
+        <label>Départ <select id="start"></select></label>
+        <label>Nouvelle politique dès la période <input id="at" type="number" min="1" max="60" step="1" value="5" /></label>
+        <div id="fields"></div>
         <button type="button" class="quiet" id="reset">Revenir à l'exemple</button>
       </section>
       <section class="controls player">

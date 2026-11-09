@@ -9,7 +9,7 @@ import { paidBy } from "../src/sfc/links.js";
  * @typedef {import("../src/sfc/links.js").Link} Link
  */
 
-const VIEW = { width: 760, height: 380, top: 34, bottom: 34, gap: 22, node: 14 };
+const VIEW = { width: 760, height: 440, top: 34, bottom: 34, gap: 32, node: 14 };
 const LEFT = 170;
 const RIGHT = VIEW.width - 170 - VIEW.node;
 

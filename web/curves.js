@@ -1,7 +1,7 @@
 import { amount, svg } from "./labels.js";
 
 /**
- * The run's curves on one axis, all in units of money, the page's choice of them (web/pages.js), and the income the
+ * The run's curves on one axis, all in one unit (money, or percent for ÉCO), the page's choice of them (web/pages.js), and the income the
  * model goes to, dashed: its stationary state under the policy of each period. Violet, magenta, green: checked on the
  * Khaki panel; magenta falls under 3:1, so each curve is named at its end, and the tooltip gives every value at a
  * period. A vertical line marks the period the page shows; a click goes to the period under the pointer.
@@ -20,17 +20,17 @@ export function niceTop(max) {
   return Math.ceil(max / step) * step;
 }
 
-/** The scales from periods and money to pixels. */
-function scales(periods, top) {
+/** The scales from periods and values to pixels, the axis from `bottom` (zero, or below if a value is) to `top`. */
+function scales(periods, top, bottom) {
   const x = (t) => VIEW.left + (t / periods) * (VIEW.width - VIEW.left - VIEW.right);
-  const y = (v) => VIEW.top + (1 - v / top) * (VIEW.height - VIEW.top - VIEW.bottom);
-  return { x, y };
+  const y = (v) => VIEW.top + (1 - (v - bottom) / (top - bottom)) * (VIEW.height - VIEW.top - VIEW.bottom);
+  return { x, y, top, bottom };
 }
 
 /** The grid: five recessive lines with their values, and the periods under the axis. */
-function grid(group, { x, y }, periods, top) {
+function grid(group, { x, y, top, bottom }, periods) {
   for (let k = 0; k <= 5; k += 1) {
-    const value = (top * k) / 5;
+    const value = bottom + ((top - bottom) * k) / 5;
     group.append(svg("line", { x1: VIEW.left, x2: VIEW.width - VIEW.right, y1: y(value), y2: y(value), class: "grid" }));
     group.append(svg("text", { x: VIEW.left - 6, y: y(value), class: "tick y" }, amount(value).replace(",0", "")));
   }
@@ -77,7 +77,7 @@ function fillTooltip(tooltip, data, t) {
     return row;
   });
   const title = document.createElement("div");
-  title.textContent = `Période ${t}`;
+  title.textContent = `${data.unit ?? "Période"} ${t}`;
   tooltip.replaceChildren(title, ...rows);
 }
 
@@ -113,16 +113,17 @@ function hover(target, tooltip, { x }, data) {
  * @param {SVGSVGElement} target
  * @param {HTMLElement} tooltip
  * @param {{ curves: Curve[], series: Record<string, Float64Array>, target: string, goal: Float64Array, periods: number,
- *   t: number, onSeek: (t: number) => void }} data
+ *   t: number, unit?: string, onSeek: (t: number) => void }} data
  */
 export function drawCurves(target, tooltip, data) {
   const { curves, series, goal, periods, t } = data;
   target.replaceChildren();
   target.setAttribute("viewBox", `0 0 ${VIEW.width} ${VIEW.height}`);
   const reached = goal.every(Number.isFinite);
-  const top = niceTop(Math.max(...curves.map((c) => Math.max(...series[c.key])), ...(reached ? goal : [])));
-  const scale = scales(periods, top);
-  grid(target, scale, periods, top);
+  const values = curves.flatMap((c) => [Math.max(...series[c.key]), Math.min(...series[c.key])]);
+  const low = Math.min(0, ...values);
+  const scale = scales(periods, niceTop(Math.max(...values, ...(reached ? goal : []))), low < 0 ? -niceTop(-low) : 0);
+  grid(target, scale, periods);
   const labels = curves.map((c) => curve(target, scale, series[c.key], c));
   if (reached) labels.push(curve(target, scale, goal, { ...TARGET, name: data.target }));
   placeLabels(target, labels);

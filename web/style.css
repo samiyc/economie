@@ -24,6 +24,7 @@ input[type="range"] { accent-color: var(--accent); }
 .controls input[type="range"] { padding: 0; min-width: 150px; }
 .controls label span { color: var(--ink); font-variant-numeric: tabular-nums; }
 #at { width: 5em; }
+#fields { display: contents; }
 
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 4px 14px 10px; box-shadow: var(--shadow); }
 .panel h2 { margin-top: 10px; }

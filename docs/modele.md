@@ -419,6 +419,9 @@ indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le
 - **Les choix** : le modèle (SIM, PC, ÉCO), la crise, la graine, la politique ; deux politiques côte à côte sur la même
   graine.
 - **SIM d'abord** : un curseur sur G et θ, et l'on voit le revenu aller vers `G / θ`. C'est la première leçon.
+- **ÉCO** (J3, 9/11) : la page s'ouvre sur lui, ses curseurs sont ses leviers et ses chocs (`web/pages.js`) ; elle
+  montre ses trimestres à partir du premier qu'il calcule, le trimestre de départ étant un instantané sans trimestre
+  d'avant. Les deux politiques côte à côte et le choix de la crise viendront avec J4.
 
 ## 12. Les jalons
 

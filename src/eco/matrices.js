@@ -9,7 +9,7 @@
  * period's price, is the one real asset.
  */
 export const MATRICES = {
-  sectors: ["households", "firms", "banks", "government", "centralBank", "world"],
+  sectors: ["households", "firms", "government", "centralBank", "banks", "world"],
   flows: [
     { key: "consumption", cells: { households: "-C", firms: "+p * c", government: "+TC" } },
     { key: "purchases", cells: { firms: "+G", government: "-G" } },
