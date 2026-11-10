@@ -20,7 +20,7 @@ const seeds = Number(values.seeds);
 function tunedIn(folder) {
   if (!folder) return undefined;
   const files = readdirSync(folder).filter((f) => f.endsWith(".json")).sort();
-  const entries = files.map((f) => JSON.parse(readFileSync(`${folder}/${f}`, "utf8"))).map((t) => ({ label: `${t.rule}*${t.weights}`, rule: t.rule, weights: t.weights, coefficients: t.coefficients }));
+  const entries = files.map((f) => JSON.parse(readFileSync(`${folder}/${f}`, "utf8"))).map((t) => ({ label: `${t.tuning ?? t.rule}*${t.weights}`, rule: t.rule, weights: t.weights, coefficients: t.coefficients }));
   const against = (e) => (e.rule === "R1" ? ["R1", "R0"] : ["R2s", "R2n", `R1*${e.weights}`]);
   return { entries, pairs: entries.flatMap((e) => against(e).map((b) => [e.label, b])) };
 }

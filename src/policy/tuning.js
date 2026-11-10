@@ -24,10 +24,19 @@ export const WEIGHTS = Object.freeze({
   debt: { unemployment: 1, inflationGap: 1, debt: 3 },
 });
 
-/** What each rule tunes, and within what: Taylor's two responses; R2s, also the share of its deficit's gap closed a year. */
-export const GENES = Object.freeze({
-  R1: [["inflation", 0, 3], ["gap", 0, 3]],
-  R2s: [["inflation", 0, 3], ["gap", 0, 3], ["speed", 0, 1]],
+/**
+ * The tunings, each a rule and what it tunes, within what (H, Q-S12):
+ * - **R1**, **R2s** (J5): Taylor's two responses; for R2s, also the share of its deficit's gap closed a year;
+ * - **R1n**, **R2sn** (J6): the same, and Taylor's neutral real rate, moved by −3 to +3 points from the model's (1 %).
+ *   They found that ÉCO makes a low rate cost next to nothing (docs/recherche.md), so the central bank stays apart;
+ * - **R2sb** (J6, Sami, 10/11): the central bank independent, Taylor the textbooks'; the deficit rule's speed alone.
+ */
+export const TUNINGS = Object.freeze({
+  R1: { rule: "R1", genes: [["inflation", 0, 3], ["gap", 0, 3]] },
+  R2s: { rule: "R2s", genes: [["inflation", 0, 3], ["gap", 0, 3], ["speed", 0, 1]] },
+  R1n: { rule: "R1", genes: [["inflation", 0, 3], ["gap", 0, 3], ["shift", -0.03, 0.03]] },
+  R2sn: { rule: "R2s", genes: [["inflation", 0, 3], ["gap", 0, 3], ["shift", -0.03, 0.03], ["speed", 0, 1]] },
+  R2sb: { rule: "R2s", genes: [["speed", 0, 1]] },
 });
 
 /** @typedef {{ unemployment: number, inflationGap: number, debt: number }} Weights */
@@ -48,7 +57,7 @@ function coefficientsOf(genes, plan) {
 /**
  * A rule's mean loss on the first `seeds` learning seeds of each family.
  *
- * @param {{ rule: "R1" | "R2s", weights: Weights, seeds: number, coefficients?: typeof TEXTBOOK }} options
+ * @param {{ rule: "R1" | "R2s", weights: Weights, seeds: number, coefficients?: { inflation: number, gap: number, shift?: number, speed: number } }} options
  */
 export function learningLoss({ rule, weights, seeds, coefficients = TEXTBOOK }) {
   let sum = 0;
@@ -59,8 +68,7 @@ export function learningLoss({ rule, weights, seeds, coefficients = TEXTBOOK }) 
 }
 
 /** The climb's problem: from the textbooks' coefficients, a gene or more moved, a fresh plan now and then. */
-function problemOf(rule, weights, seeds) {
-  const genes = GENES[rule];
+function problemOf({ rule, genes }, weights, seeds) {
   const clamp = (i, x) => Math.min(genes[i][2], Math.max(genes[i][1], x));
   return {
     start: (plan) => genes.forEach(([key], i) => {
@@ -81,16 +89,18 @@ function problemOf(rule, weights, seeds) {
 }
 
 /**
- * Tunes `rule` under `weights`: `budget` plans scored, each on `seeds` learning seeds a family; `seed` the climb's own.
- * Returns the best coefficients, their loss, and the textbooks' loss on the same seeds.
+ * Tunes `name` (`TUNINGS`) under `weights`: `budget` plans scored, each on `seeds` learning seeds a family; `seed` the
+ * climb's own. Returns the rule, the best coefficients, their loss, and the textbooks' loss on the same seeds.
  *
- * @param {{ rule: "R1" | "R2s", weights: Weights, seeds: number, budget: number, seed: number }} options
+ * @param {{ name: keyof typeof TUNINGS, weights: Weights, seeds: number, budget: number, seed: number }} options
  */
-export function tune({ rule, weights, seeds, budget, seed }) {
-  const genes = GENES[rule];
-  if (!genes) throw new Error(`tuning: no genes for ${rule}`);
-  const result = createClimb({ genes: genes.length }).run(problemOf(rule, weights, seeds), { budget, rng: createRng(seed) });
+export function tune({ name, weights, seeds, budget, seed }) {
+  const tuning = TUNINGS[name];
+  if (!tuning) throw new Error(`tuning: no tuning ${name}`);
+  const { rule, genes } = /** @type {{ rule: "R1" | "R2s", genes: Array<[string, number, number]> }} */ (tuning);
+  const result = createClimb({ genes: genes.length }).run(problemOf({ rule, genes }, weights, seeds), { budget, rng: createRng(seed) });
   return {
+    rule,
     coefficients: coefficientsOf(genes, result.plan),
     loss: -result.score,
     textbook: learningLoss({ rule, weights, seeds }),

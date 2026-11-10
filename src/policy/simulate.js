@@ -1,5 +1,5 @@
 import { ECO } from "../eco/model.js";
-import { crisisOf } from "../crises/families.js";
+import { beliefOf, crisisOf } from "../crises/families.js";
 import { assertConsistent, createLedger } from "../sfc/ledger.js";
 import { createRule, inflationOf, yearOf } from "./rules.js";
 
@@ -7,9 +7,14 @@ import { createRule, inflationOf, yearOf } from "./rules.js";
  * A rule against a crisis, on ÉCO: from its starting quarter, `periods` quarters (40, ten years: Sami, 6/11, Q-S2),
  * the crisis's shocks each quarter, the rule's levers, decided at the end of the quarter before. The loop is closed:
  * the rule sees what the model did. Every quarter the ledger checks the matrices, unless `check` is false.
+ * With `policy`, another policy plays instead of the rule (the planner of J6, src/search/planner.js): made from the
+ * run's start, what can be known of the crisis (`beliefOf`), the seed and the length, it decides with the state too.
+ *
+ * @typedef {{ levers: () => { rcb: number, gshare: number }, decide: (h: any, t: number, state: Float64Array) => void }} Policy
+ * @typedef {(run: { start: ReturnType<typeof startOf>, belief: ReturnType<typeof beliefOf>, seed: number, periods: number }) => Policy} PolicyMaker
  *
  * @typedef {{ family: "calm" | "unemployment" | "materials", seed: number, rule: "R0" | "R1" | "R2" | "R2s" | "R2n",
- *   periods?: number, check?: boolean, coefficients?: { inflation: number, gap: number, speed: number } }} Trial
+ *   periods?: number, check?: boolean, coefficients?: { inflation: number, gap: number, shift?: number, speed: number }, policy?: PolicyMaker }} Trial
  */
 
 /** The levers and the starting figures a rule needs from ÉCO's first quarter. */
@@ -28,13 +33,14 @@ function startOf(model, state) {
  *
  * @param {Trial} trial
  */
-export function simulate({ family, seed, rule: name, periods = 40, check = true, coefficients }, model = /** @type {import("../types.js").Model} */ (ECO)) {
+export function simulate({ family, seed, rule: name, periods = 40, check = true, coefficients, policy }, model = /** @type {import("../types.js").Model} */ (ECO)) {
   const width = model.VARS.length;
   const states = new Float64Array((periods + 1) * width);
   const state = model.emptyState();
   states.set(state, 0);
   const history = { at: (name, t) => states[t * width + model.V[name]] };
-  const rule = createRule(name, startOf(model, state), coefficients);
+  const start = startOf(model, state);
+  const rule = policy ? policy({ start, belief: beliefOf(family, seed, periods), seed, periods }) : createRule(name, start, coefficients);
   const shocks = crisisOf(family, seed, periods);
   const ledger = check ? createLedger(model.SPEC) : null;
   const params = { ...model.DEFAULTS };
@@ -46,7 +52,7 @@ export function simulate({ family, seed, rule: name, periods = 40, check = true,
     if (ledger) assertConsistent(ledger, state, t, states.subarray((t - 1) * width, t * width));
     levers.rcb[t] = params.rcb;
     levers.gshare[t] = params.gshare;
-    rule.decide(history, t);
+    rule.decide(history, t, state);
   }
   return { model, periods, states, levers, at: history.at, state: (t) => states.subarray(t * width, (t + 1) * width) };
 }

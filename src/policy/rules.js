@@ -16,8 +16,8 @@
  * A fiscal rule decides once a year (every fourth quarter), on the last four quarters, how much to spend; a naive
  * rule, as the real ones are: a point of deficit to cut is a point of GDP less spent.
  *
- * Their coefficients are the textbooks' (`TEXTBOOK`): Taylor's two 0.5, and the deficit's gap closed in a year. J5
- * tunes them (src/policy/tuning.js): R1* and R2s* are R1 and R2s with other coefficients.
+ * Their coefficients are the textbooks' (`TEXTBOOK`): Taylor's two 0.5, the model's neutral rate (`shift` 0), and the
+ * deficit's gap closed in a year. J5 tunes them (src/policy/tuning.js): R1* and R2s* are R1 and R2s with other coefficients.
  *
  * @typedef {{ at: (name: string, t: number) => number }} History
  */
@@ -26,8 +26,11 @@ export const LIMITS = Object.freeze({ rateStep: 0.005, rateFloor: 0, spendingSte
 const SEMI_ELASTICITY = 0.63;
 const TARGET = 0.02;
 
-/** Taylor's response to inflation above its target and to the output gap; the share of the deficit's gap closed a year. */
-export const TEXTBOOK = Object.freeze({ inflation: 0.5, gap: 0.5, speed: 1 });
+/**
+ * Taylor's response to inflation above its target and to the output gap; the neutral real rate moved by `shift`; the
+ * share of the deficit's gap closed a year.
+ */
+export const TEXTBOOK = Object.freeze({ inflation: 0.5, gap: 0.5, shift: 0, speed: 1 });
 
 /** The inflation of the four quarters to `t`, from the model's last four quarterly rates. */
 export const inflationOf = (h, t) => (1 + h.at("pic", t)) * (1 + h.at("pi1", t)) * (1 + h.at("pi2", t)) * (1 + h.at("pi3", t)) - 1;
@@ -87,12 +90,12 @@ export const RULES = Object.freeze({
  *
  * @param {keyof typeof RULES} name
  * @param {{ rcb: number, gshare: number, piT: number, point: number, structural: number }} start
- * @param {{ inflation: number, gap: number, speed: number }} [coefficients]  the textbooks' by default
+ * @param {{ inflation: number, gap: number, shift?: number, speed: number }} [coefficients]  the textbooks' by default
  */
 export function createRule(name, start, coefficients = TEXTBOOK) {
   const rule = RULES[name];
   if (!rule) throw new Error(`rules: no rule ${name}`);
-  const taylorOf = { neutral: start.rcb - start.piT, inflation: coefficients.inflation, gap: coefficients.gap };
+  const taylorOf = { neutral: start.rcb - start.piT + (coefficients.shift ?? 0), inflation: coefficients.inflation, gap: coefficients.gap };
   const band = [start.gshare - LIMITS.spendingBand * 100 * start.point, start.gshare + LIMITS.spendingBand * 100 * start.point];
   const now = { rcb: start.rcb, gshare: start.gshare, voted: start.gshare, aim: start.gshare };
   const decide = (h, t) => {

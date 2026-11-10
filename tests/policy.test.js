@@ -117,13 +117,16 @@ describe("the tuning of a rule (J5)", () => {
   });
 
   it("climbs on the learning seeds, within bounds, never worse than the textbooks there, and replays", () => {
-    const options = { rule: /** @type {const} */ ("R2s"), weights: WEIGHTS.balance, seeds: 2, budget: 25, seed: 7 };
+    const options = { name: /** @type {const} */ ("R2s"), weights: WEIGHTS.balance, seeds: 2, budget: 25, seed: 7 };
     const tuned = tune(options);
     assert.equal(tuned.evaluations, 25);
     assert.ok(tuned.loss <= tuned.textbook);
     assert.ok(tuned.coefficients.speed >= 0 && tuned.coefficients.speed <= 1 && tuned.coefficients.inflation <= 3);
-    assert.ok(Math.abs(learningLoss({ ...options, coefficients: tuned.coefficients }) - tuned.loss) < 1e-12);
+    assert.equal(tuned.rule, "R2s");
+    assert.ok(Math.abs(learningLoss({ ...options, rule: "R2s", coefficients: tuned.coefficients }) - tuned.loss) < 1e-12);
     assert.deepEqual(tune(options), tuned);
-    assert.throws(() => tune({ ...options, rule: /** @type {any} */ ("R0") }), /no genes for R0/);
+    assert.throws(() => tune({ ...options, name: /** @type {any} */ ("R0") }), /no tuning R0/);
+    const budget = tune({ ...options, name: "R2sb", budget: 6 });
+    assert.ok(budget.coefficients.inflation === 0.5 && budget.coefficients.gap === 0.5, "the central bank's Taylor kept");
   });
 });

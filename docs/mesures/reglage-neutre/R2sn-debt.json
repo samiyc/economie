@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-10",
+  "tuning": "R2sn",
+  "rule": "R2s",
+  "weights": "debt",
+  "seeds": 200,
+  "budget": 500,
+  "textbook": 248.5312,
+  "loss": 220.4206,
+  "coefficients": {
+    "inflation": 0,
+    "gap": 0,
+    "shift": -0.03,
+    "speed": 0.1023
+  },
+  "restarts": [
+    {
+      "seed": 1,
+      "loss": 220.4206,
+      "coefficients": {
+        "inflation": 0,
+        "gap": 0,
+        "shift": -0.03,
+        "speed": 0.1023
+      }
+    },
+    {
+      "seed": 2,
+      "loss": 220.4208,
+      "coefficients": {
+        "inflation": 0,
+        "gap": 0,
+        "shift": -0.03,
+        "speed": 0.1031
+      }
+    },
+    {
+      "seed": 3,
+      "loss": 220.4206,
+      "coefficients": {
+        "inflation": 0,
+        "gap": 0,
+        "shift": -0.03,
+        "speed": 0.1015
+      }
+    }
+  ]
+}

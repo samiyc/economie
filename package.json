@@ -16,7 +16,8 @@
     "check": "npm run lint && npm run types && npm test",
     "prepare": "git config core.hooksPath .githooks",
     "page": "node node_modules/mcts-commun/bin/serve.js 4807",
-    "changelog": "node scripts/changelog.js"
+    "changelog": "node scripts/changelog.js",
+    "bench": "node scripts/search-bench.js"
   },
   "author": "Sami",
   "license": "UNLICENSED",

@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-10",
+  "tuning": "R2sn",
+  "rule": "R2s",
+  "weights": "balance",
+  "seeds": 200,
+  "budget": 500,
+  "textbook": 116.073,
+  "loss": 99.9043,
+  "coefficients": {
+    "inflation": 0,
+    "gap": 0,
+    "shift": -0.03,
+    "speed": 0.0579
+  },
+  "restarts": [
+    {
+      "seed": 1,
+      "loss": 99.9044,
+      "coefficients": {
+        "inflation": 0,
+        "gap": 0,
+        "shift": -0.03,
+        "speed": 0.0571
+      }
+    },
+    {
+      "seed": 2,
+      "loss": 99.9049,
+      "coefficients": {
+        "inflation": 0,
+        "gap": 0,
+        "shift": -0.03,
+        "speed": 0.0603
+      }
+    },
+    {
+      "seed": 3,
+      "loss": 99.9043,
+      "coefficients": {
+        "inflation": 0,
+        "gap": 0,
+        "shift": -0.03,
+        "speed": 0.0579
+      }
+    }
+  ]
+}
