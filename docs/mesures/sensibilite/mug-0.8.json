@@ -1,0 +1,1047 @@
+{
+  "param": "mug",
+  "factor": 0.8,
+  "value": 0.08000000000000002,
+  "date": "2026-11-09",
+  "seeds": 1000,
+  "families": {
+    "calm": {
+      "means": {
+        "R0": {
+          "unemployment": 7.205,
+          "unemploymentPeak": 7.432,
+          "inflationGap": 0.066,
+          "inflationPeak": 2.028,
+          "debt": 135.525,
+          "debtRise": 22.525,
+          "outputGap": -0.133,
+          "floorQuarters": 0
+        },
+        "R1": {
+          "unemployment": 7.16,
+          "unemploymentPeak": 7.408,
+          "inflationGap": 0.051,
+          "inflationPeak": 2.008,
+          "debt": 134.313,
+          "debtRise": 21.313,
+          "outputGap": -0.088,
+          "floorQuarters": 0
+        },
+        "R2": {
+          "unemployment": 8.434,
+          "unemploymentPeak": 9.517,
+          "inflationGap": 0.248,
+          "inflationPeak": 2.006,
+          "debt": 126.993,
+          "debtRise": 13.993,
+          "outputGap": -2.053,
+          "floorQuarters": 0
+        },
+        "R2s": {
+          "unemployment": 8.39,
+          "unemploymentPeak": 8.789,
+          "inflationGap": 0.298,
+          "inflationPeak": 2.134,
+          "debt": 127.844,
+          "debtRise": 14.844,
+          "outputGap": -1.806,
+          "floorQuarters": 0
+        },
+        "R2n": {
+          "unemployment": 9.332,
+          "unemploymentPeak": 10.199,
+          "inflationGap": 0.413,
+          "inflationPeak": 2.152,
+          "debt": 122.053,
+          "debtRise": 9.053,
+          "outputGap": -3.161,
+          "floorQuarters": 0.224
+        }
+      },
+      "pairs": [
+        {
+          "a": "R1",
+          "b": "R0",
+          "unemployment": {
+            "mean": -0.045,
+            "low": -0.046,
+            "high": -0.044,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "inflationGap": {
+            "mean": -0.015,
+            "low": -0.015,
+            "high": -0.014,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": -1.212,
+            "low": -1.235,
+            "high": -1.189,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2",
+          "b": "R0",
+          "unemployment": {
+            "mean": 1.229,
+            "low": 1.228,
+            "high": 1.23,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.182,
+            "low": 0.181,
+            "high": 0.182,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": -8.532,
+            "low": -8.555,
+            "high": -8.508,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R0",
+          "unemployment": {
+            "mean": 1.185,
+            "low": 1.184,
+            "high": 1.186,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.232,
+            "low": 0.231,
+            "high": 0.232,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": -7.681,
+            "low": -7.705,
+            "high": -7.657,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2n",
+          "b": "R0",
+          "unemployment": {
+            "mean": 2.126,
+            "low": 2.125,
+            "high": 2.128,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.347,
+            "low": 0.347,
+            "high": 0.348,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": -13.472,
+            "low": -13.509,
+            "high": -13.435,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2n",
+          "unemployment": {
+            "mean": -0.941,
+            "low": -0.944,
+            "high": -0.939,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "inflationGap": {
+            "mean": -0.116,
+            "low": -0.116,
+            "high": -0.115,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": 5.791,
+            "low": 5.776,
+            "high": 5.806,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2",
+          "unemployment": {
+            "mean": -0.044,
+            "low": -0.044,
+            "high": -0.044,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "inflationGap": {
+            "mean": 0.05,
+            "low": 0.05,
+            "high": 0.05,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": 0.85,
+            "low": 0.85,
+            "high": 0.851,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          }
+        }
+      ]
+    },
+    "unemployment": {
+      "means": {
+        "R0": {
+          "unemployment": 8.158,
+          "unemploymentPeak": 10.223,
+          "inflationGap": 0.27,
+          "inflationPeak": 2.107,
+          "debt": 146.816,
+          "debtRise": 33.816,
+          "outputGap": -1.129,
+          "floorQuarters": 0
+        },
+        "R1": {
+          "unemployment": 7.91,
+          "unemploymentPeak": 9.559,
+          "inflationGap": 0.22,
+          "inflationPeak": 1.983,
+          "debt": 140.634,
+          "debtRise": 27.634,
+          "outputGap": -0.906,
+          "floorQuarters": 0.769
+        },
+        "R2": {
+          "unemployment": 9.226,
+          "unemploymentPeak": 10.156,
+          "inflationGap": 0.381,
+          "inflationPeak": 1.99,
+          "debt": 133.474,
+          "debtRise": 20.474,
+          "outputGap": -2.95,
+          "floorQuarters": 1.557
+        },
+        "R2s": {
+          "unemployment": 9.266,
+          "unemploymentPeak": 10.979,
+          "inflationGap": 0.414,
+          "inflationPeak": 2.007,
+          "debt": 134.771,
+          "debtRise": 21.771,
+          "outputGap": -2.799,
+          "floorQuarters": 2.863
+        },
+        "R2n": {
+          "unemployment": 10.655,
+          "unemploymentPeak": 12.271,
+          "inflationGap": 0.533,
+          "inflationPeak": 2.009,
+          "debt": 128.843,
+          "debtRise": 15.843,
+          "outputGap": -4.739,
+          "floorQuarters": 24.21
+        }
+      },
+      "pairs": [
+        {
+          "a": "R1",
+          "b": "R0",
+          "unemployment": {
+            "mean": -0.248,
+            "low": -0.251,
+            "high": -0.245,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "inflationGap": {
+            "mean": -0.05,
+            "low": -0.05,
+            "high": -0.05,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": -6.182,
+            "low": -6.246,
+            "high": -6.117,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2",
+          "b": "R0",
+          "unemployment": {
+            "mean": 1.067,
+            "low": 1.065,
+            "high": 1.07,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.111,
+            "low": 0.11,
+            "high": 0.112,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": -13.342,
+            "low": -13.403,
+            "high": -13.281,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R0",
+          "unemployment": {
+            "mean": 1.108,
+            "low": 1.105,
+            "high": 1.11,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.143,
+            "low": 0.142,
+            "high": 0.144,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": -12.045,
+            "low": -12.102,
+            "high": -11.988,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2n",
+          "b": "R0",
+          "unemployment": {
+            "mean": 2.497,
+            "low": 2.491,
+            "high": 2.503,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.263,
+            "low": 0.262,
+            "high": 0.264,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": -17.972,
+            "low": -18.015,
+            "high": -17.93,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2n",
+          "unemployment": {
+            "mean": -1.389,
+            "low": -1.396,
+            "high": -1.382,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "inflationGap": {
+            "mean": -0.12,
+            "low": -0.12,
+            "high": -0.12,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": 5.927,
+            "low": 5.897,
+            "high": 5.958,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2",
+          "unemployment": {
+            "mean": 0.04,
+            "low": 0.038,
+            "high": 0.042,
+            "wins": 941,
+            "ties": 0,
+            "losses": 59
+          },
+          "inflationGap": {
+            "mean": 0.032,
+            "low": 0.032,
+            "high": 0.032,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": 1.297,
+            "low": 1.288,
+            "high": 1.306,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          }
+        }
+      ],
+      "crisis": [
+        {
+          "a": "R1",
+          "b": "R0",
+          "unemployment": {
+            "mean": -0.203,
+            "low": -0.206,
+            "high": -0.2,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "inflationGap": {
+            "mean": -0.035,
+            "low": -0.036,
+            "high": -0.035,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": -4.97,
+            "low": -5.033,
+            "high": -4.906,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2",
+          "b": "R0",
+          "unemployment": {
+            "mean": -0.162,
+            "low": -0.164,
+            "high": -0.159,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "inflationGap": {
+            "mean": -0.071,
+            "low": -0.072,
+            "high": -0.07,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": -4.811,
+            "low": -4.87,
+            "high": -4.751,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R0",
+          "unemployment": {
+            "mean": -0.077,
+            "low": -0.08,
+            "high": -0.075,
+            "wins": 19,
+            "ties": 0,
+            "losses": 981
+          },
+          "inflationGap": {
+            "mean": -0.089,
+            "low": -0.089,
+            "high": -0.088,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": -4.364,
+            "low": -4.419,
+            "high": -4.309,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2n",
+          "b": "R0",
+          "unemployment": {
+            "mean": 0.37,
+            "low": 0.364,
+            "high": 0.376,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": -0.084,
+            "low": -0.085,
+            "high": -0.083,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": -4.5,
+            "low": -4.548,
+            "high": -4.453,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2n",
+          "unemployment": {
+            "mean": -0.448,
+            "low": -0.454,
+            "high": -0.441,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "inflationGap": {
+            "mean": -0.004,
+            "low": -0.005,
+            "high": -0.004,
+            "wins": 231,
+            "ties": 0,
+            "losses": 769
+          },
+          "debt": {
+            "mean": 0.136,
+            "low": 0.101,
+            "high": 0.171,
+            "wins": 657,
+            "ties": 0,
+            "losses": 343
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2",
+          "unemployment": {
+            "mean": 0.084,
+            "low": 0.083,
+            "high": 0.086,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": -0.018,
+            "low": -0.018,
+            "high": -0.018,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": 0.447,
+            "low": 0.437,
+            "high": 0.456,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          }
+        }
+      ]
+    },
+    "materials": {
+      "means": {
+        "R0": {
+          "unemployment": 7.415,
+          "unemploymentPeak": 7.887,
+          "inflationGap": 1.977,
+          "inflationPeak": 11.168,
+          "debt": 143.27,
+          "debtRise": 30.27,
+          "outputGap": -0.352,
+          "floorQuarters": 0
+        },
+        "R1": {
+          "unemployment": 7.366,
+          "unemploymentPeak": 8.407,
+          "inflationGap": 1.926,
+          "inflationPeak": 11.149,
+          "debt": 141.359,
+          "debtRise": 28.359,
+          "outputGap": -0.285,
+          "floorQuarters": 0.89
+        },
+        "R2": {
+          "unemployment": 9.357,
+          "unemploymentPeak": 10.809,
+          "inflationGap": 2.267,
+          "inflationPeak": 11.251,
+          "debt": 135.063,
+          "debtRise": 22.063,
+          "outputGap": -3.066,
+          "floorQuarters": 10.703
+        },
+        "R2s": {
+          "unemployment": 9.368,
+          "unemploymentPeak": 11.346,
+          "inflationGap": 2.313,
+          "inflationPeak": 11.386,
+          "debt": 135.918,
+          "debtRise": 22.918,
+          "outputGap": -2.867,
+          "floorQuarters": 7.738
+        },
+        "R2n": {
+          "unemployment": 10.348,
+          "unemploymentPeak": 12.041,
+          "inflationGap": 2.394,
+          "inflationPeak": 11.429,
+          "debt": 134.459,
+          "debtRise": 21.459,
+          "outputGap": -4.401,
+          "floorQuarters": 19.007
+        }
+      },
+      "pairs": [
+        {
+          "a": "R1",
+          "b": "R0",
+          "unemployment": {
+            "mean": -0.049,
+            "low": -0.052,
+            "high": -0.047,
+            "wins": 146,
+            "ties": 0,
+            "losses": 854
+          },
+          "inflationGap": {
+            "mean": -0.051,
+            "low": -0.052,
+            "high": -0.049,
+            "wins": 6,
+            "ties": 0,
+            "losses": 994
+          },
+          "debt": {
+            "mean": -1.911,
+            "low": -1.987,
+            "high": -1.836,
+            "wins": 60,
+            "ties": 0,
+            "losses": 940
+          }
+        },
+        {
+          "a": "R2",
+          "b": "R0",
+          "unemployment": {
+            "mean": 1.942,
+            "low": 1.929,
+            "high": 1.956,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.291,
+            "low": 0.289,
+            "high": 0.292,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": -8.207,
+            "low": -8.257,
+            "high": -8.156,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R0",
+          "unemployment": {
+            "mean": 1.953,
+            "low": 1.94,
+            "high": 1.966,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.336,
+            "low": 0.334,
+            "high": 0.338,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": -7.352,
+            "low": -7.425,
+            "high": -7.279,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2n",
+          "b": "R0",
+          "unemployment": {
+            "mean": 2.933,
+            "low": 2.929,
+            "high": 2.938,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.417,
+            "low": 0.416,
+            "high": 0.419,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": -8.811,
+            "low": -8.873,
+            "high": -8.748,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2n",
+          "unemployment": {
+            "mean": -0.98,
+            "low": -0.99,
+            "high": -0.97,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "inflationGap": {
+            "mean": -0.081,
+            "low": -0.083,
+            "high": -0.079,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          },
+          "debt": {
+            "mean": 1.459,
+            "low": 1.402,
+            "high": 1.516,
+            "wins": 966,
+            "ties": 0,
+            "losses": 34
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2",
+          "unemployment": {
+            "mean": 0.011,
+            "low": 0.006,
+            "high": 0.015,
+            "wins": 610,
+            "ties": 0,
+            "losses": 390
+          },
+          "inflationGap": {
+            "mean": 0.045,
+            "low": 0.044,
+            "high": 0.046,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": 0.855,
+            "low": 0.803,
+            "high": 0.906,
+            "wins": 879,
+            "ties": 0,
+            "losses": 121
+          }
+        }
+      ],
+      "crisis": [
+        {
+          "a": "R1",
+          "b": "R0",
+          "unemployment": {
+            "mean": -0.005,
+            "low": -0.007,
+            "high": -0.002,
+            "wins": 447,
+            "ties": 0,
+            "losses": 553
+          },
+          "inflationGap": {
+            "mean": -0.036,
+            "low": -0.038,
+            "high": -0.035,
+            "wins": 53,
+            "ties": 0,
+            "losses": 947
+          },
+          "debt": {
+            "mean": -0.699,
+            "low": -0.77,
+            "high": -0.628,
+            "wins": 285,
+            "ties": 0,
+            "losses": 715
+          }
+        },
+        {
+          "a": "R2",
+          "b": "R0",
+          "unemployment": {
+            "mean": 0.713,
+            "low": 0.7,
+            "high": 0.727,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.109,
+            "low": 0.107,
+            "high": 0.11,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": 0.325,
+            "low": 0.279,
+            "high": 0.371,
+            "wins": 660,
+            "ties": 0,
+            "losses": 340
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R0",
+          "unemployment": {
+            "mean": 0.768,
+            "low": 0.755,
+            "high": 0.781,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.104,
+            "low": 0.102,
+            "high": 0.106,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "debt": {
+            "mean": 0.329,
+            "low": 0.26,
+            "high": 0.398,
+            "wins": 627,
+            "ties": 0,
+            "losses": 373
+          }
+        },
+        {
+          "a": "R2n",
+          "b": "R0",
+          "unemployment": {
+            "mean": 0.807,
+            "low": 0.802,
+            "high": 0.811,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          },
+          "inflationGap": {
+            "mean": 0.07,
+            "low": 0.068,
+            "high": 0.071,
+            "wins": 991,
+            "ties": 0,
+            "losses": 9
+          },
+          "debt": {
+            "mean": 4.661,
+            "low": 4.597,
+            "high": 4.726,
+            "wins": 1000,
+            "ties": 0,
+            "losses": 0
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2n",
+          "unemployment": {
+            "mean": -0.039,
+            "low": -0.049,
+            "high": -0.028,
+            "wins": 395,
+            "ties": 0,
+            "losses": 605
+          },
+          "inflationGap": {
+            "mean": 0.035,
+            "low": 0.033,
+            "high": 0.036,
+            "wins": 895,
+            "ties": 0,
+            "losses": 105
+          },
+          "debt": {
+            "mean": -4.332,
+            "low": -4.392,
+            "high": -4.273,
+            "wins": 0,
+            "ties": 0,
+            "losses": 1000
+          }
+        },
+        {
+          "a": "R2s",
+          "b": "R2",
+          "unemployment": {
+            "mean": 0.055,
+            "low": 0.05,
+            "high": 0.059,
+            "wins": 771,
+            "ties": 0,
+            "losses": 229
+          },
+          "inflationGap": {
+            "mean": -0.004,
+            "low": -0.005,
+            "high": -0.003,
+            "wins": 471,
+            "ties": 0,
+            "losses": 529
+          },
+          "debt": {
+            "mean": 0.004,
+            "low": -0.047,
+            "high": 0.056,
+            "wins": 586,
+            "ties": 0,
+            "losses": 414
+          }
+        }
+      ]
+    }
+  },
+  "aa": {
+    "unemployment": {
+      "mean": -0.002,
+      "low": -0.005,
+      "high": 0.001,
+      "wins": 485,
+      "ties": 0,
+      "losses": 515
+    },
+    "inflationGap": {
+      "mean": 0,
+      "low": -0.001,
+      "high": 0.001,
+      "wins": 507,
+      "ties": 0,
+      "losses": 493
+    },
+    "debt": {
+      "mean": -0.046,
+      "low": -0.088,
+      "high": -0.003,
+      "wins": 465,
+      "ties": 0,
+      "losses": 535
+    }
+  }
+}

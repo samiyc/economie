@@ -14,21 +14,28 @@ const variants = readdirSync(folder).filter((f) => f.endsWith(".json")).sort().m
 
 const number = (x) => x.toFixed(2).replace(".", ",").replace("-", "−");
 const find = (list, a, b) => list.find((p) => p.a === a && p.b === b);
+const NAMES = { unemployment: "chômage", inflationGap: "inflation", debt: "dette" };
+
+/** The A/A's cell: "contient 0", or the objectives whose interval misses 0, with their mean. */
+function aaCell(aa) {
+  const missed = Object.entries(aa).filter(([, p]) => p.low > 0 || p.high < 0);
+  if (missed.length === 0) return "contient 0";
+  return missed.map(([k, p]) => `${NAMES[k] ?? k} ${number(p.mean)}`).join(", ");
+}
 
 /** The conclusions a measure draws: Taylor in recession, R2s against R2n in each crisis, the A/A. */
 function conclusions({ families, aa }) {
   const taylor = find(families.unemployment.pairs, "R1", "R0");
   const recession = find(families.unemployment.crisis, "R2s", "R2n");
   const materials = find(families.materials.crisis, "R2s", "R2n");
-  const aaHolds = Object.values(aa).every((p) => p.low <= 0 && p.high >= 0);
   return {
     cells: [number(taylor.unemployment.mean), number(taylor.debt.mean), number(recession.unemployment.mean),
-      number(recession.debt.mean), number(materials.debt.mean), aaHolds ? "oui" : "non"],
+      number(recession.debt.mean), number(materials.debt.mean), aaCell(aa)],
     holds: taylor.unemployment.high < 0 && recession.unemployment.high < -0.2 && recession.debt.high < 1,
   };
 }
 
-console.log("| Hypothèse | Facteur | R1 − R0, chômage | R1 − R0, dette | R2s − R2n, chômage (récession) | R2s − R2n, dette (récession) | R2s − R2n, dette (matières) | A/A | Conclusions |");
+console.log("| Hypothèse | Facteur | R1 − R0, chômage | R1 − R0, dette | R2s − R2n, chômage (récession) | R2s − R2n, dette (récession) | R2s − R2n, dette (matières) | A/A manque 0 | Conclusions |");
 console.log("|---|---|---|---|---|---|---|---|---|");
 for (const measure of [reference, ...variants]) {
   const { cells, holds } = conclusions(measure);

@@ -139,8 +139,84 @@ même bruit) :
   −0,05 [−0,09 ; −0,003], quarante fois sous le plus petit gain qui vaille (2 points). Avec trois objectifs à 95 %, un
   intervalle sur sept manque 0 par hasard ; on le surveillera dans les séries suivantes.
 - **Les hypothèses** (le modèle décalé du § 8) : les conclusions tiennent-elles si les comportements d'ÉCO changent
-  de ±20 % ? Les séries tournent dans la file (`scripts/sensitivity.js`), § 6.
+  de ±20 % ? Oui, sur les 26 variantes (§ 6).
 
 ## 6. La sensibilité aux hypothèses
 
-À venir : la même mesure sous chaque hypothèse d'ÉCO décalée de −20 et +20 %, une variante par job dans la file.
+Mesurée la nuit du 9 au 10/11 : la mesure entière (1 000 crises par famille) rejouée 26 fois, une hypothèse d'ÉCO
+décalée à la fois, de −20 % (0,80) ou de +20 % (1,20) (`scripts/sensitivity.js`, un job par variante ; les sorties
+dans `docs/mesures/sensibilite/`, la table par `scripts/sensitivity-report.js`). Les hypothèses décalées sont les
+treize comportements marqués H dans `src/eco/targets.js` :
+- `alpha2` : la propension à consommer la richesse ;
+- `eps` : le poids du revenu courant dans le revenu attendu ;
+- `etan` : la vitesse de l'emploi ;
+- `phil` : la pente de Phillips ;
+- `chi` : l'ancrage des anticipations ;
+- `epsx` : l'élasticité des exportations ;
+- `mug` : les importations des achats publics ;
+- `mut` : les importations quand le travail manque ;
+- `gammau`, `gammar`, `gammac` : la réponse de l'investissement à l'utilisation, au taux réel, à la confiance ;
+- `iota` : la consommation au taux réel ;
+- `lb1` : le partage dépôts-obligations.
+
+Les conclusions « tiennent » quand trois choses restent vraies : Taylor bat R0 en récession sur le chômage (le haut de
+l'intervalle sous 0) ; ce que la récession ajoute à R2s − R2n est un gain de chômage d'au moins 0,2 point (le haut de
+l'intervalle sous −0,2) ; et la dette n'y perd pas plus d'un point (le haut sous 1), selon les seuils du § 8 de
+`modele.md`.
+
+| Hypothèse | Facteur | R1 − R0, chômage | R1 − R0, dette | R2s − R2n, chômage (récession) | R2s − R2n, dette (récession) | R2s − R2n, dette (matières) | A/A manque 0 | Conclusions |
+|---|---|---|---|---|---|---|---|---|
+| — | 1,00 | −0,25 | −6,23 | −0,43 | 0,49 | −3,85 | dette −0,05 | tiennent |
+| alpha2 | 0,80 | −0,26 | −6,45 | −0,45 | 0,17 | −4,27 | dette −0,05 | tiennent |
+| alpha2 | 1,20 | −0,24 | −6,04 | −0,42 | 0,69 | −3,51 | dette −0,04 | tiennent |
+| chi | 0,80 | −0,26 | −6,47 | −0,44 | 0,38 | −3,91 | dette −0,05 | tiennent |
+| chi | 1,20 | −0,25 | −6,03 | −0,42 | 0,58 | −3,81 | dette −0,04 | tiennent |
+| eps | 0,80 | −0,25 | −6,24 | −0,43 | 0,51 | −3,84 | dette −0,05 | tiennent |
+| eps | 1,20 | −0,25 | −6,23 | −0,43 | 0,48 | −3,87 | dette −0,05 | tiennent |
+| epsx | 0,80 | −0,26 | −6,38 | −0,45 | 0,38 | −4,05 | dette −0,05 | tiennent |
+| epsx | 1,20 | −0,24 | −6,11 | −0,41 | 0,56 | −3,69 | dette −0,04 | tiennent |
+| etan | 0,80 | −0,25 | −6,05 | −0,44 | 0,92 | −3,51 | dette −0,05 | tiennent |
+| etan | 1,20 | −0,26 | −6,31 | −0,40 | 0,16 | −4,07 | dette −0,04 | tiennent |
+| gammac | 0,80 | −0,25 | −6,11 | −0,42 | 0,53 | −3,85 | dette −0,04 | tiennent |
+| gammac | 1,20 | −0,26 | −6,35 | −0,44 | 0,46 | −3,85 | dette −0,05 | tiennent |
+| gammar | 0,80 | −0,18 | −5,56 | −0,49 | −0,66 | −4,56 | dette −0,05 | tiennent |
+| gammar | 1,20 | −0,32 | −6,86 | −0,37 | 0,89 | −3,31 | dette −0,04 | tiennent |
+| gammau | 0,80 | −0,27 | −6,45 | −0,40 | 0,81 | −3,48 | dette −0,05 | tiennent |
+| gammau | 1,20 | −0,24 | −6,04 | −0,46 | 0,06 | −4,26 | dette −0,05 | tiennent |
+| iota | 0,80 | −0,23 | −6,02 | −0,44 | 0,19 | −4,11 | dette −0,05 | tiennent |
+| iota | 1,20 | −0,27 | −6,45 | −0,42 | 0,71 | −3,62 | dette −0,04 | tiennent |
+| lb1 | 0,80 | −0,25 | −6,23 | −0,43 | 0,48 | −3,87 | dette −0,05 | tiennent |
+| lb1 | 1,20 | −0,25 | −6,23 | −0,43 | 0,51 | −3,84 | dette −0,05 | tiennent |
+| mug | 0,80 | −0,25 | −6,18 | −0,45 | 0,14 | −4,33 | dette −0,05 | tiennent |
+| mug | 1,20 | −0,26 | −6,28 | −0,41 | 0,73 | −3,45 | dette −0,05 | tiennent |
+| mut | 0,80 | −0,25 | −6,19 | −0,43 | 0,49 | −3,85 | dette −0,05 | tiennent |
+| mut | 1,20 | −0,25 | −6,26 | −0,43 | 0,49 | −3,85 | dette −0,04 | tiennent |
+| phil | 0,80 | −0,24 | −5,68 | −0,39 | 0,83 | −3,62 | dette −0,04 | tiennent |
+| phil | 1,20 | −0,26 | −6,78 | −0,48 | −0,05 | −4,17 | dette −0,05 | tiennent |
+
+**Les trois conclusions tiennent sur les 26 variantes.**
+- **Taylor bat les stabilisateurs seuls en récession** : de 0,18 à 0,32 point de chômage en moins, et de 5,6 à 6,9
+  points de dette en moins.
+- **R2s bat R2n sur ce que la récession ajoute** : de 0,37 à 0,49 point de chômage en moins. Le coût en dette va de
+  −0,66 à +0,92 point ; le pire haut d'intervalle est 0,94, pour un emploi plus lent (`etan` 0,80), sous le point
+  qui ferait perdre la non-infériorité.
+- **Face aux matières premières, R2n finit plus endetté** : de 3,3 à 4,6 points de plus que R2s.
+
+**Ce qui fait bouger les chiffres** :
+- **Le canal du taux sur l'investissement (`gammar`)** pèse le plus. À −20 %, Taylor ne gagne plus que 0,18 point
+  de chômage en récession ; à +20 %, il en gagne 0,32. La force de la règle de Taylor tient donc à une hypothèse que
+  personne n'a encore réglée (Q-P3) : c'est la première à montrer à un économiste (Q-S10).
+- **Le coût en dette de R2s en récession** dépend de `gammar`, `phil`, `etan`, `gammau`, `mug`, `iota` et
+  `alpha2`. Il monte à 0,8 ou 0,9 point avec un emploi plus lent (`etan` 0,80), un investissement qui suit moins
+  l'utilisation (`gammau` 0,80), une pente de Phillips plus plate (`phil` 0,80) ou un canal du taux plus fort
+  (`gammar` 1,20). Il tombe vers 0, ou sous 0, avec les décalages inverses : R2s coûte alors moins de dette que R2n.
+  Le mécanisme reste à démêler.
+- **Quatre hypothèses ne changent presque rien** : `eps` et `lb1` (au plus 0,03 sur chaque colonne), `mut` et
+  `gammac` (au plus 0,12).
+
+**Les limites** :
+- Une hypothèse est décalée à la fois, de ±20 % seulement ; deux hypothèses décalées ensemble pourraient s'ajouter. Le
+  pire cas pour la dette (`etan` 0,80, ou `gammar` 1,20) reste à croiser avant J5.
+- **L'A/A de la dette manque 0 dans les 26 variantes**, toujours de −0,04 à −0,05. Ce n'est pas 26 preuves : ce sont
+  les mêmes graines (1 à 1 000 contre 1 001 à 2 000), et l'écart tient à ces deux lots de crises, pas au modèle. Il
+  reste quarante fois sous le plus petit gain qui compte. Pour le lever, l'A/A de J5 tirera d'autres lots.
