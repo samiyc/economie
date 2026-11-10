@@ -5,6 +5,7 @@ import { createEco, ECO } from "../src/eco/model.js";
 import { ASSUMED, TARGETS } from "../src/eco/targets.js";
 import { objectivesOf, simulate } from "../src/policy/simulate.js";
 import { WEIGHTS } from "../src/policy/tuning.js";
+import { createBeamPlanner } from "../src/search/beam.js";
 import { createPlanner } from "../src/search/planner.js";
 
 /**
@@ -13,7 +14,8 @@ import { createPlanner } from "../src/search/planner.js";
  * textbooks' Taylor in all of them (Sami, 10/11): R0, R1, R2s, and R2s*b, R2s's speed tuned for these weights
  * (docs/mesures/reglage/R2sb-<weights>.json). With
  * `--world param:factor`, the world is ÉCO with that hypothesis moved, the planner still planning on ÉCO: the shifted
- * model (docs/modele.md, § 8). Each seed's objectives go to docs/mesures/recherche/; scripts/search-report.js reads them.
+ * model (docs/modele.md, § 8). With `--planner beam`, the beam (src/search/beam.js, `--width` states) plans instead of
+ * the climb, tagged "faisceau". Each seed's objectives go to docs/mesures/recherche/; scripts/search-report.js reads them.
  *
  *   node scripts/search.js --family unemployment --weights balance --from 1 --seeds 50 --budget 300
  */
@@ -22,6 +24,7 @@ const { values } = parseArgs({ options: {
   family: { type: "string" }, weights: { type: "string", default: "balance" }, from: { type: "string", default: "1" },
   seeds: { type: "string", default: "100" }, budget: { type: "string", default: "300" }, count: { type: "string", default: "16" },
   horizon: { type: "string", default: "24" }, world: { type: "string" }, tag: { type: "string", default: "" },
+  planner: { type: "string", default: "climb" }, width: { type: "string", default: "60" },
 } });
 const family = /** @type {"calm" | "unemployment" | "materials"} */ (values.family);
 const [from, seeds, budget, count, horizon] = [values.from, values.seeds, values.budget, values.count, values.horizon].map(Number);
@@ -45,17 +48,20 @@ const KEPT = ["unemployment", "unemploymentPeak", "inflationGap", "inflationPeak
 const keep = (o) => Object.fromEntries(KEPT.map((k) => [k, Math.round(o[k] * 1e6) / 1e6]));
 
 const world = worldOf(values.world);
-const shape = { model: ECO, weights, budget, count, horizon };
+const beam = values.planner === "beam";
+const tag = beam ? "faisceau" : values.tag;
+const shape = { model: ECO, weights, budget, count, horizon, width: Number(values.width) };
+const makerOf = () => (beam ? (run) => createBeamPlanner(shape, run) : (run) => createPlanner(shape, run));
 const rows = Object.fromEntries(["search", ...RULES.map((r) => r.label)].map((label) => [label, []]));
 for (let seed = from; seed < from + seeds; seed += 1) {
-  const policy = (run) => createPlanner(shape, run);
+  const policy = makerOf();
   rows.search.push(keep(objectivesOf(simulate({ family, seed, rule: "R0", policy, check: seed === from }, world))));
   for (const { label, rule, coefficients } of RULES) rows[label].push(keep(objectivesOf(simulate({ family, seed, rule: /** @type {any} */ (rule), coefficients, check: false }, world))));
   progress("search", seed - from + 1, seeds, { family, weights: values.weights });
 }
 const folder = new URL("../docs/mesures/recherche/", import.meta.url);
 mkdirSync(folder, { recursive: true });
-const name = [family, values.weights, values.world?.replace(":", "-"), values.tag, from].filter(Boolean).join("-");
-const result = { date: new Date().toISOString().slice(0, 10), family, weights: values.weights, from, seeds, budget, count, horizon, world: values.world ?? null, tag: values.tag, coefficients: { r2sb }, rows };
+const name = [family, values.weights, values.world?.replace(":", "-"), tag, from].filter(Boolean).join("-");
+const result = { date: new Date().toISOString().slice(0, 10), family, weights: values.weights, from, seeds, budget, count, horizon, world: values.world ?? null, tag, planner: values.planner, width: beam ? shape.width : null, coefficients: { r2sb }, rows };
 writeFileSync(new URL(`${name}.json`, folder), `${JSON.stringify(result)}\n`);
 console.log(`${name}: ${seeds} graines, écrit`);

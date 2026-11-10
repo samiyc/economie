@@ -363,9 +363,12 @@ RESCO pour les feux. On compare donc des tendances, pas des chiffres : la règle
 à un choc de demande ; une règle nominale de déficit est procyclique ; un multiplicateur plus fort en crise. Un résultat
 de la recherche n'est montré qu'une fois ces tendances retrouvées.
 
-## 9. La recherche, plus tard
+## 9. La recherche
 
-**Rien n'est écrit, rien n'est choisi.** Ce qui suit dit l'ordre des essais, une fois les règles mesurées.
+**Faite au J6** ([`recherche.md`](recherche.md)), avec deux écarts au cadrage ci-dessous : la recherche ne joue que
+les achats publics, la banque centrale suivant le Taylor du manuel (Sami, 10/11 : un taux bas ne coûte presque rien
+dans ÉCO, Q-S13) ; son horizon est de 24 trimestres, et sa perte linéaire, celle du réglage de J5. Le cadrage de
+départ :
 
 **Le pilotage à horizon glissant** (la commande prédictive) :
 - **le plan** : les leviers sur les 8 à 12 trimestres à venir (H), soit 3 leviers × 12 trimestres = 36 nombres ;
@@ -448,7 +451,7 @@ indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le
 | **J3** (fait le 9/11) | ÉCO au trimestre : le travail, les prix, les entreprises, les banques, le reste du monde ; chaque bloc rejoué dans son modèle d'origine | les ratios de départ et les tests de calibration du § 4 |
 | **J4** (fait le 9/11) | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Sami, 6/11, Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
 | **J5** (fait le 10/11) | le réglage des règles sur les graines d'apprentissage | R1\* et R2s\* mesurées contre les règles des manuels |
-| **J6** | la recherche à horizon glissant : l'escalade, puis le faisceau ; le banc (`npm run bench`) | elle bat la meilleure règle réglée selon le seuil du § 8, ou on sait pourquoi pas ; le témoin du modèle décalé |
+| **J6** (fait le 10/11) | la recherche à horizon glissant : l'escalade, puis le faisceau ; le banc (`npm run bench`) | elle bat la meilleure règle réglée selon le seuil du § 8, ou on sait pourquoi pas ; le témoin du modèle décalé |
 | **J7** | deux États, la guerre commerciale, l'ISMCTS | à cadrer à son tour |
 
 Les empreintes, le changelog et le banc arrivent avec leur jalon, comme le dit `CLAUDE.md`.

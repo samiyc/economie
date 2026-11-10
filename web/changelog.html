@@ -19,6 +19,19 @@
         <h2>Les versions</h2>
 
       <article class="version">
+        <h3><span class="tag">0.6.0</span> La recherche à horizon glissant <span class="date">10/11/2026</span></h3>
+        <ul>
+          <li>À la fin de chaque trimestre, une recherche planifie les achats publics des six ans à venir, sur seize futurs tirés de ce qu'on sait de la crise, joue le premier trimestre et recommence. Elle ne connaît ni la durée de la crise ni la fin de la mesure.</li>
+          <li>La banque centrale reste indépendante : son taux suit la règle de Taylor du manuel. Laissée au taux, la recherche le collait à zéro, parce qu'un taux bas ne coûte presque rien dans ÉCO (le change y est fixe) ; ce défaut sera corrigé avec un économiste.</li>
+          <li>Face au choc des matières premières, la recherche fait mieux que la meilleure règle sur le chômage, l'inflation et la dette à la fois, et passe le seuil d'adoption.</li>
+          <li>Ailleurs, elle choisit un autre compromis que les règles : en récession, elle relance tôt, et le pic de chômage passe de 9,6 % à 8,0 %, pour 2,3 points de dette de plus en dix ans.</li>
+          <li>Son gain tient quand le monde diffère du modèle sur lequel elle planifie (quatre hypothèses décalées de 20 %). Quatre fois plus de calcul n'ajoute presque rien, et le faisceau de la lib fait presque aussi bien que l'escalade.</li>
+          <li>npm run bench mesure le coût : 18 s par crise de dix ans, sans allocation sur le chemin chaud. Les résultats sont dans docs/recherche.md.</li>
+        </ul>
+        <p class="commits"></p>
+      </article>
+
+      <article class="version">
         <h3><span class="tag">0.5.0</span> Les règles réglées <span class="date">10/11/2026</span></h3>
         <ul>
           <li>Les coefficients des règles ne sont plus ceux des manuels : l'escalade de la lib les règle sur des crises d'apprentissage, jamais celles de la mesure, sous trois jeux de poids (l'équilibre, le chômage d'abord, la dette d'abord).</li>

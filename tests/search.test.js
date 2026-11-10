@@ -6,6 +6,7 @@ import { ECO } from "../src/eco/model.js";
 import { LIMITS, TEXTBOOK } from "../src/policy/rules.js";
 import { simulate } from "../src/policy/simulate.js";
 import { WEIGHTS } from "../src/policy/tuning.js";
+import { createBeamPlanner } from "../src/search/beam.js";
 import { createPlanner } from "../src/search/planner.js";
 import { createRollout } from "../src/search/rollout.js";
 
@@ -95,5 +96,32 @@ describe("the rolling-horizon planner", () => {
   it("moves the purchases when it pays", () => {
     const a = plan(7, 40);
     assert.ok(a.levers.gshare.some((g) => g !== a.levers.gshare[0]));
+  });
+});
+
+describe("the beam planner", () => {
+  const beamed = (seed, width = 10) => simulate({
+    family: "unemployment", seed, rule: "R0",
+    policy: (run) => createBeamPlanner({ model: ECO, weights: WEIGHTS.jobs, width, count: 2, horizon: 8 }, run),
+  });
+
+  it("replays from its seed, and moves the purchases by half points of GDP, within their band", () => {
+    const a = beamed(3);
+    assert.deepEqual(a.states, beamed(3).states);
+    const point = a.at("GDP", 0) / 100 / (a.at("p", 0) * a.at("yfe", 0));
+    for (let t = 1; t <= 40; t += 1) {
+      assert.ok(Math.abs(a.levers.gshare[t] - a.levers.gshare[0]) <= LIMITS.spendingBand * 100 * point + 1e-12);
+      const move = Math.abs(a.levers.gshare[t] - a.levers.gshare[t - 1]);
+      assert.ok(move <= LIMITS.spendingStep * 100 * 1.2 * point, `quarter ${t}`);
+    }
+    assert.ok(a.levers.gshare.some((g) => g !== a.levers.gshare[0]), "it moves");
+  });
+
+  it("holds the purchases when no child lives", () => {
+    const run = { start: { rcb: 0.03, gshare: 0.3, piT: 0.02, point: 0.01 }, belief: beliefOf("calm", 1, 40), seed: 1, periods: 40 };
+    const planner = createBeamPlanner({ model: ECO, weights: WEIGHTS.balance, width: 2, count: 1, horizon: 0 }, run);
+    const played = simulate({ family: "calm", seed: 1, rule: "R1" });
+    planner.decide(played, 1, played.state(1));
+    assert.equal(planner.levers().gshare, 0.3);
   });
 });

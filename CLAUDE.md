@@ -64,9 +64,12 @@ Its line in the roadmap: `mcts-commun/docs/feuille-de-route.md`, § 2.C. Start t
   it with a hypothesis of ÉCO moved (a job a variant, in the queue); `scripts/sensitivity-report.js` gathers them.
   J5: `scripts/tune.js` tunes a rule's coefficients on learning seeds (`src/policy/tuning.js`, a job a rule and
   weights), then `scripts/rules.js --tuned docs/mesures/reglage` measures them; `docs/reglage.md` reads it.
-
-To add when its turn comes, copied from the other clients: **the bench** (`npm run bench`, `scripts/search-bench.js`),
-with the first search; its hot paths do not allocate.
+  J6: `scripts/search.js` plays the rolling-horizon search (`src/search/`, the climb or `--planner beam`) beside the
+  rules, 50 seeds a job (a quarter of an hour), `--world param:factor` for the shifted model;
+  `scripts/search-report.js` gathers `docs/mesures/recherche/`; `docs/recherche.md` reads it. The central bank
+  follows the textbook Taylor there: the search plays the purchases only (Sami, 10/11, Q-S13).
+- **The bench** (`npm run bench`, `scripts/search-bench.js`): the time of a decision and of a quarter played, and the
+  heap a run leaves. The search's hot paths do not allocate; a change to them is benched before and after.
 
 ## The machine
 
