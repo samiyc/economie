@@ -4,6 +4,20 @@
   "intro": "L'économie d'un État en simulation, pour en comprendre les mécanismes : ses secteurs, la monnaie qui passe de l'un à l'autre, les leviers et les crises. Un modèle pour comprendre, pas pour prévoir.",
   "versions": [
     {
+      "version": "0.5.0",
+      "title": "Les règles réglées",
+      "date": "10/11/2026",
+      "commits": [],
+      "items": [
+        "Les coefficients des règles ne sont plus ceux des manuels : l'escalade de la lib les règle sur des crises d'apprentissage, jamais celles de la mesure, sous trois jeux de poids (l'équilibre, le chômage d'abord, la dette d'abord).",
+        "R1*, la règle de Taylor réglée, répond six fois plus fort à l'inflation et à l'écart de production, et fait mieux que la règle du manuel sur le chômage, l'inflation et la dette, dans les trois familles de crises ; en récession, 2,8 points de dette en moins.",
+        "R2s*, la règle de déficit structurel réglée, corrige un cinquième de l'écart par an au lieu de tout l'écart d'un coup : en récession, 0,9 point de chômage et 4 points de dette en moins que la règle du manuel.",
+        "Entre R1* et R2s*, c'est un choix : R2s* efface de 7 à 12 points de dette de plus en dix ans, pour un demi-point de chômage en plus.",
+        "Le témoin A/A tiré sur deux autres lots de crises contient 0 sur les trois objectifs.",
+        "Les résultats sont dans docs/reglage.md."
+      ]
+    },
+    {
       "version": "0.4.0",
       "title": "Les règles simples face aux crises",
       "date": "9/11/2026",

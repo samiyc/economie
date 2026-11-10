@@ -62,6 +62,8 @@ Its line in the roadmap: `mcts-commun/docs/feuille-de-route.md`, § 2.C. Start t
 - **The measures** (J4): `node scripts/rules.js --seeds 1000 --out docs/mesures/regles.json` (a minute) plays the rules
   (`src/policy/`) on the crises (`src/crises/`) by pairs; `docs/regles.md` reads it. `scripts/sensitivity.js` replays
   it with a hypothesis of ÉCO moved (a job a variant, in the queue); `scripts/sensitivity-report.js` gathers them.
+  J5: `scripts/tune.js` tunes a rule's coefficients on learning seeds (`src/policy/tuning.js`, a job a rule and
+  weights), then `scripts/rules.js --tuned docs/mesures/reglage` measures them; `docs/reglage.md` reads it.
 
 To add when its turn comes, copied from the other clients: **the bench** (`npm run bench`, `scripts/search-bench.js`),
 with the first search; its hot paths do not allocate.

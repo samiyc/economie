@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-10",
+  "rule": "R2s",
+  "weights": "jobs",
+  "seeds": 200,
+  "budget": 400,
+  "textbook": 205.7738,
+  "loss": 183.1932,
+  "coefficients": {
+    "inflation": 3,
+    "gap": 2.9927,
+    "speed": 0
+  },
+  "restarts": [
+    {
+      "seed": 1,
+      "loss": 183.1932,
+      "coefficients": {
+        "inflation": 3,
+        "gap": 2.9927,
+        "speed": 0
+      }
+    },
+    {
+      "seed": 2,
+      "loss": 183.4826,
+      "coefficients": {
+        "inflation": 0,
+        "gap": 2.994,
+        "speed": 0
+      }
+    },
+    {
+      "seed": 3,
+      "loss": 183.1965,
+      "coefficients": {
+        "inflation": 2.995,
+        "gap": 3,
+        "speed": 0
+      }
+    }
+  ]
+}

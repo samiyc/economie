@@ -9,7 +9,7 @@ import { createRule, inflationOf, yearOf } from "./rules.js";
  * the rule sees what the model did. Every quarter the ledger checks the matrices, unless `check` is false.
  *
  * @typedef {{ family: "calm" | "unemployment" | "materials", seed: number, rule: "R0" | "R1" | "R2" | "R2s" | "R2n",
- *   periods?: number, check?: boolean }} Trial
+ *   periods?: number, check?: boolean, coefficients?: { inflation: number, gap: number, speed: number } }} Trial
  */
 
 /** The levers and the starting figures a rule needs from ÉCO's first quarter. */
@@ -28,13 +28,13 @@ function startOf(model, state) {
  *
  * @param {Trial} trial
  */
-export function simulate({ family, seed, rule: name, periods = 40, check = true }, model = /** @type {import("../types.js").Model} */ (ECO)) {
+export function simulate({ family, seed, rule: name, periods = 40, check = true, coefficients }, model = /** @type {import("../types.js").Model} */ (ECO)) {
   const width = model.VARS.length;
   const states = new Float64Array((periods + 1) * width);
   const state = model.emptyState();
   states.set(state, 0);
   const history = { at: (name, t) => states[t * width + model.V[name]] };
-  const rule = createRule(name, startOf(model, state));
+  const rule = createRule(name, startOf(model, state), coefficients);
   const shocks = crisisOf(family, seed, periods);
   const ledger = check ? createLedger(model.SPEC) : null;
   const params = { ...model.DEFAULTS };

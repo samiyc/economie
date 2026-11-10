@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-10",
+  "rule": "R1",
+  "weights": "debt",
+  "seeds": 200,
+  "budget": 400,
+  "textbook": 249.1277,
+  "loss": 245.9406,
+  "coefficients": {
+    "inflation": 3,
+    "gap": 2.9933,
+    "speed": 1
+  },
+  "restarts": [
+    {
+      "seed": 1,
+      "loss": 245.941,
+      "coefficients": {
+        "inflation": 3,
+        "gap": 2.9641,
+        "speed": 1
+      }
+    },
+    {
+      "seed": 2,
+      "loss": 245.9406,
+      "coefficients": {
+        "inflation": 3,
+        "gap": 2.9933,
+        "speed": 1
+      }
+    },
+    {
+      "seed": 3,
+      "loss": 245.9448,
+      "coefficients": {
+        "inflation": 3,
+        "gap": 2.9262,
+        "speed": 1
+      }
+    }
+  ]
+}

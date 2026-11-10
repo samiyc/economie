@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-10",
+  "rule": "R1",
+  "weights": "jobs",
+  "seeds": 200,
+  "budget": 400,
+  "textbook": 185.1674,
+  "loss": 183.1933,
+  "coefficients": {
+    "inflation": 3,
+    "gap": 2.9642,
+    "speed": 1
+  },
+  "restarts": [
+    {
+      "seed": 1,
+      "loss": 183.1945,
+      "coefficients": {
+        "inflation": 3,
+        "gap": 2.9853,
+        "speed": 1
+      }
+    },
+    {
+      "seed": 2,
+      "loss": 183.1939,
+      "coefficients": {
+        "inflation": 3,
+        "gap": 2.9924,
+        "speed": 1
+      }
+    },
+    {
+      "seed": 3,
+      "loss": 183.1933,
+      "coefficients": {
+        "inflation": 3,
+        "gap": 2.9642,
+        "speed": 1
+      }
+    }
+  ]
+}

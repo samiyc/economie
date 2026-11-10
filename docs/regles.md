@@ -219,4 +219,5 @@ l'intervalle sous −0,2) ; et la dette n'y perd pas plus d'un point (le haut so
   pire cas pour la dette (`etan` 0,80, ou `gammar` 1,20) reste à croiser avant J5.
 - **L'A/A de la dette manque 0 dans les 26 variantes**, toujours de −0,04 à −0,05. Ce n'est pas 26 preuves : ce sont
   les mêmes graines (1 à 1 000 contre 1 001 à 2 000), et l'écart tient à ces deux lots de crises, pas au modèle. Il
-  reste quarante fois sous le plus petit gain qui compte. Pour le lever, l'A/A de J5 tirera d'autres lots.
+  reste quarante fois sous le plus petit gain qui compte. L'A/A de J5, sur deux autres lots (graines 2 001 à 4 000),
+  contient 0 pour la dette : 0,01 [−0,03 ; 0,06] ([`reglage.md`](reglage.md), § 5).

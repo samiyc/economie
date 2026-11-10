@@ -266,6 +266,10 @@ de déficit) passent par l'escalade de la lib (`createClimb`), sur des **graines
 de la mesure. On rapporte les deux : la règle des manuels, et la même règle réglée (R1\*, R2s\*). La recherche du § 9
 doit battre la meilleure réglée.
 
+**Réglées au J5** (10/11, [`reglage.md`](reglage.md)) : R1\* répond à l'inflation et à l'écart de production avec des
+coefficients de 3 (la borne, Q-S12), et fait mieux que R1 sur les trois objectifs ; R2s\* corrige un cinquième de
+l'écart de son déficit par an au lieu de tout l'écart, et bat R2s partout. Entre R1\* et R2s\*, les poids décident.
+
 ## 7. Les crises
 
 Chaque crise est une famille de scénarios. La graine tire son début (entre le 4e et le 8e trimestre), son ampleur et
@@ -443,7 +447,7 @@ indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le
 | **J2** (fait le 9/11) | PC : les bons, la banque centrale, le taux ; SIMEX et PCEX en tests | l'état stationnaire calculé et les trajectoires de `sfcr` retrouvés |
 | **J3** (fait le 9/11) | ÉCO au trimestre : le travail, les prix, les entreprises, les banques, le reste du monde ; chaque bloc rejoué dans son modèle d'origine | les ratios de départ et les tests de calibration du § 4 |
 | **J4** (fait le 9/11) | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Sami, 6/11, Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
-| **J5** | le réglage des règles sur les graines d'apprentissage | R1\* et R2s\* mesurées contre les règles des manuels |
+| **J5** (fait le 10/11) | le réglage des règles sur les graines d'apprentissage | R1\* et R2s\* mesurées contre les règles des manuels |
 | **J6** | la recherche à horizon glissant : l'escalade, puis le faisceau ; le banc (`npm run bench`) | elle bat la meilleure règle réglée selon le seuil du § 8, ou on sait pourquoi pas ; le témoin du modèle décalé |
 | **J7** | deux États, la guerre commerciale, l'ISMCTS | à cadrer à son tour |
 

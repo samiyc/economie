@@ -1,8 +1,9 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { crisisOf, NOISE } from "../src/crises/families.js";
-import { createRule, inflationOf, LIMITS, taylor, yearOf } from "../src/policy/rules.js";
+import { createRule, inflationOf, LIMITS, taylor, TEXTBOOK, yearOf } from "../src/policy/rules.js";
 import { objectivesOf, simulate } from "../src/policy/simulate.js";
+import { learningLoss, lossOf, tune, WEIGHTS } from "../src/policy/tuning.js";
 
 /** A history whose every variable is `values[name]`, whatever the quarter. */
 const flat = (values) => ({ at: (name) => values[name] ?? 0 });
@@ -45,9 +46,12 @@ describe("the rules", () => {
 
   it("set Taylor's rate, half a point a quarter at most, never below zero", () => {
     const at = (inflation, gap) => flat({ pic: (1 + inflation) ** 0.25 - 1, pi1: (1 + inflation) ** 0.25 - 1, pi2: (1 + inflation) ** 0.25 - 1, pi3: (1 + inflation) ** 0.25 - 1, gap });
-    assert.ok(Math.abs(taylor(at(0.02, 0), 4, 0.03, 0.01) - 0.03) < 1e-12);
-    assert.ok(Math.abs(taylor(at(0.04, 0.01), 4, 0.03, 0.01) - (0.03 + LIMITS.rateStep)) < 1e-12);
-    assert.equal(taylor(at(-0.02, -0.05), 4, 0.003, 0.01), 0);
+    const textbook = { neutral: 0.01, ...TEXTBOOK };
+    assert.ok(Math.abs(taylor(at(0.02, 0), 4, 0.03, textbook) - 0.03) < 1e-12);
+    assert.ok(Math.abs(taylor(at(0.04, 0.01), 4, 0.03, textbook) - (0.03 + LIMITS.rateStep)) < 1e-12);
+    assert.equal(taylor(at(-0.02, -0.05), 4, 0.003, textbook), 0);
+    const gentle = { neutral: 0.01, inflation: 0, gap: 0 };
+    assert.ok(Math.abs(taylor(at(0.022, 0.01), 4, 0.03, gentle) - 0.032) < 1e-9, "the rate follows inflation one for one");
   });
 
   it("vote the purchases one quarter, spend them the next, a point of GDP a quarter at most", () => {
@@ -95,5 +99,31 @@ describe("a rule against a crisis", () => {
     assert.ok(o.inflationGap < 0.3 && Math.abs(o.inflationPeak - 2) < 0.5);
     assert.ok(o.debt > 125 && o.debt < 140 && Math.abs(o.debt - 113 - o.debtRise) < 1e-9);
     assert.equal(o.floorQuarters, 0);
+  });
+});
+
+describe("the tuning of a rule (J5)", () => {
+  it("counts each objective in units of its smallest gain worth having", () => {
+    const loss = lossOf({ unemployment: 7, inflationGap: 0.4, debt: 120 }, WEIGHTS.jobs);
+    assert.ok(Math.abs(loss - (3 * 35 + 2 + 60)) < 1e-9);
+  });
+
+  it("plays the textbooks' coefficients unless told otherwise", () => {
+    const a = simulate({ family: "calm", seed: 4, rule: "R2s" });
+    const b = simulate({ family: "calm", seed: 4, rule: "R2s", coefficients: { ...TEXTBOOK } });
+    assert.deepEqual(a.states, b.states);
+    const lazy = simulate({ family: "calm", seed: 4, rule: "R2s", coefficients: { ...TEXTBOOK, speed: 0 } });
+    assert.ok(lazy.levers.gshare.every((g) => g === lazy.levers.gshare[0]), "a fiscal rule that closes nothing spends as it started");
+  });
+
+  it("climbs on the learning seeds, within bounds, never worse than the textbooks there, and replays", () => {
+    const options = { rule: /** @type {const} */ ("R2s"), weights: WEIGHTS.balance, seeds: 2, budget: 25, seed: 7 };
+    const tuned = tune(options);
+    assert.equal(tuned.evaluations, 25);
+    assert.ok(tuned.loss <= tuned.textbook);
+    assert.ok(tuned.coefficients.speed >= 0 && tuned.coefficients.speed <= 1 && tuned.coefficients.inflation <= 3);
+    assert.ok(Math.abs(learningLoss({ ...options, coefficients: tuned.coefficients }) - tuned.loss) < 1e-12);
+    assert.deepEqual(tune(options), tuned);
+    assert.throws(() => tune({ ...options, rule: /** @type {any} */ ("R0") }), /no genes for R0/);
   });
 });

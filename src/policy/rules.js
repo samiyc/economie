@@ -16,12 +16,18 @@
  * A fiscal rule decides once a year (every fourth quarter), on the last four quarters, how much to spend; a naive
  * rule, as the real ones are: a point of deficit to cut is a point of GDP less spent.
  *
+ * Their coefficients are the textbooks' (`TEXTBOOK`): Taylor's two 0.5, and the deficit's gap closed in a year. J5
+ * tunes them (src/policy/tuning.js): R1* and R2s* are R1 and R2s with other coefficients.
+ *
  * @typedef {{ at: (name: string, t: number) => number }} History
  */
 
 export const LIMITS = Object.freeze({ rateStep: 0.005, rateFloor: 0, spendingStep: 0.01, spendingBand: 0.05 });
 const SEMI_ELASTICITY = 0.63;
 const TARGET = 0.02;
+
+/** Taylor's response to inflation above its target and to the output gap; the share of the deficit's gap closed a year. */
+export const TEXTBOOK = Object.freeze({ inflation: 0.5, gap: 0.5, speed: 1 });
 
 /** The inflation of the four quarters to `t`, from the model's last four quarterly rates. */
 export const inflationOf = (h, t) => (1 + h.at("pic", t)) * (1 + h.at("pi1", t)) * (1 + h.at("pi2", t)) * (1 + h.at("pi3", t)) - 1;
@@ -39,10 +45,17 @@ export function yearOf(h, t) {
   return { deficit: lastYear(h, "DEF", t) / lastYear(h, "GDP", t), gap: lastYear(h, "gap", t) / quarters };
 }
 
-/** Taylor's rate for the quarter after `t`, within a step of `rate` and above the floor. */
-export function taylor(h, t, rate, neutral) {
+/**
+ * Taylor's rate for the quarter after `t`, within a step of `rate` and above the floor.
+ *
+ * @param {History} h
+ * @param {number} t
+ * @param {number} rate
+ * @param {{ neutral: number, inflation: number, gap: number }} rule  the neutral real rate and the two responses
+ */
+export function taylor(h, t, rate, rule) {
   const inflation = inflationOf(h, t);
-  const wanted = neutral + inflation + 0.5 * (inflation - TARGET) + 0.5 * h.at("gap", t);
+  const wanted = rule.neutral + inflation + rule.inflation * (inflation - TARGET) + rule.gap * h.at("gap", t);
   const stepped = Math.min(rate + LIMITS.rateStep, Math.max(rate - LIMITS.rateStep, wanted));
   return Math.max(LIMITS.rateFloor, stepped);
 }
@@ -74,21 +87,22 @@ export const RULES = Object.freeze({
  *
  * @param {keyof typeof RULES} name
  * @param {{ rcb: number, gshare: number, piT: number, point: number, structural: number }} start
+ * @param {{ inflation: number, gap: number, speed: number }} [coefficients]  the textbooks' by default
  */
-export function createRule(name, start) {
+export function createRule(name, start, coefficients = TEXTBOOK) {
   const rule = RULES[name];
   if (!rule) throw new Error(`rules: no rule ${name}`);
-  const neutral = start.rcb - start.piT;
+  const taylorOf = { neutral: start.rcb - start.piT, inflation: coefficients.inflation, gap: coefficients.gap };
   const band = [start.gshare - LIMITS.spendingBand * 100 * start.point, start.gshare + LIMITS.spendingBand * 100 * start.point];
   const now = { rcb: start.rcb, gshare: start.gshare, voted: start.gshare, aim: start.gshare };
   const decide = (h, t) => {
-    if (rule.monetary) now.rcb = taylor(h, t, now.rcb, neutral);
+    if (rule.monetary) now.rcb = taylor(h, t, now.rcb, taylorOf);
     if (!rule.fiscal) return;
     now.gshare = now.voted;
     const point = h.at("GDP", t) / 100 / (h.at("p", t) * h.at("yfe", t));
     if (t % 4 === 0) {
       const { deficit, aim } = AIMS[rule.fiscal](h, t, start.structural);
-      now.aim = now.voted - (deficit - aim) * 100 * point;
+      now.aim = now.voted - coefficients.speed * (deficit - aim) * 100 * point;
     }
     const step = LIMITS.spendingStep * 100 * point;
     now.voted = Math.min(band[1], Math.max(band[0], Math.min(now.voted + step, Math.max(now.voted - step, now.aim))));
