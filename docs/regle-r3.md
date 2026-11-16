@@ -119,5 +119,24 @@ seuil du § 8 de `modele.md`, et la perte des poids :
 - **Les graines** : le réglage et la mesure ne partagent aucune graine (1 000 001 et suivantes, contre 1 à 200).
 - **R3 à zéro est R1**, à l'octet ; les réglages de J5 et de J6 voient les mêmes plans qu'avant (les empreintes et les
   tests n'ont pas bougé).
-- **Pas encore fait** : le modèle décalé pour R3\*, comme pour la recherche au J6 ; des bornes plus larges pour le
-  chômage d'abord et la dette d'abord.
+- **Le modèle décalé** : R3\* (équilibre), réglée sur ÉCO, jouée dans les quatre mondes de J6 où une hypothèse bouge
+  (`recherche.md`, § 6), graines 1 à 100, contre R1 et la recherche dans le même monde :
+
+| Monde | Famille | R3\* − R1 : chômage | Écart d'inflation | Dette | Seuil | Perte | Part du gain de la recherche |
+|---|---|---|---|---|---|---|---|
+| ÉCO (§ 4, 200 graines) | Le chômage fort | −0,60 | −0,08 | +1,91 | — | −2,43 | 80 % |
+| `phil` × 1,2 | Le chômage fort | −0,55 [−0,58 ; −0,53] | −0,09 | +1,34 | — | −2,58 | 80 % |
+| `gammar` × 0,8 | Le chômage fort | −0,63 [−0,66 ; −0,60] | −0,08 | +1,45 | — | −2,83 | 82 % |
+| `etan` × 0,8 | Le chômage fort | −0,61 [−0,64 ; −0,59] | −0,10 | +2,18 | — | −2,47 | 86 % |
+| `mug` × 1,2 | Le chômage fort | −0,58 [−0,61 ; −0,55] | −0,08 | +1,90 | — | −2,35 | 81 % |
+| ÉCO (§ 4, 200 graines) | Les matières premières | −0,22 | −0,04 | −0,60 | gagne | −1,56 | 56 % |
+| `phil` × 1,2 | Les matières premières | −0,21 [−0,22 ; −0,20] | −0,04 | −0,86 | — | −1,67 | 55 % |
+| `gammar` × 0,8 | Les matières premières | −0,21 [−0,23 ; −0,20] | −0,04 | −0,53 | gagne | −1,53 | 59 % |
+| `etan` × 0,8 | Les matières premières | −0,22 [−0,23 ; −0,20] | −0,04 | −0,35 | gagne | −1,45 | 53 % |
+| `mug` × 1,2 | Les matières premières | −0,21 [−0,23 ; −0,20] | −0,03 | −0,56 | gagne | −1,52 | 55 % |
+
+  R3\* tient comme la recherche : sa part du gain ne bouge presque pas (80 à 86 % en récession, 53 à 59 % face aux
+  matières premières). Avec `phil` × 1,2, elle manque le seuil d'un cheveu : la borne de l'intervalle du chômage
+  touche le gain de 0,2 sans le passer. La règle ne prévoit rien avec le modèle ; le risque était que ses
+  coefficients, réglés sur ÉCO, ne vaillent plus ailleurs. Ils valent encore.
+- **Pas encore fait** : des bornes plus larges pour le chômage d'abord et la dette d'abord (R3w, dans la file).
