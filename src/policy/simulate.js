@@ -1,6 +1,7 @@
 import { ECO } from "../eco/model.js";
 import { beliefOf, crisisOf } from "../crises/families.js";
 import { assertConsistent, createLedger } from "../sfc/ledger.js";
+import { createCountercyclical } from "./countercyclical.js";
 import { createRule, inflationOf, yearOf } from "./rules.js";
 
 /**
@@ -13,8 +14,8 @@ import { createRule, inflationOf, yearOf } from "./rules.js";
  * @typedef {{ levers: () => { rcb: number, gshare: number }, decide: (h: any, t: number, state: Float64Array) => void }} Policy
  * @typedef {(run: { start: ReturnType<typeof startOf>, belief: ReturnType<typeof beliefOf>, seed: number, periods: number }) => Policy} PolicyMaker
  *
- * @typedef {{ family: "calm" | "unemployment" | "materials", seed: number, rule: "R0" | "R1" | "R2" | "R2s" | "R2n",
- *   periods?: number, check?: boolean, coefficients?: { inflation: number, gap: number, shift?: number, speed: number }, policy?: PolicyMaker }} Trial
+ * @typedef {{ family: "calm" | "unemployment" | "materials", seed: number, rule: "R0" | "R1" | "R2" | "R2s" | "R2n" | "R3",
+ *   periods?: number, check?: boolean, coefficients?: Record<string, number>, policy?: PolicyMaker }} Trial
  */
 
 /** The levers and the starting figures a rule needs from ÉCO's first quarter. */
@@ -28,6 +29,10 @@ function startOf(model, state) {
   };
 }
 
+/** A rule of J4 (src/policy/rules.js), or R3 (src/policy/countercyclical.js). */
+const ruleOf = (name, start, coefficients) =>
+  name === "R3" ? createCountercyclical(start, coefficients) : createRule(name, start, /** @type {any} */ (coefficients));
+
 /**
  * Plays `trial`: its states, period 0 the start, and the levers of each quarter.
  *
@@ -40,7 +45,7 @@ export function simulate({ family, seed, rule: name, periods = 40, check = true,
   states.set(state, 0);
   const history = { at: (name, t) => states[t * width + model.V[name]] };
   const start = startOf(model, state);
-  const rule = policy ? policy({ start, belief: beliefOf(family, seed, periods), seed, periods }) : createRule(name, start, coefficients);
+  const rule = policy ? policy({ start, belief: beliefOf(family, seed, periods), seed, periods }) : ruleOf(name, start, coefficients);
   const shocks = crisisOf(family, seed, periods);
   const ledger = check ? createLedger(model.SPEC) : null;
   const params = { ...model.DEFAULTS };

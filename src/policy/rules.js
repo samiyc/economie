@@ -23,7 +23,7 @@
  */
 
 export const LIMITS = Object.freeze({ rateStep: 0.005, rateFloor: 0, spendingStep: 0.01, spendingBand: 0.05 });
-const SEMI_ELASTICITY = 0.63;
+export const SEMI_ELASTICITY = 0.63;
 const TARGET = 0.02;
 
 /**

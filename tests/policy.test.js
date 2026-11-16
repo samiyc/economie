@@ -1,9 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { crisisOf, NOISE } from "../src/crises/families.js";
+import { R3_START } from "../src/policy/countercyclical.js";
 import { createRule, inflationOf, LIMITS, taylor, TEXTBOOK, yearOf } from "../src/policy/rules.js";
 import { objectivesOf, simulate } from "../src/policy/simulate.js";
-import { learningLoss, lossOf, tune, WEIGHTS } from "../src/policy/tuning.js";
+import { learningLoss, lossOf, TUNINGS, tune, WEIGHTS } from "../src/policy/tuning.js";
 
 /** A history whose every variable is `values[name]`, whatever the quarter. */
 const flat = (values) => ({ at: (name) => values[name] ?? 0 });
@@ -128,5 +129,32 @@ describe("the tuning of a rule (J5)", () => {
     assert.throws(() => tune({ ...options, name: /** @type {any} */ ("R0") }), /no tuning R0/);
     const budget = tune({ ...options, name: "R2sb", budget: 6 });
     assert.ok(budget.coefficients.inflation === 0.5 && budget.coefficients.gap === 0.5, "the central bank's Taylor kept");
+  });
+});
+
+describe("R3, the countercyclical rule, and CMA-ES", () => {
+  it("is R1 when it responds to nothing, and spends early in a recession when it does", () => {
+    const r1 = simulate({ family: "unemployment", seed: 3, rule: "R1" });
+    assert.deepEqual(simulate({ family: "unemployment", seed: 3, rule: "R3", coefficients: { ...R3_START } }).states, r1.states);
+    const r3 = simulate({ family: "unemployment", seed: 3, rule: "R3", coefficients: { ...R3_START, jobs: 2, rise: 2 } });
+    const g = r3.levers.gshare;
+    const point = r1.at("GDP", 0) / 100 / (r1.at("p", 0) * r1.at("yfe", 0));
+    assert.ok(Math.max(...g) > g[0] + point, "a point of GDP more at least");
+    for (let t = 1; t < g.length; t += 1) assert.ok(Math.abs(g[t] - g[t - 1]) <= 0.0101 * 100 * point * 1.2, `a point a quarter at most, ${t}`);
+    assert.ok(g.every((x) => Math.abs(x - g[0]) <= 0.0501 * 100 * point * 1.2), "within five points of the start");
+  });
+
+  it("is tuned by CMA-ES as by the climb: within bounds, whole generations, a curve that only falls, and replays", () => {
+    const options = { name: /** @type {const} */ ("R3"), weights: WEIGHTS.balance, seeds: 2, budget: 40, seed: 3, optimizer: /** @type {const} */ ("cmaes") };
+    const tuned = tune(options);
+    assert.equal(tuned.optimizer, "cmaes");
+    assert.ok(tuned.evaluations <= 40 && tuned.evaluations % 9 === 0, `${tuned.evaluations} plans, generations of 9`);
+    assert.ok(tuned.loss <= tuned.textbook);
+    for (const [key, low, high] of TUNINGS.R3.genes) assert.ok(tuned.coefficients[key] >= low && tuned.coefficients[key] <= high, key);
+    assert.ok(tuned.curve.every((c, i) => i === 0 || c.loss <= tuned.curve[i - 1].loss));
+    assert.equal(tuned.curve.at(-1).loss, tuned.loss);
+    assert.ok(Math.abs(learningLoss({ ...options, rule: "R3", coefficients: tuned.coefficients }) - tuned.loss) < 1e-12);
+    assert.deepEqual(tune(options), tuned);
+    assert.equal(tune({ ...options, optimizer: "climb" }).evaluations, 40);
   });
 });
