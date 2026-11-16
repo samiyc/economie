@@ -12,7 +12,9 @@ chiffres viennent de [`mesures/r3/`](mesures/r3/), que `node scripts/r3-report.j
 - **R3 prend de 39 à 119 % du gain de la recherche** sur la barre, selon la famille et les poids : l'essentiel quand
   il faut relancer, moins quand il faut consolider ;
 - **avec la dette d'abord, R3 bat la règle de déficit réglée sur les trois objectifs**, en récession et face aux
-  matières premières : ce que la recherche ne faisait pas en récession.
+  matières premières : ce que la recherche ne faisait pas en récession ;
+- **sur le modèle décalé, R3 garde sa part** du gain de la recherche (§ 5) ; **aux bornes élargies** (R3w, § 6), elle
+  en prend plus avec le chômage d'abord, mais n'est plus meilleure sur les trois objectifs avec la dette d'abord.
 
 ## 1. La règle
 
@@ -139,4 +141,29 @@ seuil du § 8 de `modele.md`, et la perte des poids :
   matières premières). Avec `phil` × 1,2, elle manque le seuil d'un cheveu : la borne de l'intervalle du chômage
   touche le gain de 0,2 sans le passer. La règle ne prévoit rien avec le modèle ; le risque était que ses
   coefficients, réglés sur ÉCO, ne vaillent plus ailleurs. Ils valent encore.
-- **Pas encore fait** : des bornes plus larges pour le chômage d'abord et la dette d'abord (R3w, dans la file).
+
+## 6. Les bornes élargies (R3w)
+
+R3w est R3 aux bornes élargies là où son optimum butait (`src/policy/tuning.js`) : `jobs` jusqu'à 6, `rise` jusqu'à
+10, `patience` dès 0,01, `reference` de −2 à +2 ; `consolidation` et `smooth` gardent les leurs, une part au-delà de
+1 ne voulant rien dire. Elle est réglée par l'escalade, au même budget (1 600 plans, cinq relances).
+
+| Poids | Perte d'apprentissage, R3 → R3w | La règle R3w trouvée |
+|---|---|---|
+| équilibre | 108,96 → 108,96 | la même : `jobs` 2,5, `patience` 0,09, `reference` −0,46 |
+| chômage d'abord | 179,35 → **178,44** | `jobs` 5,7, `reference` **−2** (borne), `smooth` **0,1** (borne), `consolidation` 1, `prices` 0,6 |
+| dette d'abord | 244,18 → **243,58** | `jobs` 5,9, `rise` 0, `patience` **3** (borne), `reference` 1,9, `smooth` **0,1** (borne) |
+
+- **Avec l'équilibre, rien ne change** : son optimum n'était pas tenu par les bornes.
+- **Avec les deux autres poids, la règle change de forme** : elle vise une réponse deux fois plus forte, mais n'en
+  fait qu'un dixième du chemin chaque trimestre. C'est une relance plus lente à venir et plus lente à partir.
+  Elle bute de nouveau sur des bornes, cette fois `smooth` et `reference`. Ce sont probablement les bornes
+  de vitesse des leviers (Q-S6) qui la tiennent : élargir encore déplacerait la borne, pas la leçon.
+- **Sur la mesure, avec le chômage d'abord, R3w prend plus du gain de la recherche** : 96 % en récession (83 % pour
+  R3), 87 % face aux matières premières (70 %), 84 % au calme (98 %). En récession, son pic de chômage (7,53 %)
+  est celui de la recherche (7,52 %), pour 6,6 points de dette de plus.
+- **Avec la dette d'abord, R3w perd ce que R3 avait gagné** : elle ne passe plus le seuil contre R2s\*b, car elle
+  échange du chômage (+0,2 à +0,6 point) contre de la dette (−3 à −6 points), comme la recherche. Sa perte est
+  pourtant meilleure, avec 91 % du gain de la recherche face aux matières premières (61 % pour R3). La perte des
+  poids et le seuil ne disent pas la même chose : avec la dette d'abord, une règle qui bat la barre sur les trois
+  objectifs reste R3 dans les bornes du § 1.
