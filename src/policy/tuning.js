@@ -35,7 +35,9 @@ export const WEIGHTS = Object.freeze({
  * - **R1n**, **R2sn** (J6): the same, and Taylor's neutral real rate, moved by −3 to +3 points from the model's (1 %).
  *   They found that ÉCO makes a low rate cost next to nothing (docs/recherche.md), so the central bank stays apart;
  * - **R2sb** (J6, Sami, 10/11): the central bank independent, Taylor the textbooks'; the deficit rule's speed alone;
- * - **R3** (16/11): the countercyclical rule's seven numbers (src/policy/countercyclical.js), Taylor the textbooks'.
+ * - **R3** (16/11): the countercyclical rule's seven numbers (src/policy/countercyclical.js), Taylor the textbooks';
+ * - **R3w** (16/11): the same, the bounds R3's optimum stood on widened (docs/regle-r3.md, § 3); consolidation and
+ *   smooth keep theirs, a share past 1 meaning nothing.
  */
 export const TUNINGS = Object.freeze({
   R1: { rule: "R1", genes: [["inflation", 0, 3], ["gap", 0, 3]] },
@@ -46,6 +48,10 @@ export const TUNINGS = Object.freeze({
   R3: {
     rule: "R3",
     genes: [["jobs", 0, 3], ["rise", 0, 5], ["prices", 0, 3], ["consolidation", 0, 1], ["patience", 0.1, 3], ["reference", -1, 1], ["smooth", 0.1, 1]],
+  },
+  R3w: {
+    rule: "R3",
+    genes: [["jobs", 0, 6], ["rise", 0, 10], ["prices", 0, 3], ["consolidation", 0, 1], ["patience", 0.01, 3], ["reference", -2, 2], ["smooth", 0.1, 1]],
   },
 });
 

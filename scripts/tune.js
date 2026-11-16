@@ -7,7 +7,7 @@ import { TUNINGS, tune, WEIGHTS } from "../src/policy/tuning.js";
 
 /**
  * Tunes a rule under a set of weights (src/policy/tuning.js, J5; `--rule` a tuning's name: R1, R2s, R1n, R2sn, R2sb,
- * R3): `--restarts` searches from different seeds, each of `--budget` plans scored on `--seeds` learning seeds a family;
+ * R3, R3w): `--restarts` searches from different seeds, each of `--budget` plans scored on `--seeds` learning seeds a family;
  * keeps the best in docs/mesures/reglage/<rule>-<weights>.json (or `--out`), with every restart and its best loss at the
  * budget's marks, so that one can see whether they agree. `--optimizer cmaes` tunes by CMA-ES instead of the climb.
  * A job a pair, in the queue.
