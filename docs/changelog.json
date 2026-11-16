@@ -4,6 +4,19 @@
   "intro": "L'économie d'un État en simulation, pour en comprendre les mécanismes : ses secteurs, la monnaie qui passe de l'un à l'autre, les leviers et les crises. Un modèle pour comprendre, pas pour prévoir.",
   "versions": [
     {
+      "version": "0.7.0",
+      "title": "R3, la règle qui imite la recherche",
+      "date": "16/11/2026",
+      "commits": [],
+      "items": [
+        "Une nouvelle règle budgétaire, R3, écrite d'après la recherche : elle dépense selon le chômage et sa hausse, un peu moins quand l'inflation monte, et consolide le déficit une fois le chômage revenu. Sept nombres, réglés sur des crises d'apprentissage.",
+        "Elle fait l'essentiel du travail de la recherche quand il faut relancer : en récession, 80 % de son gain avec l'équilibre, et le pic de chômage passe de 9,6 % à 8,6 %. Elle en fait moins quand il faut consolider.",
+        "Avec la dette d'abord, elle bat la règle de déficit réglée sur le chômage, l'inflation et la dette à la fois, en récession et face aux matières premières.",
+        "CMA-ES, la recherche que la lib a reçue le 13/11, règle R3 aussi bien que l'escalade, mais deux à quatre fois plus lentement : l'escalade reste l'outil du réglage.",
+        "Les résultats sont dans docs/regle-r3.md."
+      ]
+    },
+    {
       "version": "0.6.0",
       "title": "La recherche à horizon glissant",
       "date": "10/11/2026",

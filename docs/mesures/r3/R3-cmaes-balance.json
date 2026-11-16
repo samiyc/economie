@@ -1,0 +1,217 @@
+{
+  "date": "2026-11-16",
+  "tuning": "R3",
+  "rule": "R3",
+  "optimizer": "cmaes",
+  "weights": "balance",
+  "seeds": 200,
+  "budget": 1600,
+  "textbook": 110.3974,
+  "loss": 108.9609,
+  "coefficients": {
+    "jobs": 2.3356,
+    "rise": 0.0833,
+    "prices": 0,
+    "consolidation": 0.1587,
+    "patience": 0.1334,
+    "reference": -0.5005,
+    "smooth": 1
+  },
+  "restarts": [
+    {
+      "seed": 1,
+      "loss": 108.9609,
+      "coefficients": {
+        "jobs": 2.3356,
+        "rise": 0.0833,
+        "prices": 0,
+        "consolidation": 0.1587,
+        "patience": 0.1334,
+        "reference": -0.5005,
+        "smooth": 1
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 109.3422
+        },
+        {
+          "evaluations": 100,
+          "loss": 109.1485
+        },
+        {
+          "evaluations": 200,
+          "loss": 109.051
+        },
+        {
+          "evaluations": 400,
+          "loss": 109.0188
+        },
+        {
+          "evaluations": 800,
+          "loss": 108.995
+        },
+        {
+          "evaluations": 1593,
+          "loss": 108.9609
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "loss": 108.9761,
+      "coefficients": {
+        "jobs": 2.5923,
+        "rise": 0,
+        "prices": 0,
+        "consolidation": 0.0163,
+        "patience": 1.2469,
+        "reference": -0.4483,
+        "smooth": 1
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 109.3733
+        },
+        {
+          "evaluations": 100,
+          "loss": 109.3733
+        },
+        {
+          "evaluations": 200,
+          "loss": 109.1068
+        },
+        {
+          "evaluations": 400,
+          "loss": 109.0602
+        },
+        {
+          "evaluations": 800,
+          "loss": 108.9845
+        },
+        {
+          "evaluations": 1593,
+          "loss": 108.9761
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "loss": 108.9793,
+      "coefficients": {
+        "jobs": 2.6168,
+        "rise": 0,
+        "prices": 0,
+        "consolidation": 0.0174,
+        "patience": 0.4954,
+        "reference": -0.4356,
+        "smooth": 1
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 109.3593
+        },
+        {
+          "evaluations": 100,
+          "loss": 109.2971
+        },
+        {
+          "evaluations": 200,
+          "loss": 109.0975
+        },
+        {
+          "evaluations": 400,
+          "loss": 109.0392
+        },
+        {
+          "evaluations": 800,
+          "loss": 108.9881
+        },
+        {
+          "evaluations": 1593,
+          "loss": 108.9793
+        }
+      ]
+    },
+    {
+      "seed": 4,
+      "loss": 108.9614,
+      "coefficients": {
+        "jobs": 2.5236,
+        "rise": 0,
+        "prices": 0,
+        "consolidation": 0.0995,
+        "patience": 0.1087,
+        "reference": -0.4667,
+        "smooth": 1
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 109.7352
+        },
+        {
+          "evaluations": 100,
+          "loss": 109.7352
+        },
+        {
+          "evaluations": 200,
+          "loss": 109.2997
+        },
+        {
+          "evaluations": 400,
+          "loss": 109.0521
+        },
+        {
+          "evaluations": 800,
+          "loss": 108.9869
+        },
+        {
+          "evaluations": 1593,
+          "loss": 108.9614
+        }
+      ]
+    },
+    {
+      "seed": 5,
+      "loss": 108.9761,
+      "coefficients": {
+        "jobs": 2.5747,
+        "rise": 0,
+        "prices": 0,
+        "consolidation": 0.0153,
+        "patience": 1.3393,
+        "reference": -0.4446,
+        "smooth": 1
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 109.2483
+        },
+        {
+          "evaluations": 100,
+          "loss": 109.2483
+        },
+        {
+          "evaluations": 200,
+          "loss": 109.1772
+        },
+        {
+          "evaluations": 400,
+          "loss": 109.0733
+        },
+        {
+          "evaluations": 800,
+          "loss": 109.0257
+        },
+        {
+          "evaluations": 1593,
+          "loss": 108.9761
+        }
+      ]
+    }
+  ]
+}

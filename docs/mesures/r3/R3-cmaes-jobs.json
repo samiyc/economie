@@ -1,0 +1,217 @@
+{
+  "date": "2026-11-16",
+  "tuning": "R3",
+  "rule": "R3",
+  "optimizer": "cmaes",
+  "weights": "jobs",
+  "seeds": 200,
+  "budget": 1600,
+  "textbook": 185.1674,
+  "loss": 179.3528,
+  "coefficients": {
+    "jobs": 3,
+    "rise": 0,
+    "prices": 0,
+    "consolidation": 0,
+    "patience": 0.1191,
+    "reference": -1,
+    "smooth": 1
+  },
+  "restarts": [
+    {
+      "seed": 1,
+      "loss": 179.3653,
+      "coefficients": {
+        "jobs": 3,
+        "rise": 0,
+        "prices": 0,
+        "consolidation": 0,
+        "patience": 0.4742,
+        "reference": -1,
+        "smooth": 0.2941
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 180.7261
+        },
+        {
+          "evaluations": 100,
+          "loss": 179.5211
+        },
+        {
+          "evaluations": 200,
+          "loss": 179.5211
+        },
+        {
+          "evaluations": 400,
+          "loss": 179.3819
+        },
+        {
+          "evaluations": 800,
+          "loss": 179.3663
+        },
+        {
+          "evaluations": 1593,
+          "loss": 179.3653
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "loss": 179.3653,
+      "coefficients": {
+        "jobs": 3,
+        "rise": 0,
+        "prices": 0,
+        "consolidation": 0,
+        "patience": 1.1563,
+        "reference": -1,
+        "smooth": 0.2941
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 180.1428
+        },
+        {
+          "evaluations": 100,
+          "loss": 180.1428
+        },
+        {
+          "evaluations": 200,
+          "loss": 180.1428
+        },
+        {
+          "evaluations": 400,
+          "loss": 179.5068
+        },
+        {
+          "evaluations": 800,
+          "loss": 179.3662
+        },
+        {
+          "evaluations": 1593,
+          "loss": 179.3653
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "loss": 179.3528,
+      "coefficients": {
+        "jobs": 3,
+        "rise": 0,
+        "prices": 0,
+        "consolidation": 0,
+        "patience": 0.1191,
+        "reference": -1,
+        "smooth": 1
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 180.599
+        },
+        {
+          "evaluations": 100,
+          "loss": 179.5179
+        },
+        {
+          "evaluations": 200,
+          "loss": 179.5179
+        },
+        {
+          "evaluations": 400,
+          "loss": 179.3861
+        },
+        {
+          "evaluations": 800,
+          "loss": 179.3641
+        },
+        {
+          "evaluations": 1593,
+          "loss": 179.3528
+        }
+      ]
+    },
+    {
+      "seed": 4,
+      "loss": 179.3653,
+      "coefficients": {
+        "jobs": 3,
+        "rise": 0,
+        "prices": 0,
+        "consolidation": 0,
+        "patience": 0.4102,
+        "reference": -1,
+        "smooth": 0.2941
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 183.2768
+        },
+        {
+          "evaluations": 100,
+          "loss": 179.9217
+        },
+        {
+          "evaluations": 200,
+          "loss": 179.5588
+        },
+        {
+          "evaluations": 400,
+          "loss": 179.4595
+        },
+        {
+          "evaluations": 800,
+          "loss": 179.3656
+        },
+        {
+          "evaluations": 1593,
+          "loss": 179.3653
+        }
+      ]
+    },
+    {
+      "seed": 5,
+      "loss": 179.388,
+      "coefficients": {
+        "jobs": 3,
+        "rise": 0,
+        "prices": 0,
+        "consolidation": 0,
+        "patience": 0.1988,
+        "reference": -1,
+        "smooth": 0.6747
+      },
+      "curve": [
+        {
+          "evaluations": 50,
+          "loss": 179.663
+        },
+        {
+          "evaluations": 100,
+          "loss": 179.663
+        },
+        {
+          "evaluations": 200,
+          "loss": 179.5429
+        },
+        {
+          "evaluations": 400,
+          "loss": 179.3913
+        },
+        {
+          "evaluations": 800,
+          "loss": 179.3894
+        },
+        {
+          "evaluations": 1593,
+          "loss": 179.388
+        }
+      ]
+    }
+  ]
+}

@@ -204,4 +204,5 @@ mi-chemin. Aucune des deux recherches ne change le résultat : **l'escalade rest
 - **Q-P18** se pose maintenant : la relance précoce en récession se reconnaît ; la rigueur de la dette d'abord est à
   faire juger.
 - **La quatrième piste du § 9 de `modele.md`**, le réglage d'une règle sur toutes les familles à la fois, est faite
-  pour le déficit (R2s\*b) ; une règle qui imite la recherche (relancer tôt, consolider après) reste à écrire.
+  pour le déficit (R2s\*b). La règle qui imite la recherche (relancer tôt, consolider après) est R3, écrite et réglée
+  le 16/11 ([`regle-r3.md`](regle-r3.md)) : elle prend de 39 à 119 % du gain de la recherche sur la barre.

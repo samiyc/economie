@@ -19,6 +19,18 @@
         <h2>Les versions</h2>
 
       <article class="version">
+        <h3><span class="tag">0.7.0</span> R3, la règle qui imite la recherche <span class="date">16/11/2026</span></h3>
+        <ul>
+          <li>Une nouvelle règle budgétaire, R3, écrite d'après la recherche : elle dépense selon le chômage et sa hausse, un peu moins quand l'inflation monte, et consolide le déficit une fois le chômage revenu. Sept nombres, réglés sur des crises d'apprentissage.</li>
+          <li>Elle fait l'essentiel du travail de la recherche quand il faut relancer : en récession, 80 % de son gain avec l'équilibre, et le pic de chômage passe de 9,6 % à 8,6 %. Elle en fait moins quand il faut consolider.</li>
+          <li>Avec la dette d'abord, elle bat la règle de déficit réglée sur le chômage, l'inflation et la dette à la fois, en récession et face aux matières premières.</li>
+          <li>CMA-ES, la recherche que la lib a reçue le 13/11, règle R3 aussi bien que l'escalade, mais deux à quatre fois plus lentement : l'escalade reste l'outil du réglage.</li>
+          <li>Les résultats sont dans docs/regle-r3.md.</li>
+        </ul>
+        <p class="commits"></p>
+      </article>
+
+      <article class="version">
         <h3><span class="tag">0.6.0</span> La recherche à horizon glissant <span class="date">10/11/2026</span></h3>
         <ul>
           <li>À la fin de chaque trimestre, une recherche planifie les achats publics des six ans à venir, sur seize futurs tirés de ce qu'on sait de la crise, joue le premier trimestre et recommence. Elle ne connaît ni la durée de la crise ni la fin de la mesure.</li>
