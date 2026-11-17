@@ -43,8 +43,11 @@ function labour(t, a, z) {
   return { N, Nt: N, u: t.unemployment, WB, W, pr, y: z.Y, yfe, gap: z.Y / yfe - 1, uc, phi: 1 / uc - 1, gshare: z.g / yfe };
 }
 
-/** The money: the loans, the debt and its two halves, the reserves, and the deposits they add up to. */
-function money(t, a) {
+/**
+ * The money: the loans, the debt and its two halves, the reserves, and the deposits they add up to; the bonds the
+ * foreigners hold (`foreign`, a share of the debt: none at a fixed rate) and those left to the households.
+ */
+function money(t, a, foreign) {
   const DEBT = t.debt * 4 * Q;
   const Bs = t.billsShare * DEBT;
   const L = t.loans * 4 * Q;
@@ -53,7 +56,8 @@ function money(t, a) {
   const Hb = a.rho * M;
   const Bb = M - L - Hb;
   const rates = { rb: a.rcb / 4, rl: (a.rcb + a.sl) / 4, rm: Math.max(a.rcb - a.sm, 0) / 4, rbl: (a.rcb + a.tp) / 4 };
-  return { ...rates, DEBT, Bs, BL: DEBT - Bs, L, or, M, Hb, Hs: Hb, Bb, Bcb: Bs - Bb, V: M + DEBT - Bs };
+  const BLw = foreign * DEBT;
+  return { ...rates, DEBT, Bs, BL: DEBT - Bs, BLw, BLh: DEBT - Bs - BLw, L, or, M, Hb, Hs: Hb, Bb, Bcb: Bs - Bb, V: M + DEBT - Bs - BLw };
 }
 
 /** The state's accounts: its interest fixes the average coupon; its spending and levies, the transfers and fees. */
@@ -73,13 +77,17 @@ function state(t, a, z, back) {
     rr: UB / ((1 - TW / z.WB) * z.W * (t.labourForce - z.N)) };
 }
 
-/** The firms' accounts: the profits, the earnings from abroad that close the current account, the dividends. */
+/**
+ * The firms' accounts: the profits, the earnings from abroad that close the current account (net of the coupons the
+ * foreigners get), the dividends.
+ */
 function firms(t, z, back) {
   const FU = z.I - (z.L - back(z.L));
   const before = z.S - z.IM - z.E + z.SUB - z.WB - z.rl * back(z.L);
-  // F = before + FDin, FDw = share × (F − TF − FU), and CA = X − IM − E − FDw + FDin: FDin solves the three.
+  // F = before + FDin, FDw = share × (F − TF − FU), and CA = X − IM − E − FDw + FDin − coupons: FDin solves the three.
   const share = t.foreignControl;
-  const FDin = (t.currentAccount * Q - z.X + z.IM + z.E + share * (before - z.TF - FU)) / (1 - share);
+  const abroad = z.rbar * back(z.BLw);
+  const FDin = (t.currentAccount * Q - z.X + z.IM + z.E + abroad + share * (before - z.TF - FU)) / (1 - share);
   const F = before + FDin;
   const FD = F - z.TF - FU;
   return { FU, FDin, F, FD, FDw: share * FD, FDh: (1 - share) * FD, CA: t.currentAccount * Q, fshare: share,
@@ -89,13 +97,13 @@ function firms(t, z, back) {
 /** The households: the banks' profits they get, their income, the α1 that makes their consumption, their bonds. */
 function households(a, z, back, rise) {
   const Fb = z.rl * back(z.L) + z.rb * back(z.Bb) - z.rm * back(z.M);
-  const capitalIncome = z.FDh + Fb + z.rm * back(z.M) + z.rbar * back(z.BL);
+  const capitalIncome = z.FDh + Fb + z.rm * back(z.M) + z.rbar * back(z.BLh);
   const YD = z.WB - z.TW + z.UB + z.PEN + z.TO - z.ORV + capitalIncome - z.TK;
   const pc = 1 + z.tauc;
   const vBefore = back(z.V) / (pc / (1 + rise.prices));
   const ydr = (YD - (pc - pc / (1 + rise.prices)) * vBefore) / pc;
   return { Fb, tauk: z.TK / capitalIncome, YD, pc, v: z.V / pc, ydr, yde: ydr, alpha1: (z.c - a.alpha2 * vBefore) / ydr,
-    lb0: z.BL / z.V - a.lb1 * (z.rbl - z.rm) };
+    lb0: z.BLh / z.V - a.lb1 * (z.rbl - z.rm) };
 }
 
 /** The capital, its wear, the utilization that is normal, and the growth the investment aims at. */
@@ -120,19 +128,34 @@ const EXTERNAL_KEYS = ["gpr", "un", "piT", "chi", "phil", "piw", "mu", "mut", "m
 const AT_REST = { Lf: 0, Ret: 0, xr: 1, wpush: 0, pmshock: 1, eshock: 1, shield: 0, mpush: 0, xshock: 1, conf: 0, lock: 0 };
 
 /**
+ * The floating regime's start (src/eco/floating.js): the rate at 1, the foreigners wanting the bonds they hold at
+ * equal rates (`lw0` of their wealth, the world's long rate ours), their wealth's trend the one that keeps the rate
+ * still as the current account changes their bonds; the rate is no longer external.
+ */
+function floatingStart(a, z) {
+  const { xr } = AT_REST;
+  const Ww = z.BLw / (xr * a.lw0);
+  return {
+    values: { xr, Ww, BLwd: Ww * a.lw0, dxre: 0, ka: Ww * (a.lw0 - a.lw1 * a.thx), kb: Ww * a.lw1 * a.thx },
+    external: { ptm: a.ptm, epsm: a.epsm, thx: a.thx, lw0: a.lw0, lw1: a.lw1, rwl: a.rcb + a.tp, gww: -z.CA / z.BLw },
+  };
+}
+
+/**
  * ÉCO's start: the parameters (`external`) and the starting quarter (`values`, every variable), from `targets` and
  * `assumed`.
  *
  * @param {Record<string, number>} [targets]
  * @param {Record<string, number>} [assumed]
+ * @param {"fixed" | "floating"} [regime]
  */
-export function calibrate(targets = TARGETS, assumed = ASSUMED) {
+export function calibrate(targets = TARGETS, assumed = ASSUMED, regime = "fixed") {
   const rise = growth(targets, assumed);
   const back = (value) => value / (1 + rise.nominal);
   const z = { ...assumed };
   Object.assign(z, demand(targets, assumed));
   Object.assign(z, labour(targets, assumed, z));
-  Object.assign(z, money(targets, assumed));
+  Object.assign(z, money(targets, assumed, regime === "floating" ? targets.foreignHolders : 0));
   Object.assign(z, state(targets, assumed, z, back));
   Object.assign(z, firms(targets, z, back));
   Object.assign(z, households(assumed, z, back, rise));
@@ -140,5 +163,8 @@ export function calibrate(targets = TARGETS, assumed = ASSUMED) {
   Object.assign(z, prices(targets, assumed, z, rise));
   Object.assign(z, { GDP: Q, Y: z.Y, Lf: targets.labourForce, Ret: targets.retirees });
   const external = { ...AT_REST, ...Object.fromEntries(EXTERNAL_KEYS.map((key) => [key, z[key]])), Lf: targets.labourForce, Ret: targets.retirees };
-  return { external, values: z };
+  if (regime === "fixed") return { external, values: z };
+  const floating = floatingStart(assumed, z);
+  delete external.xr;
+  return { external: { ...external, ...floating.external }, values: { ...z, ...floating.values } };
 }

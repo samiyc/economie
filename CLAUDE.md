@@ -69,7 +69,9 @@ Its line in the roadmap: `mcts-commun/docs/feuille-de-route.md`, § 2.C. Start t
   rules, 50 seeds a job (a quarter of an hour), `--world param:factor` for the shifted model;
   `scripts/search-report.js` gathers `docs/mesures/recherche/`; `docs/recherche.md` reads it. The central bank
   follows the textbook Taylor there: the search plays the purchases only (Sami, 10/11, Q-S13).
-  J7 (17/11, `docs/change-flottant.md`): the floating rate; OPEN FLEX (`src/book/openflex.js`) is its bench.
+  J7 (17/11, `docs/change-flottant.md`): the floating rate; OPEN FLEX (`src/book/openflex.js`) is its bench, ÉCO
+  at a floating rate is `createEco(targets, assumed, "floating")` (`ECOFLEX`, `src/eco/floating.js`): the fixed
+  regime and its fingerprint unchanged.
   R3 (16/11, `src/policy/countercyclical.js`): `scripts/tune.js --rule R3 --optimizer climb|cmaes --out
   docs/mesures/r3/…` tunes it, `scripts/r3-report.js` measures it against the bar and the search; `docs/regle-r3.md`.
 - **The bench** (`npm run bench`, `scripts/search-bench.js`): the time of a decision and of a quarter played, and the

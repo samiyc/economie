@@ -33,6 +33,7 @@ export const TARGETS = Object.freeze({
   reserves: 0.08, // réserves de change et or de la banque centrale (H : à sourcer)
   capital: 2.25, // capital fixe des entreprises, en années de PIB (H)
   inflation: 0.02, // la cible de la BCE, prise comme l'inflation de départ
+  foreignHolders: 0.532, // part de la dette négociable de l'État détenue par les non-résidents fin 2023, AFT (E) ; le change flottant seul
 });
 
 /** The behaviour's hypotheses: each with its question, the value the model keeps until an answer. */
@@ -59,4 +60,11 @@ export const ASSUMED = Object.freeze({
   gammac: 0.05, // réponse de l'investissement à la confiance (H, Q-P9)
   lb1: 5, // sensibilité de la part des obligations à l'écart de taux (H)
   idx: 1, // indexation des retraites sur les prix
+  // Le change flottant seul (src/eco/floating.js) :
+  ptm: 0.3, // transmission du change aux prix des importations hors énergie en un an, zone euro depuis 2008 (BCE, Bulletin 3/2020 ; 0,7 dans le livre, 12.21) (E, Q-P19)
+  epsm: 0.7, // élasticité des importations au prix relatif, celle du livre (12.19) (H, Q-P1)
+  lw0: 0.25, // part de notre dette dans le portefeuille des étrangers qui la détiennent, le λ20 du livre (H, Q-P20)
+  thx: 1 / 32, // anticipations régressives : un 32e par trimestre de l'écart du change réel à son départ, attendu refermé en huit ans (H, Q-P20)
+  lw1: 20, // sensibilité de cette part au rendement attendu, trimestriel : 1 point de taux annuel, 20 % de demande ; un point de baisse fait
+  // perdre 6 % à la monnaie, la Banque de France (NiGEM) en trouvant 5 % pour 70 points de base (H, Q-P20)
 });

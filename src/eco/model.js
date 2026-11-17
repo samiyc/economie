@@ -2,6 +2,7 @@ import { parseEquations } from "../sfc/parse.js";
 import { createSystem } from "../sfc/system.js";
 import { calibrate } from "./calibrate.js";
 import { EQUATIONS } from "./equations.js";
+import { FLOATING_EQUATIONS, FLOATING_MATRICES } from "./floating.js";
 import { MATRICES } from "./matrices.js";
 import { ASSUMED, TARGETS } from "./targets.js";
 
@@ -17,16 +18,21 @@ import { ASSUMED, TARGETS } from "./targets.js";
  *
  * @param {Record<string, number>} [targets]
  * @param {Record<string, number>} [assumed]
+ * @param {"fixed" | "floating"} [regime] the exchange rate: fixed (J3 to J6), or floating (J7, src/eco/floating.js)
  */
-export function createEco(targets = TARGETS, assumed = ASSUMED) {
-  const { external, values } = calibrate(targets, assumed);
+export function createEco(targets = TARGETS, assumed = ASSUMED, regime = "fixed") {
+  const { external, values } = calibrate(targets, assumed, regime);
+  const floating = regime === "floating";
+  const equations = floating ? FLOATING_EQUATIONS : EQUATIONS;
   return createSystem({
-    name: "ECO",
-    equations: EQUATIONS,
+    name: floating ? "ECOFLEX" : "ECO",
+    equations,
     external,
-    initial: Object.fromEntries(parseEquations(EQUATIONS).map(({ name }) => [name, values[name]])),
-    matrices: MATRICES,
+    initial: Object.fromEntries(parseEquations(equations).map(({ name }) => [name, values[name]])),
+    matrices: floating ? FLOATING_MATRICES : MATRICES,
   });
 }
 
 export const ECO = createEco();
+/** ÉCO with a floating rate (J7). */
+export const ECOFLEX = createEco(TARGETS, ASSUMED, "floating");

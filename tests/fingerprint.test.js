@@ -30,6 +30,8 @@ const EXPECTED = {
   // ÉCO from its calibrated start, 100 quarters, energy twice as dear from 20, the rate at 5 % from 40 (9/11/2026, J3;
   // 9/11, J4: the rate reaches consumption and investment as an expected real rate, 3aa253792848fe9c before).
   eco: "132e3011d9401144",
+  // 17/11/2026, J7: ÉCO at a floating rate (src/eco/floating.js), the same run.
+  ecoflex: "02b0054bedfd88db",
 };
 
 const digest = (states) => createHash("sha256").update(Buffer.from(states.buffer, states.byteOffset, states.byteLength)).digest("hex").slice(0, 16);
@@ -61,8 +63,9 @@ describe("the fingerprints of the models", () => {
     assert.equal(from("OPENFLEX", [{ at: 50, lambda20: 0.3, lambda40: 0.75 }]), EXPECTED.openflex);
   });
 
-  it("leaves ÉCO as it was", () => {
+  it("leaves ÉCO as it was, at a fixed rate and at a floating one", () => {
     const changes = [{ at: 20, eshock: 2 }, { at: 40, rcb: 0.05 }];
     assert.equal(digest(run("ECO", { start: "zero", periods: 100, changes }).states), EXPECTED.eco);
+    assert.equal(digest(run("ECOFLEX", { start: "zero", periods: 100, changes }).states), EXPECTED.ecoflex);
   });
 });

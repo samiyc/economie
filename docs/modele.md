@@ -452,7 +452,7 @@ indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le
 | **J4** (fait le 9/11) | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Sami, 6/11, Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
 | **J5** (fait le 10/11) | le réglage des règles sur les graines d'apprentissage | R1\* et R2s\* mesurées contre les règles des manuels |
 | **J6** (fait le 10/11) | la recherche à horizon glissant : l'escalade, puis le faisceau ; le banc (`npm run bench`) | elle bat la meilleure règle réglée selon le seuil du § 8, ou on sait pourquoi pas ; le témoin du modèle décalé |
-| **J7** (en cours, le banc fait le 17/11) | le change flottant : OPEN FLEX rejoué, puis greffé sur ÉCO (Sami, 17/11, Q-S13 ; [`change-flottant.md`](change-flottant.md)) | un taux bas coûte : la monnaie baisse, l'inflation monte ; les règles et la recherche remesurées, le taux rendu à la recherche |
+| **J7** (en cours : le banc et la greffe faits le 17/11) | le change flottant : OPEN FLEX rejoué, puis greffé sur ÉCO (Sami, 17/11, Q-S13 ; [`change-flottant.md`](change-flottant.md)) | un taux bas coûte : la monnaie baisse, l'inflation monte ; les règles et la recherche remesurées, le taux rendu à la recherche |
 | **J8** | deux États, la guerre commerciale, l'ISMCTS, à partir des deux pays d'OPEN FLEX | à cadrer à son tour |
 
 Les empreintes, le changelog et le banc arrivent avec leur jalon, comme le dit `CLAUDE.md`.
