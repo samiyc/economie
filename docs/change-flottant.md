@@ -92,6 +92,34 @@ Les mondes ont un nom que les scripts prennent tous (`--world`, `scripts/lib/wor
    `docs/mesures/flottant/reglees.json`) ; la recherche sur les achats contre la barre et R1, 200 graines par famille et
    par jeu de poids, comme au J6 (36 jobs) ; R3*, réglée au change fixe, s'y mesure ensuite
    (`scripts/r3-report.js` lit tous les mondes de la recherche).
+   **Les règles, mesurées le 17/11** (1 000 graines par famille, moyennes du change fixe au flottant :
+   chômage, écart d'inflation à 2 %, pic d'inflation, dette à la fin, en points) :
+
+   | Famille | Règle | Chômage | Écart d'inflation | Pic d'inflation | Dette |
+   |---|---|---|---|---|---|
+   | calme | R0 | 7,20 → 7,14 | 0,07 → 0,14 | 2,03 → 2,30 | 135,5 → 133,9 |
+   | calme | R1 | 7,16 → 7,08 | 0,05 → 0,28 | 2,01 → 2,55 | 134,3 → 133,4 |
+   | calme | R2s | 8,36 → 8,04 | 0,29 → 0,51 | 2,11 → 2,98 | 127,5 → 122,4 |
+   | chômage | R0 | 8,17 → 8,05 | 0,27 → 0,57 | 2,11 → 2,67 | 146,9 → 144,5 |
+   | chômage | R1 | 7,91 → 7,51 | 0,22 → 0,43 | 1,98 → 3,19 | 140,7 → 137,5 |
+   | chômage | R2s | 9,24 → 8,52 | 0,41 → 0,78 | 2,00 → 3,64 | 134,5 → 125,1 |
+   | matières | R0 | 7,42 → 6,87 | 1,98 → 3,13 | 11,18 → 16,01 | 143,3 → 141,8 |
+   | matières | R1 | 7,37 → 7,11 | 1,93 → 1,98 | 11,16 → 13,66 | 141,4 → 142,9 |
+   | matières | R2s | 9,32 → 8,77 | 2,31 → 2,81 | 11,37 → 14,20 | 135,4 → 125,2 |
+
+   - **Taylor, tel quel, agite la monnaie au calme** : chaque mouvement du taux (0,2 à 0,5 point, en réponse aux petits
+     chocs) déplace la monnaie de 1 à 3 % d'un coup, et les prix importés avec elle ; l'inflation oscille de 1,4 à
+     2,5 % (de 1,9 à 2,1 % au fixe). Au calme, R1 s'écarte plus de la cible que R0 (0,28 point contre 0,14), l'inverse
+     du fixe. Les banques centrales d'économies ouvertes lissent leur taux ; Taylor ne le fait pas ici.
+   - **Dans la crise des matières premières, Taylor devient utile** : sans lui, la monnaie et l'inflation dérivent (3,1
+     points d'écart, un pic à 16 %) ; R1 tient l'écart à 2,0 points, comme au fixe, pour un quart de point de chômage de
+     plus (R1 − R0 : +0,24 [0,23 ; 0,24]), la monnaie forte pesant sur les exportations.
+   - **La rigueur budgétaire coûte moins au flottant** : R2s − R0, en crise du chômage, +0,47 point de chômage au lieu
+     de +1,07, et −19,4 points de dette au lieu de −12,4. Quand l'État serre, Taylor baisse le taux, la monnaie baisse
+     et les exportations prennent le relais : Mundell-Fleming, le budget pèse moins au flottant, le taux plus.
+   - Les règles réglées au J5 (R1*, R2s*), réglées au change fixe, y gardent leur rang ; les régler au flottant (avec
+     un lissage du taux) viendra si la recherche montre qu'il y a à prendre.
+
 2. **Le taux rendu à la recherche** (Q-S13) : la recherche tient les achats et le taux (`createPlanner` `rate`,
    `scripts/search.js --rate`) : `horizon` gènes de plus, un demi-point au plus par trimestre et jamais sous 0,
    comme Taylor, l'à-coup payé comme pour les achats. Aux deux changes, 100 graines par cas (36 jobs) : la colle-t-elle
