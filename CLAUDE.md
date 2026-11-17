@@ -48,7 +48,8 @@ Its line in the roadmap: `mcts-commun/docs/feuille-de-route.md`, § 2.C. Start t
   a model that leaks throws. A new model brings its matrices and joins `src/models.js`, which the runner
   (`src/sfc/run.js`) and the page take it from.
 - **The system** (`src/sfc/system.js`): a model written in sfcr's notation, its equations and its matrices, compiled
-  once and solved block by block (Gauss-Seidel in written order). The book's blocks (`src/book/`) and ÉCO (`src/eco/`:
+  once and solved block by block (Gauss-Seidel in written order; Newton, `src/sfc/newton.js`, for a model that asks,
+  as OPEN FLEX, whose cycles Gauss-Seidel does not settle). The book's blocks (`src/book/`) and ÉCO (`src/eco/`:
   its equations, matrices, targets and calibration) are written so; SIM and PC stay hand-written.
 - **The reference trajectories** (`tests/reference.test.js`, `tests/book.test.js`): sfcr's, solved once by
   `scripts/reference/sfcr.R` (R and sfcr installed for Sami's account, 9/11) and kept in `tests/fixtures/sfcr/`; a
@@ -68,6 +69,7 @@ Its line in the roadmap: `mcts-commun/docs/feuille-de-route.md`, § 2.C. Start t
   rules, 50 seeds a job (a quarter of an hour), `--world param:factor` for the shifted model;
   `scripts/search-report.js` gathers `docs/mesures/recherche/`; `docs/recherche.md` reads it. The central bank
   follows the textbook Taylor there: the search plays the purchases only (Sami, 10/11, Q-S13).
+  J7 (17/11, `docs/change-flottant.md`): the floating rate; OPEN FLEX (`src/book/openflex.js`) is its bench.
   R3 (16/11, `src/policy/countercyclical.js`): `scripts/tune.js --rule R3 --optimizer climb|cmaes --out
   docs/mesures/r3/…` tunes it, `scripts/r3-report.js` measures it against the bar and the search; `docs/regle-r3.md`.
 - **The bench** (`npm run bench`, `scripts/search-bench.js`): the time of a decision and of a quarter played, and the

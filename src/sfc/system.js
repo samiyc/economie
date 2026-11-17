@@ -1,4 +1,5 @@
 import { blocksOf } from "./blocks.js";
+import { createNewton } from "./newton.js";
 import { compile, parseEquations, translate } from "./parse.js";
 
 /**
@@ -23,6 +24,8 @@ import { compile, parseEquations, translate } from "./parse.js";
 
 export const TOLERANCE = 1e-14;
 export const ITERATIONS = 500;
+/** Newton's iterations on a cyclic block, for a model that asks for it (`solver: "newton"`). */
+const NEWTON_ITERATIONS = 50;
 /** How long a run may take to reach its stationary state, and how still it must then be. */
 const SETTLING = { periods: 20000, change: 1e-12 };
 const EMPTY = 1e-15;
@@ -44,6 +47,25 @@ function solverBody(sources, blocks) {
     const lines = members.map((i) => `v = ${sources[i]}; w = Math.max(w, Math.abs(v - s[${i}]) / (1 + Math.abs(v))); s[${i}] = v;`);
     return `for (let k = 0; ; k += 1) {\n  if (k === ${ITERATIONS}) return ${b + 1};\n  w = 0;\n  ${lines.join("\n  ")}\n  if (w <= ${TOLERANCE}) break;\n}`;
   }).join("\n");
+}
+
+/** A solver by Newton's method on each cycle (newton.js), the other blocks computed once: returns 0, or 1 + the block that failed. */
+function newtonSolver(sources, blocks) {
+  const steps = blocks.map(({ members, cyclic }) => {
+    if (!cyclic) {
+      const assign = compile(["s", "l"], `s[${members[0]}] = ${sources[members[0]]};`);
+      return (s, l) => {
+        assign(s, l);
+        return true;
+      };
+    }
+    const evaluate = compile(["s", "l", "out"], members.map((i, j) => `out[${j}] = ${sources[i]};`).join("\n"));
+    return createNewton({ members, evaluate: /** @type {any} */ (evaluate), tolerance: TOLERANCE, iterations: NEWTON_ITERATIONS });
+  });
+  return (s, l) => {
+    for (let b = 0; b < steps.length; b += 1) if (!steps[b](s, l)) return b + 1;
+    return 0;
+  };
 }
 
 /** The model's matrices as the ledger reads them, each cell compiled to a source over `s` and `l`. */
@@ -72,17 +94,17 @@ function variablesOf(name, equations, external) {
  * matrices.
  *
  * @param {{ name: string, equations: string, external: Record<string, number>, initial?: Record<string, number>,
- *   matrices: SystemMatrices }} definition
+ *   matrices: SystemMatrices, solver?: "gauss-seidel" | "newton" }} definition
  * @returns {Model & { equations: Array<{ name: string, expression: string }> }}
  */
-export function createSystem({ name, equations, external, initial = {}, matrices }) {
+export function createSystem({ name, equations, external, initial = {}, matrices, solver = "gauss-seidel" }) {
   const list = parseEquations(equations);
   const VARS = variablesOf(name, list, external);
   const V = Object.freeze(Object.fromEntries(VARS.map((variable, i) => [variable, i])));
   const reads = list.map(() => new Set());
   const sources = list.map((e, i) => translate(e.expression, referee(name, V, list.length, reads[i])));
   const blocks = blocksOf(reads.map((set) => [...set]));
-  const solve = compile(["s", "l"], `let v = 0, w = 0;\n${solverBody(sources, blocks)}\nreturn 0;`);
+  const solve = solver === "newton" ? newtonSolver(sources, blocks) : compile(["s", "l"], `let v = 0, w = 0;\n${solverBody(sources, blocks)}\nreturn 0;`);
   const outside = Object.keys(external).map((key) => [key, V[key]]);
   const lag = new Float64Array(VARS.length);
   const assertParams = (params) => {

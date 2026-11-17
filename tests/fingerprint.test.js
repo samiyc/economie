@@ -25,6 +25,8 @@ const EXPECTED = {
   bmw: "143abd2e121091e3",
   disinf: "38250af50d22089b",
   growth: "e894737445bc0e74",
+  // 17/11/2026, J7: OPEN FLEX (ch. 12), solved by Newton, from its start, 100 periods, its vignette's third shock at 50.
+  openflex: "a79f94c599f55759",
   // ÉCO from its calibrated start, 100 quarters, energy twice as dear from 20, the rate at 5 % from 40 (9/11/2026, J3;
   // 9/11, J4: the rate reaches consumption and investment as an expected real rate, 3aa253792848fe9c before).
   eco: "132e3011d9401144",
@@ -56,6 +58,7 @@ describe("the fingerprints of the models", () => {
     assert.equal(from("BMW", [{ at: 50, alpha0: 30 }]), EXPECTED.bmw);
     assert.equal(from("DISINF", [{ at: 50, phi: 0.3 }]), EXPECTED.disinf);
     assert.equal(from("GROWTH", [{ at: 50, omega0: -0.1 }]), EXPECTED.growth);
+    assert.equal(from("OPENFLEX", [{ at: 50, lambda20: 0.3, lambda40: 0.75 }]), EXPECTED.openflex);
   });
 
   it("leaves ÉCO as it was", () => {

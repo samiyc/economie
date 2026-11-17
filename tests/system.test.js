@@ -4,6 +4,7 @@ import { blocksOf } from "../src/sfc/blocks.js";
 import { createLedger } from "../src/sfc/ledger.js";
 import { compile, parseEquations, tokenize, translate } from "../src/sfc/parse.js";
 import { runModel } from "../src/sfc/run.js";
+import { eliminate } from "../src/sfc/newton.js";
 import { createSystem } from "../src/sfc/system.js";
 import { run } from "../src/models.js";
 
@@ -158,5 +159,27 @@ describe("the ledger of a model in sfcr's notation", () => {
     assert.ok(Math.abs(ledger.totals[1] - state[model.V.K]) < 1e-12);
     ledger.fill(state);
     assert.equal(ledger.flows[0], 0);
+  });
+});
+
+describe("Newton's method, for the cycles Gauss-Seidel does not settle (OPEN FLEX)", () => {
+  const equations = "x ~ 2 * y + a\ny ~ 2 * x - 3";
+  const matrices = { sectors: ["a"], flows: [], stocks: [] };
+
+  it("solves a cycle whose iteration diverges, where Gauss-Seidel throws", () => {
+    const solved = createSystem({ name: "CYCLE", equations, external: { a: 1 }, matrices, solver: "newton" });
+    const state = solved.emptyState();
+    solved.step(solved.DEFAULTS, state);
+    assert.ok(Math.abs(state[solved.V.x] - 5 / 3) < 1e-12);
+    assert.ok(Math.abs(state[solved.V.y] - 1 / 3) < 1e-12);
+    const iterated = createSystem({ name: "CYCLE", equations, external: { a: 1 }, matrices });
+    assert.throws(() => iterated.step(iterated.DEFAULTS, iterated.emptyState()), /did not settle/);
+  });
+
+  it("eliminates with partial pivoting", () => {
+    const a = Float64Array.from([0, 2, 1, 1, 1, 1, 2, 1, 3]);
+    const b = Float64Array.from([5, 5, 12]);
+    eliminate(a, b, 3);
+    [1, 1, 3].forEach((x, i) => assert.ok(Math.abs(b[i] - x) < 1e-12));
   });
 });

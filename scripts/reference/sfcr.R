@@ -100,11 +100,11 @@ save(shock(solve(pcex_eqs, pc_ext, c("Hh" = "Hs"), 1000), sfcr_set(r_bar ~ 0.035
 # from that last period, the shock from its period 5. A scenario's rows are numbered from the baseline's start, so
 # that our run from the start, one period less, retraces both: its row k is period P - 1 + k.
 everything <- function(run) setdiff(names(as.data.frame(run)), c("period", grep("^block", names(as.data.frame(run)), value = TRUE)))
-book <- function(name, eqs, ext, length, change, initial = NULL, hidden = NULL, columns = NULL, rhtol = FALSE) {
-  base <- sfcr_baseline(eqs, ext, periods = length, initial = initial, hidden = hidden, method = "Gauss", tol = 1e-15, max_iter = 1000, .hidden_tol = 1e-6, rhtol = rhtol)
+book <- function(name, eqs, ext, length, change, initial = NULL, hidden = NULL, columns = NULL, rhtol = FALSE, method = "Gauss") {
+  base <- sfcr_baseline(eqs, ext, periods = length, initial = initial, hidden = hidden, method = method, tol = 1e-15, max_iter = 1000, .hidden_tol = 1e-6, rhtol = rhtol)
   if (is.null(columns)) columns <- everything(base)
   save(base, paste0(name, "-zero"), columns)
-  run <- sfcr_scenario(base, sfcr_shock(variables = change, start = 5, end = periods), periods = periods, method = "Gauss", tol = 1e-15, max_iter = 1000)
+  run <- sfcr_scenario(base, sfcr_shock(variables = change, start = 5, end = periods), periods = periods, method = method, tol = 1e-15, max_iter = 1000)
   run <- as.data.frame(run)[-1, ]
   run$period <- length - 1 + seq_len(nrow(run)) + 1
   save(run, paste0(name, "-shock"), columns)
@@ -335,7 +335,7 @@ growth_eqs <- sfcr_set(
   Lhs ~ Lhd,
   Hbd ~ ro*Ms,
   Bbs ~ Bbs[-1] + (Bs - Bs[-1]) - (Bhs - Bhs[-1]) - (Bcbs - Bcbs[-1]),
-  Bbd ~ Ms + OFb - Lfs - Lhs - Hbd, 
+  Bbd ~ Ms + OFb - Lfs - Lhs - Hbd,
   BLR ~ Bbd/Ms,
   Rm ~ Rm[-1] + z1a*xim1 + z1b*xim2 - z2a*xim1 - z2b*xim2,
   z2a ~ if (BLR[-1] > (top + .05)) {1} else {0},
@@ -545,3 +545,127 @@ growth_cols <- c("Yk", "Sk", "Ck", "Ik", "Kk", "GRk", "U", "RRl", "PI", "P", "W"
   "FDf", "FUf", "Lfd", "Eks", "Pe", "YP", "TX", "YDr", "V", "Mh", "Bhd", "BLd", "Pbl", "Bs", "Bbs", "Bbd", "Hs", "Rm",
   "Rl", "ADDl", "OFb", "Fb", "Lhd", "PSBR", "GD")
 book("growth", growth_eqs, growth_parameters, 100, sfcr_set(omega0 ~ -0.1), initial = growth_initial, hidden = c("Bbs" = "Bbd"), columns = growth_cols, rhtol = TRUE)
+
+# OPEN FLEX (ch. 12), the vignette of the advanced open economy (gl9-open12.Rmd): its equations, parameters and
+# start, but for the start's totals, made to add up from their parts (src/book/openflex-values.js). sfcr solves it
+# by Broyden, as the vignette does: Gauss-Seidel does not settle it. 100 periods from the start, then the third
+# scenario of the vignette, a stronger desire for US bills (lambda20 0.30, lambda40 0.75).
+openflex_eqs <- sfcr_set(
+  yd_uk ~ (y_uk + r_uk[-1]*b_ukuk_d[-1] + xr_us*r_us[-1]*b_ukus_s[-1])*(1 - theta_uk) + (xr_us - xr_us[-1])*b_ukus_s[-1],
+  yd_hs_uk ~ yd_uk + (xr_us - xr_us[-1])*b_ukus_s[-1],
+  v_uk ~ v_uk[-1] + yd_uk - cons_uk,
+  yd_us ~ (y_us + r_us[-1]*b_usus_d[-1] + xr_uk*r_uk[-1]*b_usuk_s[-1])*(1 - theta_us) + (xr_uk - xr_uk[-1])*b_usuk_s[-1],
+  yd_hs_us ~ yd_us + d(xr_uk)*b_usuk_s[-1],
+  v_us ~ v_us[-1] + yd_us - cons_us,
+  t_uk ~ theta_uk*(y_uk + r_uk[-1]*b_ukuk_d[-1] + xr_us*r_us[-1]*b_ukus_s[-1]),
+  t_us ~ theta_us*(y_us + r_us[-1]*b_usus_d[-1] + xr_uk*r_uk[-1]*b_usuk_s[-1]),
+  f_cb_uk ~ r_uk[-1]*b_cb_ukuk_d[-1] + r_us[-1]*b_cb_ukus_s[-1]*xr_us,
+  f_cb_us ~ r_us[-1]*b_cb_usus_d[-1],
+  b_uk_s ~ b_uk_s[-1] + g_uk + r_uk[-1]*b_uk_s[-1] - t_uk - f_cb_uk,
+  b_us_s ~ b_us_s[-1] + g_us + r_us[-1]*b_us_s[-1] - t_us - f_cb_us,
+  cab_uk ~ x_uk - im_uk + xr_us*r_us[-1]*b_ukus_s[-1] - r_uk[-1]*b_usuk_s[-1] + r_us[-1]*b_cb_ukus_s[-1]*xr_us,
+  kab_uk ~ kabp_uk - (xr_us*(b_cb_ukus_s - b_cb_ukus_s[-1]) + pg_uk*(or_uk - or_uk[-1])),
+  cab_us ~ x_us - im_us + xr_uk*r_uk[-1]*b_usuk_s[-1] - r_us[-1]*b_ukus_s[-1] - r_us[-1]*b_cb_ukus_s[-1],
+  kab_us ~ kabp_us + (b_cb_ukus_s - b_cb_ukus_s[-1]) - pg_us*(or_us - or_us[-1]),
+  kabp_uk ~ - (b_ukus_s - b_ukus_s[-1])*xr_us + (b_usuk_s - b_usuk_s[-1]),
+  kabp_us ~ - (b_usuk_s - b_usuk_s[-1])*xr_uk + (b_ukus_s - b_ukus_s[-1]),
+  pm_uk ~ exp(nu0m + nu1m*log(py_us) + (1 - nu1m)*log(py_uk) - nu1m*log(xr_uk)),
+  px_uk ~ exp(nu0x + nu1x*log(py_us) + (1 - nu1x)*log(py_uk) - nu1x*log(xr_uk)),
+  px_us ~ pm_uk*xr_uk,
+  pm_us ~ px_uk*xr_uk,
+  x_k_uk ~ exp(eps0 - eps1*log(pm_us/py_us) + eps2*log(y_k_us)),
+  im_k_uk ~ exp(mu0 - mu1*log(pm_uk[-1]/py_uk[-1]) + mu2*log(y_k_uk)),
+  x_k_us ~ im_k_uk,
+  im_k_us ~ x_k_uk,
+  x_uk ~ x_k_uk*px_uk,
+  x_us ~ x_k_us*px_us,
+  im_uk ~ im_k_uk*pm_uk,
+  im_us ~ im_k_us*pm_us,
+  v_k_uk ~ v_uk/pds_uk,
+  v_k_us ~ v_us/pds_us,
+  ydhs_k_uk ~ yd_uk/pds_uk - v_k_uk[-1]*(pds_uk - pds_uk[-1])/pds_uk,
+  ydhs_k_us ~ yd_us/pds_us - v_k_us[-1]*(pds_us - pds_us[-1])/pds_us,
+  c_k_uk ~ alpha1_uk*ydhse_k_uk + alpha2_uk*v_k_uk[-1],
+  c_k_us ~ alpha1_us*ydhse_k_us + alpha2_us*v_k_us[-1],
+  ydhse_k_uk ~ (ydhs_k_uk + ydhs_k_uk[-1])/2,
+  ydhse_k_us ~ (ydhs_k_us + ydhs_k_us[-1])/2,
+  s_k_uk ~ c_k_uk + g_k_uk + x_k_uk,
+  s_k_us ~ c_k_us + g_k_us + x_k_us,
+  s_uk ~ s_k_uk*ps_uk,
+  s_us ~ s_k_us*ps_us,
+  ps_uk ~ (1 + phi_uk)*(w_uk*n_uk + im_uk)/s_k_uk,
+  ps_us ~ (1 + phi_us)*(w_us*n_us + im_us)/s_k_us,
+  pds_uk ~ (s_uk - x_uk)/(s_k_uk - x_k_uk),
+  pds_us ~ (s_us - x_us)/(s_k_us - x_k_us),
+  ds_uk ~ s_uk - x_uk,
+  ds_us ~ s_us - x_us,
+  ds_k_uk ~ c_k_uk + g_k_uk,
+  ds_k_us ~ c_k_us + g_k_us,
+  y_uk ~ s_uk - im_uk,
+  y_us ~ s_us - im_us,
+  y_k_uk ~ s_k_uk - im_k_uk,
+  y_k_us ~ s_k_us - im_k_us,
+  py_uk ~ y_uk/y_k_uk,
+  py_us ~ y_us/y_k_us,
+  cons_uk ~ c_k_uk*pds_uk,
+  cons_us ~ c_k_us*pds_us,
+  g_uk ~ g_k_uk*pds_uk,
+  g_us ~ g_k_us*pds_us,
+  n_uk ~ y_k_uk/pr_uk,
+  n_us ~ y_k_us/pr_us,
+  b_ukuk_d ~ v_uk*(lambda10 + lambda11*r_uk - lambda12*(r_us + dxre_us)),
+  b_ukus_d ~ v_uk*(lambda20 - lambda21*r_uk + lambda22*(r_us + dxre_us)),
+  h_uk_d ~ v_uk - b_ukuk_d - b_ukus_d,
+  b_usus_d ~ v_us*(lambda40 + lambda41*r_us - lambda42*(r_uk + dxre_uk)),
+  b_usuk_d ~ v_us*(lambda50 - lambda51*r_us + lambda52*(r_uk + dxre_uk)),
+  h_us_d ~ v_us - b_usus_d - b_usuk_d,
+  h_us_s ~ h_us_d,
+  b_usus_s ~ b_usus_d,
+  b_cb_usus_s ~ b_cb_usus_d,
+  h_uk_s ~ h_uk_d,
+  b_ukuk_s ~ b_ukuk_d,
+  b_cb_ukuk_s ~ b_cb_ukuk_d,
+  b_cb_usus_d ~ b_cb_usus_d[-1] + (h_us_s - h_us_s[-1]) - (or_us - or_us[-1])*pg_us,
+  b_cb_ukuk_d ~ b_cb_ukuk_d[-1] + (h_uk_s - h_uk_s[-1]) - (b_cb_ukus_s - b_cb_ukus_s[-1])*xr_us - (or_uk - or_uk[-1])*pg_uk,
+  pg_uk ~ pg_us/xr_uk,
+  xr_us ~ 1/xr_uk,
+  b_usuk_s ~ b_usuk_d*xr_us,
+  b_cb_ukus_d ~ b_cb_ukus_s*xr_us,
+  psbr_uk ~ g_uk + r_uk[-1]*b_uk_s[-1] - t_uk - f_cb_uk,
+  psbr_us ~ g_us + r_us[-1]*b_us_s[-1] - t_us - f_cb_us,
+  nafa_uk ~ psbr_uk + cab_uk,
+  nafa_us ~ psbr_us + cab_us,
+  b_cb_ukuk_sa ~ b_uk_s - b_ukuk_s - b_usuk_s,
+  nwcb_uk ~ -h_uk_d + b_cb_ukuk_d + b_cb_ukus_d * xr_us + or_uk * pg_uk,
+  xr_uk ~ b_ukus_s/b_ukus_d,
+  b_ukus_s ~ b_us_s - b_usus_s - b_cb_usus_d - b_cb_ukus_s
+)
+openflex_ext <- sfcr_set(
+  alpha1_uk ~ 0.75, alpha1_us ~ 0.75, alpha2_uk ~ 0.13333, alpha2_us ~ 0.13333, eps0 ~ -2.1, eps1 ~ 0.7, eps2 ~ 1,
+  lambda10 ~ 0.7, lambda11 ~ 5, lambda12 ~ 5, lambda20 ~ 0.25, lambda21 ~ 5, lambda22 ~ 5, lambda40 ~ 0.7,
+  lambda41 ~ 5, lambda42 ~ 5, lambda50 ~ 0.25, lambda51 ~ 5, lambda52 ~ 5, mu0 ~ -2.1, mu1 ~ 0.7, mu2 ~ 1,
+  nu0m ~ -0.00001, nu0x ~ -0.00001, nu1m ~ 0.7, nu1x ~ 0.5, phi_uk ~ 0.2381, phi_us ~ 0.2381, theta_uk ~ 0.2,
+  theta_us ~ 0.2, dxre_us ~ 0, dxre_uk ~ 0, g_k_uk ~ 16, g_k_us ~ 16, or_uk ~ 7, or_us ~ 7, pg_us ~ 1,
+  pr_uk ~ 1.3333, pr_us ~ 1.3333, r_us ~ 0.03, r_uk ~ 0.03, b_cb_ukus_s ~ 0.02031, w_uk ~ 1, w_us ~ 1,
+  xre_uk ~ 1.0003, xre_us ~ 0.99971
+)
+openflex_init <- sfcr_set(
+  b_cb_ukuk_d ~ 0.27984, b_cb_ukuk_s ~ 0.27984, b_cb_ukuk_sa ~ 0.27984, b_cb_ukus_d ~ 0.0203,
+  b_cb_usus_d ~ 0.29843, b_cb_usus_s ~ 0.29843, b_uk_s ~ 138.94684, b_ukuk_d ~ 102.18, b_ukuk_s ~ 102.18,
+  b_ukus_d ~ 36.4930520843747, b_ukus_s ~ 36.504, b_us_s ~ 139.01274, b_usuk_d ~ 36.4979461, b_usuk_s ~ 36.487,
+  b_usus_d ~ 102.19, b_usus_s ~ 102.19, h_uk_d ~ 7.2987, h_uk_s ~ 7.2987, h_us_d ~ 7.2995, h_us_s ~ 7.2995,
+  v_k_uk ~ 152.62, v_k_us ~ 152.63, v_uk ~ 145.971752084375, v_us ~ 145.9874461, c_k_uk ~ 81.393, c_k_us ~ 81.401,
+  cab_uk ~ 0, cab_us ~ 0, cons_uk ~ 77.851, cons_us ~ 77.86, ds_k_uk ~ 97.393, ds_k_us ~ 97.401, ds_uk ~ 93.154,
+  ds_us ~ 93.164, f_cb_uk ~ 0.00869, f_cb_us ~ 0.00895, g_uk ~ 15.304, g_us ~ 15.304, im_k_uk ~ 11.928,
+  im_k_us ~ 11.926, im_uk ~ 11.407, im_us ~ 11.409, kabp_uk ~ 0.00002, kabp_us ~ -0.00002, n_uk ~ 73.046,
+  n_us ~ 73.054, pds_uk ~ 0.95648, pds_us ~ 0.95649, pg_uk ~ 0.99971, pm_uk ~ 0.95628, pm_us ~ 0.95661,
+  ps_uk ~ 0.95646, ps_us ~ 0.9565, px_uk ~ 0.95634, px_us ~ 0.95656, py_uk ~ 0.95648, py_us ~ 0.95649,
+  s_k_uk ~ 109.32, s_k_us ~ 109.33, s_uk ~ 104.56, s_us ~ 104.57, t_uk ~ 19.463, t_us ~ 19.465, x_k_uk ~ 11.926,
+  x_k_us ~ 11.928, x_uk ~ 11.406, x_us ~ 11.41, xr_uk ~ 1.0003, xr_us ~ 0.999700089973008, y_k_uk ~ 97.392,
+  y_k_us ~ 97.403, y_uk ~ 93.154, y_us ~ 93.164, yd_uk ~ 77.851, yd_us ~ 77.86, ydhs_k_uk ~ 81.394,
+  ydhs_k_us ~ 81.402, ydhse_k_uk ~ 81.394, ydhse_k_us ~ 81.402, b_cb_ukus_s ~ 0.02031, dxre_us ~ 0, dxre_uk ~ 0,
+  g_k_uk ~ 16, g_k_us ~ 16, or_uk ~ 7, or_us ~ 7, pg_us ~ 1, pr_uk ~ 1.3333, pr_us ~ 1.3333, r_uk ~ 0.03,
+  r_us ~ 0.03, w_uk ~ 1, w_us ~ 1, xre_uk ~ 1.0003, xre_us ~ 0.99971
+)
+book("openflex", openflex_eqs, openflex_ext, 100, sfcr_set(lambda20 ~ 0.30, lambda40 ~ 0.75), initial = openflex_init,
+  hidden = c("b_cb_ukuk_s" = "b_cb_ukuk_sa"), method = "Broyden")

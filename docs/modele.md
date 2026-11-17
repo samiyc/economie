@@ -389,7 +389,7 @@ départ :
 4. **le réglage des règles sur un jeu de crises** : la recherche hors ligne de la meilleure règle simple, qui tient sur
    toutes les familles à la fois. C'est peut-être là le résultat le plus utile : une règle qu'on peut écrire.
 
-**MCTS ne revient qu'à deux États** (J7) : une guerre commerciale entre deux pays du modèle OPEN (ch. 6, deux pays,
+**MCTS ne revient qu'à deux États** (J8) : une guerre commerciale entre deux pays du modèle OPEN (ch. 6, deux pays,
 chacun ses leviers et ses droits de douane), où chacun répond à l'autre. C'est un jeu, et l'ISMCTS de la lib est fait
 pour cela.
 
@@ -411,7 +411,7 @@ pour cela.
 | `measure` (`paired`, `sprt`, `wilson`) | les paires par objectif, l'arrêt des séries, la part des graines au-delà d'un seuil (le chômage au-dessus de 10 %, par exemple) |
 | `trace` (`progress`) | l'avancement des jobs |
 | `replay-keys`, `web/theme.css` | le lecteur de la page (un pas d'un trimestre, un grand pas d'un an), l'allure commune |
-| `mcts` (`search`) | seulement à J7, la guerre commerciale |
+| `mcts` (`search`) | seulement à J8, la guerre commerciale |
 
 **Ce qu'on ajoute** : le moteur des modèles (les équations d'un trimestre, leur résolution, les deux matrices et leur
 vérification), SIM, PC puis ÉCO, les crises, les règles, la mesure d'une graine, la page et son diagramme de Sankey.
@@ -452,7 +452,8 @@ indices fixes, les futurs de la recherche copiés dans des tampons (`pool` si le
 | **J4** (fait le 9/11) | les règles R0 à R2n ; les crises, d'abord le chômage fort et les matières premières (Sami, 6/11, Q-S9) | les paires des règles par famille, avec leurs intervalles ; R2n perd contre R2s en récession |
 | **J5** (fait le 10/11) | le réglage des règles sur les graines d'apprentissage | R1\* et R2s\* mesurées contre les règles des manuels |
 | **J6** (fait le 10/11) | la recherche à horizon glissant : l'escalade, puis le faisceau ; le banc (`npm run bench`) | elle bat la meilleure règle réglée selon le seuil du § 8, ou on sait pourquoi pas ; le témoin du modèle décalé |
-| **J7** | deux États, la guerre commerciale, l'ISMCTS | à cadrer à son tour |
+| **J7** (en cours, le banc fait le 17/11) | le change flottant : OPEN FLEX rejoué, puis greffé sur ÉCO (Sami, 17/11, Q-S13 ; [`change-flottant.md`](change-flottant.md)) | un taux bas coûte : la monnaie baisse, l'inflation monte ; les règles et la recherche remesurées, le taux rendu à la recherche |
+| **J8** | deux États, la guerre commerciale, l'ISMCTS, à partir des deux pays d'OPEN FLEX | à cadrer à son tour |
 
 Les empreintes, le changelog et le banc arrivent avec leur jalon, comme le dit `CLAUDE.md`.
 
