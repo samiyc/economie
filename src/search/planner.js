@@ -13,7 +13,10 @@ import { createRollout } from "./rollout.js";
  *
  * The central bank is independent (Sami, 10/11): its rate follows the textbooks' Taylor, in the world as in the
  * futures, where the planner knows the rule. ÉCO makes a low rate cost next to nothing (docs/recherche.md), and a
- * planner holding the rate kept it at 0.
+ * planner holding the rate kept it at 0. With `rate` (J7, docs/change-flottant.md, § 3), the rate is given back to
+ * the planner, to see whether it still does when a low rate costs: `horizon` genes more, the rate's moves from the
+ * quarter after on, half a point at most a quarter and never below 0, as for Taylor; each move squared pays `jerk`
+ * too, in points of rate.
  *
  * A plan is `horizon` − 1 genes in [−1, 1], the purchases' moves: a point of GDP at most a quarter, within 5 points
  * of their start. As for a rule, the purchases of the next quarter were voted the quarter before: the plan's first
@@ -21,11 +24,15 @@ import { createRollout } from "./rollout.js";
  * measure.
  *
  * @typedef {{ unemployment: number, inflationGap: number, debt: number }} Weights
- * @typedef {{ model: import("../types.js").Model, weights: Weights, budget: number, count?: number, horizon?: number, jerk?: number }} PlannerShape
+ * @typedef {{ model: import("../types.js").Model, weights: Weights, budget: number, count?: number, horizon?: number, jerk?: number, rate?: boolean }} PlannerShape
  */
 
-/** The climb's problem over a plan of `genes` numbers in [−1, 1]: hold the purchases first, a few genes moved, shifted. */
-function problemOf(genes, score) {
+/**
+ * The climb's problem over a plan in [−1, 1], its genes in `parts` (each a lever's, in order): hold the levers first,
+ * a few genes moved, each part shifted.
+ */
+function problemOf(parts, score) {
+  const genes = parts.reduce((sum, n) => sum + n, 0);
   const clamp = (x) => Math.max(-1, Math.min(1, x));
   return {
     start: (plan) => plan.fill(0),
@@ -42,7 +49,11 @@ function problemOf(genes, score) {
       for (let i = 0; i < genes; i += 1) plan[i] = 2 * rng.next() - 1;
     },
     shift: (next, last) => {
-      for (let i = 0; i < genes; i += 1) next[i] = i === genes - 1 ? last[i] : last[i + 1];
+      let from = 0;
+      for (const n of parts) {
+        for (let i = from; i < from + n; i += 1) next[i] = i === from + n - 1 ? last[i] : last[i + 1];
+        from += n;
+      }
     },
   };
 }
@@ -57,13 +68,22 @@ function decode(plan, voted, { horizon, step, band, gshares }) {
   }
 }
 
-/** What a plan's moves cost in jerk: each move of the purchases squared, in points of GDP. */
-function jerkOf(spent, { horizon, point, gshares }) {
-  let total = 0;
-  let g = spent;
+/** The rates a plan stands for, quarters t + 1 on, from `rate`, quarter t's: its genes after the purchases'. */
+function decodeRates(plan, rate, { horizon, rates }) {
+  let r = rate;
   for (let q = 0; q < horizon; q += 1) {
-    total += ((gshares[q] - g) / point) ** 2;
-    g = gshares[q];
+    r = Math.max(LIMITS.rateFloor, r + LIMITS.rateStep * plan[horizon - 1 + q]);
+    rates[q] = r;
+  }
+}
+
+/** What a path's moves cost in jerk: each move squared, in `unit`s (a point of GDP, a point of rate). */
+function jerkOf(from, path, unit) {
+  let total = 0;
+  let x = from;
+  for (let q = 0; q < path.length; q += 1) {
+    total += ((path[q] - x) / unit) ** 2;
+    x = path[q];
   }
   return total;
 }
@@ -75,27 +95,30 @@ function jerkOf(spent, { horizon, point, gshares }) {
  * @param {PlannerShape} shape
  * @param {{ start: { rcb: number, gshare: number, piT: number, point: number }, belief: ReturnType<typeof import("../crises/families.js").beliefOf>, seed: number, periods: number }} run
  */
-export function createPlanner({ model, weights, budget, count = 16, horizon = 24, jerk = 0.05 }, { start, belief, seed, periods }) {
+export function createPlanner({ model, weights, budget, count = 16, horizon = 24, jerk = 0.05, rate = false }, { start, belief, seed, periods }) {
   const bank = { neutral: start.rcb - start.piT, inflation: TEXTBOOK.inflation, gap: TEXTBOOK.gap };
   const rollout = createRollout(model, { horizon, count, periods, weights, taylor: bank });
-  const climb = createClimb({ genes: horizon - 1 });
+  const parts = rate ? [horizon - 1, horizon] : [horizon - 1];
+  const climb = createClimb({ genes: parts.reduce((sum, n) => sum + n, 0) });
   const rng = streamOf(seed, 2);
   const band = [start.gshare - LIMITS.spendingBand * 100 * start.point, start.gshare + LIMITS.spendingBand * 100 * start.point];
   const now = { rcb: start.rcb, gshare: start.gshare, voted: start.gshare };
-  const shape = { horizon, step: 0, band, point: start.point, gshares: new Float64Array(horizon) };
+  const shape = { horizon, step: 0, band, point: start.point, gshares: new Float64Array(horizon), rates: rate ? new Float64Array(horizon) : null };
   const before = new Float64Array(3);
   const at = { state: /** @type {Float64Array<ArrayBufferLike>} */ (new Float64Array(0)) };
   const score = (plan) => {
     decode(plan, now.voted, shape);
-    const loss = rollout.loss({ state: at.state, rate: now.rcb, gshares: shape.gshares, before });
-    return -(loss + jerk * jerkOf(now.gshare, shape));
+    if (shape.rates) decodeRates(plan, now.rcb, shape);
+    const loss = rollout.loss({ state: at.state, rate: now.rcb, gshares: shape.gshares, rates: shape.rates, before });
+    const moves = jerkOf(now.gshare, shape.gshares, shape.point) + (shape.rates ? jerkOf(now.rcb, shape.rates, 0.01) : 0);
+    return -(loss + jerk * moves);
   };
-  const problem = problemOf(horizon - 1, score);
+  const problem = problemOf(parts, score);
   return {
     levers: () => ({ rcb: now.rcb, gshare: now.gshare }),
     /** @param {{ at: (name: string, t: number) => number }} h @param {number} t @param {Float64Array} state */
     decide(h, t, state) {
-      now.rcb = taylor(h, t, now.rcb, bank);
+      if (!rate) now.rcb = taylor(h, t, now.rcb, bank);
       at.state = state;
       for (let i = 0; i < 3; i += 1) before[i] = h.at("GDP", Math.max(0, t - 2 + i));
       shape.point = h.at("GDP", t) / 100 / (h.at("p", t) * h.at("yfe", t));
@@ -104,6 +127,10 @@ export function createPlanner({ model, weights, budget, count = 16, horizon = 24
       const { plan } = climb.run(problem, { budget, rng });
       decode(plan, now.voted, shape);
       [now.gshare, now.voted] = [now.voted, shape.gshares[1]];
+      if (shape.rates) {
+        decodeRates(plan, now.rcb, shape);
+        now.rcb = shape.rates[0];
+      }
     },
   };
 }

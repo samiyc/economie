@@ -2,7 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { createRng } from "mcts-commun/random.js";
 import { beliefOf, crisisOf, FAMILIES, NOISE } from "../src/crises/families.js";
-import { ECO } from "../src/eco/model.js";
+import { ECO, ECOFLEX } from "../src/eco/model.js";
 import { LIMITS, TEXTBOOK } from "../src/policy/rules.js";
 import { simulate } from "../src/policy/simulate.js";
 import { WEIGHTS } from "../src/policy/tuning.js";
@@ -96,6 +96,21 @@ describe("the rolling-horizon planner", () => {
   it("moves the purchases when it pays", () => {
     const a = plan(7, 40);
     assert.ok(a.levers.gshare.some((g) => g !== a.levers.gshare[0]));
+  });
+
+  it("holds the rate too when it is given it (J7): half a point at most a quarter, never below 0, its own moves", () => {
+    const played = (seed) => simulate({
+      family: "unemployment", seed, rule: "R0",
+      policy: (run) => createPlanner({ model: ECOFLEX, weights: WEIGHTS.balance, budget: 40, count: 2, horizon: 4, rate: true }, run),
+    }, ECOFLEX);
+    const a = played(8);
+    assert.deepEqual(a.states, played(8).states);
+    for (let t = 1; t <= 40; t += 1) {
+      assert.ok(a.levers.rcb[t] >= LIMITS.rateFloor);
+      assert.ok(Math.abs(a.levers.rcb[t] - a.levers.rcb[t - 1]) <= LIMITS.rateStep + 1e-12, `quarter ${t}`);
+    }
+    const r1 = simulate({ family: "unemployment", seed: 8, rule: "R1" }, ECOFLEX);
+    assert.notDeepEqual(Array.from(a.levers.rcb), Array.from(r1.levers.rcb), "not Taylor's");
   });
 });
 
