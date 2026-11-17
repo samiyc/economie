@@ -12,7 +12,8 @@ chiffres viennent de [`mesures/r3/`](mesures/r3/), que `node scripts/r3-report.j
 - **R3 prend de 39 à 119 % du gain de la recherche** sur la barre, selon la famille et les poids : l'essentiel quand
   il faut relancer, moins quand il faut consolider ;
 - **avec la dette d'abord, R3 bat la règle de déficit réglée sur les trois objectifs**, en récession et face aux
-  matières premières : ce que la recherche ne faisait pas en récession ;
+  matières premières : ce que la recherche ne faisait pas en récession. Sur le modèle décalé, cela tient face aux
+  matières premières, pas toujours en récession (§ 5) ;
 - **sur le modèle décalé, R3 garde sa part** du gain de la recherche (§ 5) ; **aux bornes élargies** (R3w, § 6), elle
   en prend plus avec le chômage d'abord, mais n'est plus meilleure sur les trois objectifs avec la dette d'abord.
 
@@ -141,6 +142,20 @@ seuil du § 8 de `modele.md`, et la perte des poids :
   matières premières). Avec `phil` × 1,2, elle manque le seuil d'un cheveu : la borne de l'intervalle du chômage
   touche le gain de 0,2 sans le passer. La règle ne prévoit rien avec le modèle ; le risque était que ses
   coefficients, réglés sur ÉCO, ne vaillent plus ailleurs. Ils valent encore.
+
+  Avec les deux autres poids (nuit du 16/11, `recherche.md` § 6 pour la recherche) :
+  - **chômage d'abord** : rien ne bouge, R3\* prend 83 à 86 % du gain en récession (83 % sur ÉCO), 68 à 71 % face
+    aux matières premières (70 %) ;
+  - **dette d'abord, en récession** : R3\* fait encore mieux que R2s\*b sur les trois objectifs dans les quatre mondes,
+    mais elle ne passe le seuil que dans `gammar` × 0,8. Ailleurs, son gain de chômage (0,14 à 0,22 point) n'est plus
+    assez sûr. Dans `gammar`, la recherche perd ce qu'elle tirait du taux : R3\* fait alors aussi bien qu'elle (perte
+    +0,25 [−0,06 ; 0,56]) ;
+  - **dette d'abord, face aux matières premières** : R3\* passe le seuil dans `etan` et `mug`, comme sur ÉCO. Dans
+    `gammar` et `phil`, R2s\*b n'est plus la barre ; contre R1, R3\* échange un point de chômage contre 7 points de
+    dette, comme la recherche.
+
+  Le résultat « R3 bat la règle de déficit sur les trois objectifs » (§ 4) tient donc face aux matières premières,
+  mais il est fragile en récession.
 
 ## 6. Les bornes élargies (R3w)
 

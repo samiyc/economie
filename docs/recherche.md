@@ -159,7 +159,10 @@ Quatre fois le budget gagne de 0,02 à 0,06 unité de perte, contre 0,3 à 3 gag
 sur les objectifs. **L'escalade est
 presque à son plafond à 300 plans** : ce que la recherche gagne de plus viendra de ce qu'elle sait (l'horizon, les
 futurs, le modèle), pas du budget. Le témoin passe sur la perte au calme et en récession, pas face aux matières
-premières, où l'intervalle contient 0.
+premières, où l'intervalle contient 0. Avec les deux autres poids (nuit du 16/11, 30 graines, en récession et face aux
+matières premières), quatre fois le budget fait de −0,16 à +0,06 unité de perte, contre 5,8 à 12 gagnées sur la
+barre. **Le plateau tient pour les trois jeux de poids.** Ce qui sépare R3 de la recherche avec la dette d'abord
+([`regle-r3.md`](regle-r3.md), § 4) n'est donc pas une affaire de budget.
 
 **Le modèle décalé** (§ 8 de `modele.md`) : le monde est ÉCO avec une hypothèse décalée de 20 %, la recherche planifie
 toujours sur ÉCO, 100 graines par famille. Chaque décalage va dans le sens qui dessert la relance :
@@ -185,6 +188,26 @@ toujours sur ÉCO, 100 graines par famille. Chaque décalage va dans le sens qui
 aussi bien que sur le vrai. Elle n'exploite pas ces quatre hypothèses. Elle n'est pas garantie pour autant : le défaut
 qu'elle exploitait vraiment, le taux bas gratuit (§ 2), est dans tous ces mondes, et c'est la décision du 10/11 qui
 l'en tient à l'écart.
+
+**Avec les deux autres poids** (nuit du 16/11, mêmes mondes, 100 graines), le gain de la recherche sur la barre, en
+perte, et les trimestres où le taux est au plancher (sur 40) :
+
+| Poids, famille | ÉCO | `phil` × 1,2 | `gammar` × 0,8 | `etan` × 0,8 | `mug` × 1,2 |
+|---|---|---|---|---|---|
+| chômage d'abord, récession (barre R1) | −12,05 | −11,84 | −13,10 | −11,66 | −11,62 |
+| chômage d'abord, matières premières (R1) | −8,46 | −8,99 | −8,92 | −8,03 | −8,32 |
+| dette d'abord, récession (R2s\*b) | −5,80 ; plancher 9,2 | −4,96 ; 15,7 | **−3,43 ; 23,3** | −7,14 ; 8,7 | −6,51 ; 8,7 |
+| dette d'abord, matières premières (R2s\*b) | −8,59 ; 5,7 | −9,40 ; 7,9 | −6,96 ; 15,4 | −8,78 ; 5,4 | −9,09 ; 5,4 |
+
+- **Avec le chômage d'abord, rien ne bouge** : à 10 % près, le gain est celui d'ÉCO dans les quatre mondes.
+- **Avec la dette d'abord, la recherche s'appuie sur la banque centrale.** Elle consolide fort et compte sur le Taylor
+  pour baisser le taux et amortir le coup. Quand l'investissement suit moins le taux (`gammar` × 0,8), la baisse amortit
+  moins : en récession, le taux reste au plancher 23 trimestres sur 40, contre 9, et la recherche perd 40 % de son
+  gain (−5,80 → −3,43). Une Phillips plus pentue (`phil` × 1,2) fait la même chose en plus petit. Face aux matières
+  premières, dans ces deux mondes, R2s\*b n'est plus la meilleure règle et la recherche ne passe plus le seuil contre
+  R1, à laquelle elle échange un point de chômage contre 8 à 10 points de dette.
+- C'est le seul endroit où la recherche exploite une hypothèse du modèle, et c'est celle de Q-P3 et de Q-S13 : ce que
+  coûte et ce que rapporte un taux bas. À montrer à l'économiste (Q-S10).
 
 **Le faisceau contre l'escalade**, 200 graines par famille, au même coût :
 

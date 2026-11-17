@@ -11,7 +11,7 @@ import { lossPair, mean, meanLoss, number, searchRuns, verdict } from "./lib/ver
  * and the best of the restarts; then the measure, seeds 1 to 200 of each family, the R3* against each other, against
  * the bar of J6 (R1 or R2s*b) and against the search of J6 on the same seeds (docs/mesures/recherche/), by pairs, with
  * the verdict of the threshold (Q-S3) and the loss; last, the shifted model: R3* tuned on ÉCO, played in each world of
- * J6 where a hypothesis is moved, against R1 and the search there. Prints markdown; docs/regle-r3.md reads it.
+ * J6 where a hypothesis is moved, against the bar and the search there. Prints markdown; docs/regle-r3.md reads it.
  *
  *   node scripts/r3-report.js
  */
@@ -96,19 +96,19 @@ function worldOf(spec) {
   return createEco(TARGETS, { ...ASSUMED, [param]: ASSUMED[param] * Number(factor) });
 }
 
-/** R3* tuned on ÉCO under balance (the climb or CMA-ES), in each shifted world of J6, against R1 and the search there. */
+/** R3* tuned on ÉCO (the climb or CMA-ES, within R3's bounds), in each shifted world of J6, against the bar and the search there. */
 function printShifted() {
-  const w = "balance";
-  const best = bestOf(w, OPTIMIZERS);
-  console.log(`\n## Le modèle décalé : R3*${best}, réglée sur ÉCO, dans les mondes de J6 (${w})\n`);
+  console.log("\n## Le modèle décalé : R3*, réglée sur ÉCO, dans les mondes de J6\n");
   for (const group of searchRuns().filter((g) => !g.key.startsWith("ÉCO"))) {
-    const [world, , , family] = group.key.split(" | ");
-    const seeds = group.rows.search.length;
-    const rows = /** @type {Record<string, any[]>} */ ({ ...play({ R3: ["R3", tuned(best, w).coefficients] }, /** @type {any} */ (family), seeds, worldOf(world)), R1: group.rows.R1, search: group.rows.search });
-    console.log(`\n### ${world}, ${family}, ${seeds} graines (part du gain de la recherche ${share(rows, "R3", "R1", WEIGHTS[w])} %)\n${HEADER}`);
-    console.log(line("R3* − R1", rows.R3, rows.R1, WEIGHTS[w]));
-    console.log(line("recherche − R1", rows.search, rows.R1, WEIGHTS[w]));
-    console.log(line("R3* − recherche", rows.R3, rows.search, WEIGHTS[w]));
+    const [world, , , family, w] = group.key.split(" | ");
+    const best = bestOf(w, OPTIMIZERS);
+    const weights = WEIGHTS[w];
+    const rows = /** @type {Record<string, any[]>} */ ({ ...group.rows, R3: play({ R3: ["R3", tuned(best, w).coefficients] }, /** @type {any} */ (family), group.rows.search.length, worldOf(world)).R3 });
+    const bar = meanLoss(rows.R1, weights) <= meanLoss(rows["R2s*b"], weights) ? "R1" : "R2s*b";
+    console.log(`\n### ${world}, ${family}, ${w}, ${rows.search.length} graines (R3*${best}, barre ${bar}, part du gain de la recherche ${share(rows, "R3", bar, weights)} %)\n${HEADER}`);
+    console.log(line(`R3* − ${bar}`, rows.R3, rows[bar], weights));
+    console.log(line(`recherche − ${bar}`, rows.search, rows[bar], weights));
+    console.log(line("R3* − recherche", rows.R3, rows.search, weights));
   }
 }
 
