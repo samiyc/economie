@@ -13,7 +13,8 @@ importations et relance l'inflation, que la banque centrale doit alors combattre
 - **la greffe sur ÉCO est faite** : 53,2 % de la dette aux étrangers, un change qui les équilibre, des anticipations
   régressives ; une baisse d'un point fait perdre 6 % à la monnaie et ajoute 1,5 point d'inflation en un an, quand
   le change fixe n'en ajoute presque pas. Gauss-Seidel le résout, 6 µs le trimestre (§ 2) ;
-- **vient ensuite** la mesure : les règles et la recherche sur le change flottant, et le taux rendu à la recherche (§ 3).
+- **la mesure est en file** : les règles et la recherche sur le change flottant, et le taux rendu à la recherche, aux
+  deux changes (§ 3).
 
 ## 1. Le banc : OPEN FLEX (fait le 17/11)
 
@@ -80,13 +81,24 @@ Ce que le régime donne, la politique figée sauf mention (`tests/ecoflex.test.j
   Taylor (R1) tient : sur la famille des matières premières, l'écart d'inflation à la cible est de 2,4 points au
   flottant contre 2,3 au fixe, la monnaie perdant 18 % au plus (moyenne de 30 graines).
 
-## 3. La mesure (à faire)
+## 3. La mesure (en file depuis le 17/11)
 
-1. Les règles de J4 et R3, et la recherche de J6, sur le change flottant, la banque centrale toujours indépendante :
-   ce qui change quand un taux bas coûte.
-2. **Le taux rendu à la recherche** (la question de Q-S13) : le colle-t-elle encore à 0 ? Le taux neutre de Taylor
-   réglé comme au J6 (R1n, R2sn), et la recherche sur les achats et le taux.
-3. Les témoins : le modèle décalé, avec la transmission du change et l'élasticité de la demande étrangère parmi les
-   hypothèses qui bougent ; la nuit du 16/11 refaite sur le change flottant.
+Les mondes ont un nom que les scripts prennent tous (`--world`, `scripts/lib/world.js`) : `flottant`, et
+`"flottant phil:1.2"` pour le modèle décalé au change flottant. Les jobs tournent depuis deux copies figées
+(`E:/Dev/economie-j7` au commit 125f58c, `E:/Dev/economie-j7b` au 6d46621), pour que `src/` reste libre.
+
+1. **Les règles et la recherche de J6, sur le change flottant**, la banque centrale toujours indépendante : ce qui
+   change quand un taux bas coûte. Les règles de J4 et J5 sur 1 000 graines (`scripts/rules.js --world flottant`,
+   `docs/mesures/flottant/reglees.json`) ; la recherche sur les achats contre la barre et R1, 200 graines par famille et
+   par jeu de poids, comme au J6 (36 jobs) ; R3*, réglée au change fixe, s'y mesure ensuite
+   (`scripts/r3-report.js` lit tous les mondes de la recherche).
+2. **Le taux rendu à la recherche** (Q-S13) : la recherche tient les achats et le taux (`createPlanner` `rate`,
+   `scripts/search.js --rate`) : `horizon` gènes de plus, un demi-point au plus par trimestre et jamais sous 0,
+   comme Taylor, l'à-coup payé comme pour les achats. Aux deux changes, 100 graines par cas (36 jobs) : la colle-t-elle
+   encore à 0 ? Un essai de deux graines (chômage, poids équilibrés) l'y colle 32 à 33 trimestres sur 40 au change
+   fixe, encore 25 à 28 au flottant : l'inflation s'écarte plus de la cible (0,7 point contre 0,45 sous Taylor), mais la
+   dette fond (101 à 104 % contre 137 %). À confirmer sur la mesure.
+3. **Les témoins** : le modèle décalé au change flottant, avec la transmission du change (`ptm`), le retour attendu
+   (`thx`) et la sensibilité des étrangers (`lw1`) parmi les hypothèses qui bougent ; après les deux premières.
 
 La guerre commerciale entre deux États, l'ancien J7, devient J8 : elle partira des deux pays d'OPEN FLEX.
