@@ -1,19 +1,21 @@
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 import { progress } from "mcts-commun/trace.js";
-import { ECO } from "../src/eco/model.js";
 import { OBJECTIVES, REPORTED, measureRules } from "./lib/rules-measure.js";
+import { worldOf } from "./lib/world.js";
 
 /**
  * The simple rules measured by pairs on ÉCO (scripts/lib/rules-measure.js): prints the tables, keeps them in `--out`.
  * docs/regles.md reads them. With `--tuned`, the rules tuned by scripts/tune.js (J5) join them: R1*<weights> against
- * R1 and R0, R2s*<weights> against R2s, R2n and R1* of the same weights.
+ * R1 and R0, R2s*<weights> against R2s, R2n and R1* of the same weights. `--world` names another world than ÉCO
+ * (scripts/lib/world.js): `flottant` for the floating rate (J7).
  *
  *   node scripts/rules.js --seeds 1000 --out docs/mesures/regles.json
  *   node scripts/rules.js --seeds 1000 --tuned docs/mesures/reglage --out docs/mesures/reglees.json
+ *   node scripts/rules.js --seeds 1000 --tuned docs/mesures/reglage --world flottant --out docs/mesures/flottant/reglees.json
  */
 
-const { values } = parseArgs({ options: { seeds: { type: "string", default: "200" }, out: { type: "string" }, tuned: { type: "string" } } });
+const { values } = parseArgs({ options: { seeds: { type: "string", default: "200" }, out: { type: "string" }, tuned: { type: "string" }, world: { type: "string" } } });
 const seeds = Number(values.seeds);
 
 /** The tuned rules in `folder`, and the pairs they are measured in. */
@@ -30,7 +32,7 @@ const cell = ({ mean, low, high }) => `${mean.toFixed(2)} [${low.toFixed(2)} ; $
 const row = (p) => `| ${p.a} − ${p.b} | ${OBJECTIVES.map((k) => cell(p[k])).join(" | ")} |`;
 
 let done = 0;
-const results = measureRules(ECO, seeds, (family) => {
+const results = measureRules(worldOf(values.world).world, seeds, (family) => {
   done += 1;
   progress("rules", done, 3 * seeds, { family });
 }, tunedIn(values.tuned));

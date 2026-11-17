@@ -1,12 +1,11 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 import { progress } from "mcts-commun/trace.js";
-import { createEco, ECO } from "../src/eco/model.js";
-import { ASSUMED, TARGETS } from "../src/eco/targets.js";
 import { objectivesOf, simulate } from "../src/policy/simulate.js";
 import { WEIGHTS } from "../src/policy/tuning.js";
 import { createBeamPlanner } from "../src/search/beam.js";
 import { createPlanner } from "../src/search/planner.js";
+import { fileNameOf, worldOf } from "./lib/world.js";
 
 /**
  * The rolling-horizon planner (src/search/planner.js, J6) against the rules on the same crises: seeds `--from` to
@@ -14,7 +13,8 @@ import { createPlanner } from "../src/search/planner.js";
  * textbooks' Taylor in all of them (Sami, 10/11): R0, R1, R2s, and R2s*b, R2s's speed tuned for these weights
  * (docs/mesures/reglage/R2sb-<weights>.json). With
  * `--world param:factor`, the world is ÉCO with that hypothesis moved, the planner still planning on ÉCO: the shifted
- * model (docs/modele.md, § 8). With `--planner beam`, the beam (src/search/beam.js, `--width` states) plans instead of
+ * model (docs/modele.md, § 8). With `--world flottant` (and its hypotheses, `"flottant phil:1.2"`), ÉCO at a floating
+ * rate (J7), the planner planning on it (scripts/lib/world.js). With `--planner beam`, the beam (src/search/beam.js, `--width` states) plans instead of
  * the climb, tagged "faisceau". Each seed's objectives go to docs/mesures/recherche/; scripts/search-report.js reads them.
  *
  *   node scripts/search.js --family unemployment --weights balance --from 1 --seeds 50 --budget 300
@@ -31,14 +31,6 @@ const [from, seeds, budget, count, horizon] = [values.from, values.seeds, values
 const weights = WEIGHTS[values.weights];
 if (!weights) throw new Error(`search: --weights ${Object.keys(WEIGHTS)}`);
 
-/** The world the policies play: ÉCO, or ÉCO with a hypothesis moved. */
-function worldOf(spec) {
-  if (!spec) return ECO;
-  const [param, factor] = spec.split(":");
-  if (!(param in ASSUMED)) throw new Error(`search: no hypothesis ${param}`);
-  return createEco(TARGETS, { ...ASSUMED, [param]: ASSUMED[param] * Number(factor) });
-}
-
 const r2sb = JSON.parse(readFileSync(new URL(`../docs/mesures/reglage/R2sb-${values.weights}.json`, import.meta.url), "utf8")).coefficients;
 const RULES = [
   { label: "R0", rule: "R0" }, { label: "R1", rule: "R1" }, { label: "R2s", rule: "R2s" },
@@ -47,10 +39,10 @@ const RULES = [
 const KEPT = ["unemployment", "unemploymentPeak", "inflationGap", "inflationPeak", "debt", "outputGap", "floorQuarters", "leverMoves"];
 const keep = (o) => Object.fromEntries(KEPT.map((k) => [k, Math.round(o[k] * 1e6) / 1e6]));
 
-const world = worldOf(values.world);
+const { world, model } = worldOf(values.world);
 const beam = values.planner === "beam";
 const tag = beam ? "faisceau" : values.tag;
-const shape = { model: ECO, weights, budget, count, horizon, width: Number(values.width) };
+const shape = { model, weights, budget, count, horizon, width: Number(values.width) };
 const makerOf = () => (beam ? (run) => createBeamPlanner(shape, run) : (run) => createPlanner(shape, run));
 const rows = Object.fromEntries(["search", ...RULES.map((r) => r.label)].map((label) => [label, []]));
 for (let seed = from; seed < from + seeds; seed += 1) {
@@ -61,7 +53,7 @@ for (let seed = from; seed < from + seeds; seed += 1) {
 }
 const folder = new URL("../docs/mesures/recherche/", import.meta.url);
 mkdirSync(folder, { recursive: true });
-const name = [family, values.weights, values.world?.replace(":", "-"), tag, from].filter(Boolean).join("-");
+const name = [family, values.weights, values.world && fileNameOf(values.world), tag, from].filter(Boolean).join("-");
 const result = { date: new Date().toISOString().slice(0, 10), family, weights: values.weights, from, seeds, budget, count, horizon, world: values.world ?? null, tag, planner: values.planner, width: beam ? shape.width : null, coefficients: { r2sb }, rows };
 writeFileSync(new URL(`${name}.json`, folder), `${JSON.stringify(result)}\n`);
 console.log(`${name}: ${seeds} graines, écrit`);

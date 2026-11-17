@@ -1,9 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
-import { createEco } from "../src/eco/model.js";
-import { ASSUMED, TARGETS } from "../src/eco/targets.js";
 import { objectivesOf, simulate } from "../src/policy/simulate.js";
 import { WEIGHTS } from "../src/policy/tuning.js";
 import { lossPair, mean, meanLoss, number, searchRuns, verdict } from "./lib/verdict.js";
+import { worldOf } from "./lib/world.js";
 
 /**
  * R3 tuned by the climb and by CMA-ES, and by the climb within wider bounds (R3w, "large") when it is there
@@ -90,12 +89,6 @@ function printMeasure() {
   for (const w of weightsDone) for (const family of FAMILIES) printFamily(family, w);
 }
 
-/** ÉCO with a hypothesis moved by a factor, as scripts/search.js builds it. */
-function worldOf(spec) {
-  const [param, factor] = spec.split(":");
-  return createEco(TARGETS, { ...ASSUMED, [param]: ASSUMED[param] * Number(factor) });
-}
-
 /** R3* tuned on ÉCO (the climb or CMA-ES, within R3's bounds), in each shifted world of J6, against the bar and the search there. */
 function printShifted() {
   console.log("\n## Le modèle décalé : R3*, réglée sur ÉCO, dans les mondes de J6\n");
@@ -103,7 +96,7 @@ function printShifted() {
     const [world, , , family, w] = group.key.split(" | ");
     const best = bestOf(w, OPTIMIZERS);
     const weights = WEIGHTS[w];
-    const rows = /** @type {Record<string, any[]>} */ ({ ...group.rows, R3: play({ R3: ["R3", tuned(best, w).coefficients] }, /** @type {any} */ (family), group.rows.search.length, worldOf(world)).R3 });
+    const rows = /** @type {Record<string, any[]>} */ ({ ...group.rows, R3: play({ R3: ["R3", tuned(best, w).coefficients] }, /** @type {any} */ (family), group.rows.search.length, worldOf(world).world).R3 });
     const bar = meanLoss(rows.R1, weights) <= meanLoss(rows["R2s*b"], weights) ? "R1" : "R2s*b";
     console.log(`\n### ${world}, ${family}, ${w}, ${rows.search.length} graines (R3*${best}, barre ${bar}, part du gain de la recherche ${share(rows, "R3", bar, weights)} %)\n${HEADER}`);
     console.log(line(`R3* − ${bar}`, rows.R3, rows[bar], weights));
